@@ -1,1 +1,0 @@
-# Sistema-Gest-o-Financeira
