@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Início | Resgate de Vidas</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script th:src="@{/js/dashboard.js}" defer></script>
+</head>
+<body>
+<div class="layout">
+    <nav class="navegacao" aria-label="Navegação principal">
+        <p class="navegacao-marca">Resgate de Vidas</p>
+        <ul class="navegacao-lista">
+            <li>
+                <a class="navegacao-link" th:href="@{/dashboard}" aria-current="page">Início</a>
+            </li>
+            <li>
+                <a class="navegacao-link" th:href="@{/movimentacoes}">
+                    <span class="rotulo-curto">Mov.</span>
+                    <span class="rotulo-completo">Movimentações</span>
+                </a>
+            </li>
+            <li>
+                <a class="navegacao-link" th:href="@{/relatorios}">
+                    <span class="rotulo-curto">Relat.</span>
+                    <span class="rotulo-completo">Relatórios</span>
+                </a>
+            </li>
+            <li>
+                <a class="navegacao-link" th:href="@{/configuracoes}">
+                    <span class="rotulo-curto">Dados ONG</span>
+                    <span class="rotulo-completo">Dados da ONG</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="conteudo">
+        <header class="cabecalho">
+            <h1 class="cabecalho-titulo">Olá, equipe!</h1>
+            <p class="cabecalho-periodo">Resumo financeiro · Agosto de 2026</p>
+            <p class="aviso-demonstrativo">Dados demonstrativos</p>
+        </header>
+
+        <section class="secao" aria-labelledby="titulo-visao-geral">
+            <h2 class="secao-titulo" id="titulo-visao-geral">Visão geral</h2>
+            <dl class="indicadores">
+                <div class="indicador indicador-entrada">
+                    <dt class="indicador-rotulo">Entradas</dt>
+                    <dd class="indicador-valor">R$ 18.450,00</dd>
+                </div>
+                <div class="indicador indicador-saida">
+                    <dt class="indicador-rotulo">Saídas</dt>
+                    <dd class="indicador-valor">R$ 11.280,00</dd>
+                </div>
+                <div class="indicador indicador-saldo">
+                    <dt class="indicador-rotulo">Saldo</dt>
+                    <dd class="indicador-valor">R$ 7.170,00</dd>
+                </div>
+                <div class="indicador">
+                    <dt class="indicador-rotulo">Movimentos</dt>
+                    <dd class="indicador-valor">32</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="secao" aria-labelledby="titulo-pix">
+            <h2 class="secao-titulo" id="titulo-pix">Chave Pix para doações</h2>
+            <div class="pix">
+                <span class="pix-icone" aria-hidden="true">Pix</span>
+                <div class="pix-texto">
+                    <p class="pix-instrucao">Passe esta chave para quem quiser doar</p>
+                    <p class="pix-chave" id="chave-pix">doacoes@exemplo.org.br</p>
+                    <p class="pix-status" id="status-copia" role="status"></p>
+                </div>
+                <button class="botao-copiar" id="botao-copiar" type="button">Copiar</button>
+            </div>
+        </section>
+
+        <section class="secao" aria-labelledby="titulo-acoes">
+            <h2 class="secao-titulo" id="titulo-acoes">Ações rápidas</h2>
+            <ul class="acoes">
+                <li>
+                    <span class="acao acao-indisponivel">
+                        <span class="acao-icone" aria-hidden="true">+</span>
+                        <span class="acao-texto">
+                            Nova entrada
+                            <span class="acao-aviso">Em breve</span>
+                        </span>
+                    </span>
+                </li>
+                <li>
+                    <span class="acao acao-indisponivel">
+                        <span class="acao-icone" aria-hidden="true">−</span>
+                        <span class="acao-texto">
+                            Nova saída
+                            <span class="acao-aviso">Em breve</span>
+                        </span>
+                    </span>
+                </li>
+                <li>
+                    <a class="acao" th:href="@{/movimentacoes}">
+                        <span class="acao-icone" aria-hidden="true">⇅</span>
+                        <span class="acao-texto">Movimentações</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="acao" th:href="@{/relatorios}">
+                        <span class="acao-icone" aria-hidden="true">R$</span>
+                        <span class="acao-texto">Relatórios</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+</div>
+</body>
+</html>
