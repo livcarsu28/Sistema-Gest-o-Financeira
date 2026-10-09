@@ -1,23 +1,26 @@
 const botaoCopiar = document.getElementById("botao-copiar");
 const chavePix = document.getElementById("chave-pix");
 const statusCopia = document.getElementById("status-copia");
+const rotuloCopiar = document.getElementById("rotulo-copiar");
 let temporizador;
 
-botaoCopiar.addEventListener("click", async () => {
-    clearTimeout(temporizador);
+if (botaoCopiar && chavePix && statusCopia && rotuloCopiar) {
+    botaoCopiar.addEventListener("click", async () => {
+        const chave = chavePix.dataset.chave?.trim();
+        if (botaoCopiar.disabled || !chave) return;
 
-    try {
-        await navigator.clipboard.writeText(chavePix.textContent.trim());
-        botaoCopiar.textContent = "Copiada";
-        botaoCopiar.classList.add("botao-copiar-sucesso");
-        statusCopia.textContent = "Chave Pix copiada.";
-    } catch {
-        statusCopia.textContent = "Não foi possível copiar. Selecione a chave e copie manualmente.";
-    }
+        clearTimeout(temporizador);
+        try {
+            await navigator.clipboard.writeText(chave);
+            rotuloCopiar.textContent = "Chave copiada";
+            statusCopia.textContent = "Chave Pix copiada.";
+        } catch {
+            statusCopia.textContent = "Não foi possível copiar. Selecione a chave e copie manualmente.";
+        }
 
-    temporizador = setTimeout(() => {
-        botaoCopiar.textContent = "Copiar";
-        botaoCopiar.classList.remove("botao-copiar-sucesso");
-        statusCopia.textContent = "";
-    }, 3000);
-});
+        temporizador = setTimeout(() => {
+            rotuloCopiar.textContent = "Copiar chave Pix";
+            statusCopia.textContent = "";
+        }, 3000);
+    });
+}

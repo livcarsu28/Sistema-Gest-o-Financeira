@@ -8,111 +8,63 @@
     <script th:src="@{/js/dashboard.js}" defer></script>
 </head>
 <body>
+<a class="pular-conteudo" href="#conteudo-principal">Ir para o conteúdo</a>
 <div class="layout">
-    <nav class="navegacao" aria-label="Navegação principal">
-        <p class="navegacao-marca">Resgate de Vidas</p>
-        <ul class="navegacao-lista">
-            <li>
-                <a class="navegacao-link" th:href="@{/dashboard}" aria-current="page">Início</a>
-            </li>
-            <li>
-                <a class="navegacao-link" th:href="@{/movimentacoes}">
-                    <span class="rotulo-curto">Mov.</span>
-                    <span class="rotulo-completo">Movimentações</span>
-                </a>
-            </li>
-            <li>
-                <a class="navegacao-link" th:href="@{/relatorios}">
-                    <span class="rotulo-curto">Relat.</span>
-                    <span class="rotulo-completo">Relatórios</span>
-                </a>
-            </li>
-            <li>
-                <a class="navegacao-link" th:href="@{/configuracoes}">
-                    <span class="rotulo-curto">Dados ONG</span>
-                    <span class="rotulo-completo">Dados da ONG</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <main class="conteudo">
+    <aside class="barra-lateral">
+        <a class="marca" th:href="@{/dashboard}" aria-label="Resgate de Vidas – Criança Feliz, início">
+            <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="" width="64" height="64">
+            <span class="marca-texto"><strong>Resgate de Vidas</strong><span>Criança Feliz</span></span>
+        </a>
+        <p class="marca-sistema">Gestão financeira</p>
+        <nav class="navegacao" aria-label="Navegação principal">
+            <p class="navegacao-titulo">Principal</p>
+            <ul class="navegacao-lista"><li><a class="navegacao-link" th:href="@{/dashboard}" aria-current="page"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a></li>
+<li><a class="navegacao-link" th:href="@{/movimentacoes}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg><span>Movimentações</span></a></li>
+<li><a class="navegacao-link" th:href="@{/relatorios}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6"/></svg><span>Relatórios</span></a></li>
+<li><a class="navegacao-link" th:href="@{/configuracoes}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1"/></svg><span>Dados da ONG</span></a></li>
+</ul>
+        </nav>
+    </aside>
+    <main class="conteudo" id="conteudo-principal" tabindex="-1">
         <header class="cabecalho">
-            <h1 class="cabecalho-titulo">Olá, equipe!</h1>
-            <p class="cabecalho-periodo">Resumo financeiro · Agosto de 2026</p>
-            <p class="aviso-demonstrativo">Dados demonstrativos</p>
+            <div><p class="sobretitulo">Painel financeiro</p><h1>Olá, equipe.</h1><p class="cabecalho-subtitulo">Acompanhe as finanças e organize o dia a dia da ONG.</p></div>
+            <div class="periodo"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18"/></svg><span><span class="periodo-rotulo">Período de referência</span><strong>Aguardando integração</strong></span></div>
         </header>
-
         <section class="secao" aria-labelledby="titulo-visao-geral">
-            <h2 class="secao-titulo" id="titulo-visao-geral">Visão geral</h2>
-            <dl class="indicadores">
-                <div class="indicador indicador-entrada">
-                    <dt class="indicador-rotulo">Entradas</dt>
-                    <dd class="indicador-valor">R$ 18.450,00</dd>
-                </div>
-                <div class="indicador indicador-saida">
-                    <dt class="indicador-rotulo">Saídas</dt>
-                    <dd class="indicador-valor">R$ 11.280,00</dd>
-                </div>
-                <div class="indicador indicador-saldo">
-                    <dt class="indicador-rotulo">Saldo</dt>
-                    <dd class="indicador-valor">R$ 7.170,00</dd>
-                </div>
-                <div class="indicador">
-                    <dt class="indicador-rotulo">Movimentos</dt>
-                    <dd class="indicador-valor">32</dd>
-                </div>
-            </dl>
-        </section>
-
-        <section class="secao" aria-labelledby="titulo-pix">
-            <h2 class="secao-titulo" id="titulo-pix">Chave Pix para doações</h2>
-            <div class="pix">
-                <span class="pix-icone" aria-hidden="true">Pix</span>
-                <div class="pix-texto">
-                    <p class="pix-instrucao">Passe esta chave para quem quiser doar</p>
-                    <p class="pix-chave" id="chave-pix">doacoes@exemplo.org.br</p>
-                    <p class="pix-status" id="status-copia" role="status"></p>
-                </div>
-                <button class="botao-copiar" id="botao-copiar" type="button">Copiar</button>
+            <div class="secao-cabecalho"><h2 id="titulo-visao-geral">Visão geral</h2><span class="secao-legenda">Resumo do período</span></div>
+            <div class="aviso-integracao"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></svg><p>Os dados financeiros ainda não foram integrados. Os valores serão exibidos quando estiverem disponíveis.</p></div>
+            <div class="resumo">
+                <dl class="saldo">
+                    <dt>Saldo mensal</dt>
+                    <dd class="saldo-valor"><span aria-hidden="true">—</span><span class="sr-only">Ainda não disponível</span></dd>
+                    <dd class="saldo-descricao">Entradas recebidas menos despesas pagas no mês</dd>
+                    <dd class="saldo-status"><span></span>Aguardando dados financeiros</dd>
+                </dl>
+                <dl class="indicadores"><div class="indicador"><dt><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>Entradas recebidas</span></dt><dd class="indicador-valor"><span aria-hidden="true">—</span><span class="sr-only">Ainda não disponível</span></dd><dd class="indicador-descricao">Recebimentos efetivos do mês</dd></div>
+<div class="indicador"><dt><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3m-5 5 5-5 5 5M4 16v5h16v-5"/></svg><span>Despesas pagas</span></dt><dd class="indicador-valor"><span aria-hidden="true">—</span><span class="sr-only">Ainda não disponível</span></dd><dd class="indicador-descricao">Pagamentos efetivos do mês</dd></div>
+<div class="indicador"><dt><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg><span>Movimentações</span></dt><dd class="indicador-valor"><span aria-hidden="true">—</span><span class="sr-only">Ainda não disponível</span></dd><dd class="indicador-descricao">Registros cadastrados no mês</dd></div>
+</dl>
             </div>
         </section>
-
-        <section class="secao" aria-labelledby="titulo-acoes">
-            <h2 class="secao-titulo" id="titulo-acoes">Ações rápidas</h2>
-            <ul class="acoes">
-                <li>
-                    <span class="acao acao-indisponivel">
-                        <span class="acao-icone" aria-hidden="true">+</span>
-                        <span class="acao-texto">
-                            Nova entrada
-                            <span class="acao-aviso">Em breve</span>
-                        </span>
-                    </span>
-                </li>
-                <li>
-                    <span class="acao acao-indisponivel">
-                        <span class="acao-icone" aria-hidden="true">−</span>
-                        <span class="acao-texto">
-                            Nova saída
-                            <span class="acao-aviso">Em breve</span>
-                        </span>
-                    </span>
-                </li>
-                <li>
-                    <a class="acao" th:href="@{/movimentacoes}">
-                        <span class="acao-icone" aria-hidden="true">⇅</span>
-                        <span class="acao-texto">Movimentações</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="acao" th:href="@{/relatorios}">
-                        <span class="acao-icone" aria-hidden="true">R$</span>
-                        <span class="acao-texto">Relatórios</span>
-                    </a>
-                </li>
-            </ul>
-        </section>
+        <div class="secoes-inferiores">
+            <section class="painel pix" aria-labelledby="titulo-pix">
+                <div class="secao-cabecalho"><h2 id="titulo-pix">Pix para doações</h2><span class="etiqueta">Dados da ONG</span></div>
+                <p class="painel-descricao">A chave da instituição, sempre à mão para compartilhar.</p>
+                <div class="pix-chave-area"><span class="pix-simbolo" aria-hidden="true">Pix</span><div><p class="pix-rotulo">Chave Pix</p><p class="pix-chave" id="chave-pix" data-chave="">Ainda não disponível</p></div></div>
+                <p class="pix-ajuda" id="pix-ajuda">A chave será exibida após a integração dos dados da ONG.</p>
+                <button class="botao-copiar" id="botao-copiar" type="button" disabled aria-describedby="pix-ajuda"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></svg><span id="rotulo-copiar">Copiar chave Pix</span></button>
+                <p class="pix-status" id="status-copia" role="status" aria-live="polite"></p>
+            </section>
+            <section class="painel" aria-labelledby="titulo-acoes">
+                <div class="secao-cabecalho"><h2 id="titulo-acoes">Ações rápidas</h2></div>
+                <p class="painel-descricao">Atalhos para a rotina financeira.</p>
+                <ul class="acoes"><li><div class="acao acao-indisponivel"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="acao-texto"><strong>Nova entrada</strong><span>Ainda não disponível</span></span><span class="acao-etiqueta">Em breve</span></div></li>
+<li><div class="acao acao-indisponivel"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/></svg></span><span class="acao-texto"><strong>Nova saída</strong><span>Ainda não disponível</span></span><span class="acao-etiqueta">Em breve</span></div></li>
+<li><a class="acao" th:href="@{/movimentacoes}"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg></span><span class="acao-texto"><strong>Movimentações</strong><span>Acessar movimentações</span></span><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a></li>
+<li><a class="acao" th:href="@{/relatorios}"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6"/></svg></span><span class="acao-texto"><strong>Relatórios</strong><span>Acessar relatórios</span></span><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a></li>
+</ul>
+            </section>
+        </div>
     </main>
 </div>
 </body>

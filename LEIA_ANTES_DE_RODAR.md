@@ -114,7 +114,25 @@ O Flyway usa o mesmo DataSource da aplicação, procura `src/main/resources/db/m
 
 Confira nos logs a conexão MySQL, a validação e aplicação do Flyway e a inicialização do Tomcat. Verifique as oito tabelas, as três views e as versões bem-sucedidas no histórico, sem modificar seus registros manualmente.
 
-Abra `http://localhost:8080/dashboard`. A configuração existente do Spring Security foi preservada; o acesso pode exigir o usuário temporário de desenvolvimento. A autenticação definitiva será tratada separadamente.
+Abra `http://localhost:8080/` ou `http://localhost:8080/dashboard`. Sem sessão autenticada, o sistema encaminha para o formulário padrão em `/login`. Após autenticar, o destino é `/dashboard`. Não é necessário criar um template `login.html` para esse formulário gerado pelo Spring Security.
+
+No desenvolvimento, use o usuário `user` e a senha gerada pela instância atual, exibida no seu terminal. Essa senha muda a cada reinicialização; não use a senha de uma execução anterior. A autenticação definitiva será tratada separadamente.
+
+Para iniciar pela raiz do repositório sem carregar as variáveis manualmente a cada execução:
+
+```powershell
+.\iniciar.ps1
+```
+
+Se a política padrão do PowerShell bloquear o script local, execute `powershell -NoProfile -ExecutionPolicy RemoteSigned -File .\iniciar.ps1`. Essa opção vale somente para o processo iniciado e não altera a política permanente do computador. Se houver bloqueio por política da organização, use a execução pela IDE.
+
+O script lê `DB_URL`, `DB_USER` e `DB_PASSWORD` do `.env` local quando ainda não estiverem definidas no ambiente, valida o prefixo JDBC MySQL e verifica a porta 8080. Não encerra processos nem altera credenciais. O `.env` é opcional se as variáveis já estiverem configuradas. Use valores literais e aspas correspondentes, como explicado anteriormente neste guia.
+
+Ao iniciar pela IDE, configure as variáveis na configuração de execução e selecione a classe `financeiro.FinanceiroApplication` deste módulo. O script não é executado automaticamente pela IDE.
+
+Aguarde `Started FinanceiroApplication`, além da mensagem de inicialização do Tomcat. Se houver `APPLICATION FAILED TO START` ou um erro posterior, a aplicação não está pronta. Uma porta 8080 atendida por outra instância não comprova que a execução atual iniciou corretamente.
+
+Para validar após reiniciar, encerre somente a instância deste projeto pelo terminal ou pela IDE, inicie novamente e abra uma janela privada. Acesse `/login`, autentique com a senha da nova execução e confirme o dashboard e seus arquivos visuais. O Flyway continua ativo; confira o histórico antes de iniciar contra um banco ainda não validado.
 
 ## Problemas comuns
 
