@@ -1,18 +1,15 @@
 services:
-
-  postgres:
-    image: postgres:17
-
+  mysql:
+    image: mysql:8.4
     environment:
-      POSTGRES_DB: financeiro
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-
+      MYSQL_DATABASE: financeiro
+      MYSQL_USER: ${DB_USER:?Defina DB_USER com um usuario diferente de root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Defina MYSQL_ROOT_PASSWORD}
     ports:
-      - "5432:5432"
-
+      - "127.0.0.1:3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
 
 volumes:
-  postgres_data:
+  mysql_data:

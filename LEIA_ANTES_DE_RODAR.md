@@ -1,579 +1,145 @@
-# LEIA ANTES DE RODAR O PROJETO
+# Executar o sistema com MySQL
 
-Este projeto utiliza:
+## Requisitos
 
-- Java 21
-- Spring Boot
-- PostgreSQL
-- Flyway
-- Maven
+- Java 21 com `JAVA_HOME` configurado.
+- PowerShell e VS Code.
+- MySQL 8 instalado ou Docker Desktop com Docker Compose.
+- Acesso à internet para o primeiro download do Maven e das dependências.
 
-O banco de dados utiliza variáveis de ambiente para armazenar as informações de conexão.
+Execute os comandos iniciais na raiz `Sistema-Gest-o-Financeira`. Use sua branch de trabalho; não faça alterações diretamente na `main`.
 
-Por segurança, usuário e senha do PostgreSQL **não são armazenados diretamente no código-fonte e não devem ser enviados para o GitHub**.
+## Variáveis individuais
 
-Por isso, antes de executar o projeto pela primeira vez, siga os passos abaixo.
+Copie o exemplo somente se ainda não tiver um `.env`:
 
-
----
-
-# 1. Atualizar sua branch
-
-Antes de começar, é importante trazer as alterações mais recentes da `main`.
-
-Primeiro, verifique em qual branch você está:
-
-```bash
-git branch
+```powershell
+if (-not (Test-Path -LiteralPath .env)) {
+    Copy-Item -LiteralPath .env.example -Destination .env
+}
 ```
 
-A branch atual aparecerá com `*`.
+Edite `.env` localmente. Configure `DB_URL`, `DB_USER` e `DB_PASSWORD` para seu banco. Para o Docker, configure também `MYSQL_ROOT_PASSWORD` com uma senha diferente da senha do usuário da aplicação. Não use `root` como `DB_USER`.
 
-Por exemplo:
+A referência de conexão local é `jdbc:mysql://localhost:3306/financeiro`. Preserve outro endereço se seu banco estiver em outro servidor. Não publique `.env` nem mostre suas senhas no terminal.
 
-```text
-* movimentacoes
-  main
+Docker Compose lê `.env` da raiz. Spring Boot não carrega esse arquivo automaticamente. No mesmo PowerShell em que executará a aplicação, carregue os valores sem exibi-los:
+
+```powershell
+foreach ($linha in Get-Content -LiteralPath .env) {
+    if ($linha -match '^\s*(DB_URL|DB_USER|DB_PASSWORD|MYSQL_ROOT_PASSWORD)\s*=(.*)$') {
+        $nomeVariavel = $Matches[1]
+        $valorVariavel = $Matches[2].Trim()
+        if ($valorVariavel.Length -ge 2) {
+            if (($valorVariavel.StartsWith('"') -and $valorVariavel.EndsWith('"')) -or ($valorVariavel.StartsWith("'") -and $valorVariavel.EndsWith("'"))) {
+                $valorVariavel = $valorVariavel.Substring(1, $valorVariavel.Length - 2)
+            }
+        }
+        [Environment]::SetEnvironmentVariable($nomeVariavel, $valorVariavel, 'Process')
+    }
+}
 ```
 
-Depois atualize as informações do repositório:
+Use uma atribuição por linha, sem comentários ao final do valor. Coloque valores com espaços ou `#` entre aspas simples. No Compose, aspas simples também evitam a interpolação de `$` na senha. Não use expressões de expansão de variáveis no arquivo; o carregamento acima trata os valores literalmente.
 
-```bash
-git fetch origin
+Confira apenas se as variáveis necessárias estão presentes:
+
+```powershell
+foreach ($nomeVariavel in 'DB_URL', 'DB_USER', 'DB_PASSWORD') {
+    if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($nomeVariavel, 'Process'))) {
+        throw "Variável ausente: $nomeVariavel"
+    }
+}
 ```
 
-Atualize a `main`:
+Para iniciar pelo VS Code, configure as mesmas variáveis na execução local da IDE. Um terminal novo precisa carregá-las novamente.
 
-```bash
-git switch main
-git pull origin main
+## Banco MySQL
+
+Escolha uma das opções abaixo. Não inicie outro servidor na porta 3306 se ela já estiver ocupada.
+
+### Docker
+
+O Compose usa MySQL 8.4, publica a porta apenas no computador local e persiste os dados em `mysql_data`. O volume antigo do PostgreSQL permanece intacto e não é usado pelo MySQL.
+
+Depois de revisar as credenciais, execute:
+
+```powershell
+docker compose config --quiet
+docker compose up -d mysql
+docker compose ps mysql
 ```
 
-Depois volte para sua branch:
+Na primeira inicialização de um volume vazio, a imagem cria o banco `financeiro` e o usuário informado. Aguarde o servidor ficar pronto antes de iniciar o Spring Boot.
 
-```bash
-git switch NOME_DA_SUA_BRANCH
+As variáveis de criação não alteram usuários e senhas de um volume já inicializado. Se houver um volume MySQL existente, confira suas credenciais; não o apague para solucionar problemas de conexão. Não execute `docker compose down -v` nem comandos de limpeza de volumes. Não remova containers antigos com `--remove-orphans` nesta transição.
+
+### MySQL instalado
+
+Conecte-se com uma conta administrativa e verifique primeiro se `financeiro` já existe. Somente se estiver ausente e sua criação estiver autorizada, execute:
+
+```sql
+CREATE DATABASE financeiro CHARACTER SET utf8mb4;
 ```
 
-Exemplo:
+Solicite ao responsável pelo banco um usuário próprio para a aplicação. Ele deve conseguir acessar `financeiro` e executar as operações necessárias às migrations, incluindo criação de tabelas, índices e views. Não utilize credenciais administrativas na aplicação.
 
-```bash
-git switch movimentacoes
+Os scripts V1–V3 criam a estrutura; não importam os registros do PostgreSQL.
+
+## Compilar sem acessar o banco
+
+```powershell
+Set-Location financeiro/financeiro
+.\mvnw.cmd dependency:resolve
+.\mvnw.cmd -DskipTests compile test-compile
 ```
 
-E traga as alterações da `main`:
+O arquivo `.mvn/wrapper/maven-wrapper.properties` faz parte do projeto e é necessário para o Wrapper. A compilação atualiza os recursos em `target/classes` com os scripts de `src/main/resources`. `target/` não deve ser versionado.
 
-```bash
-git merge main
+O comando acima compila os testes, mas não os executa. O teste `contextLoads()` usa `@SpringBootTest`: executá-lo pode conectar ao banco e disparar migrations. Execute-o somente depois de autorizar a validação no banco escolhido.
+
+## Histórico Flyway e inicialização
+
+Antes de iniciar, confirme o banco de destino e a autorização para aplicar migrations. Em banco existente, o responsável deve revisar a tabela `flyway_schema_history` e os checksums. V1–V3 foram adaptadas de PostgreSQL para MySQL; a existência de arquivos no Git não comprova quais versões foram aplicadas em cada banco.
+
+Não altere migrations já aplicadas. Não execute `repair`, `baseline` ou `clean` para contornar erros. Se houver divergência de histórico ou tabelas existentes sem histórico, interrompa a inicialização e combine a transição com a equipe.
+
+Depois dessa conferência e autorização:
+
+```powershell
+.\mvnw.cmd spring-boot:run
 ```
 
-Se não houver conflitos, sua branch estará atualizada.
+O Flyway usa o mesmo DataSource da aplicação, procura `src/main/resources/db/migration` e aplica V1, V2 e V3 em ordem. `spring.jpa.hibernate.ddl-auto=validate` foi preservado: Hibernate não deve criar ou atualizar a estrutura por conta própria. Como ainda não há entidades JPA, essa validação não comprova a presença de todas as tabelas.
 
+Confira nos logs a conexão MySQL, a validação e aplicação do Flyway e a inicialização do Tomcat. Verifique as oito tabelas, as três views e as versões bem-sucedidas no histórico, sem modificar seus registros manualmente.
 
----
+Abra `http://localhost:8080/dashboard`. A configuração existente do Spring Security foi preservada; o acesso pode exigir o usuário temporário de desenvolvimento. A autenticação definitiva será tratada separadamente.
 
-# 2. PostgreSQL
+## Problemas comuns
 
-Para executar o sistema, é necessário ter acesso a um banco PostgreSQL.
+- Variáveis ausentes: carregue `.env` no mesmo terminal ou configure a execução da IDE.
+- `Connection refused`: confira o servidor, a porta publicada e o endereço de `DB_URL`.
+- `Unknown database`: confira se `financeiro` existe no servidor correto.
+- `Access denied`: confira usuário, senha e permissões. Alterar `.env` não altera credenciais de um volume Docker existente.
+- Porta 3306 ocupada: use o servidor já instalado ou combine uma porta alternativa no Compose e em `DB_URL`.
+- Erro de checksum Flyway: interrompa e revise o histórico com o responsável pelo banco.
+- SQL PostgreSQL em `target/classes`: compile novamente os recursos atuais antes de iniciar. Não edite os arquivos gerados.
+- Falha no Wrapper: confira Java 21, `JAVA_HOME`, conexão com Maven Central e presença de `.mvn/wrapper/maven-wrapper.properties`.
 
-O banco utilizado no desenvolvimento é:
+## Próxima etapa: dashboard
 
-```text
-financeiro
+O dashboard demonstrativo permanece preservado. Após validar o ambiente, o back-end deverá entregar entradas recebidas e despesas pagas filtradas por `data_pagamento`, saldo mensal como diferença desses valores, quantidade de registros do mês incluindo pendentes e vencidos e a chave Pix da instituição.
+
+A view `vw_resumo_financeiro` atual soma todo o histórico e não oferece filtro mensal. A contagem por data de registro exige confirmar com a equipe se `data_movimentacao` é realmente imutável e representa o cadastro; não existe uma coluna separada de data de criação nessa tabela.
+
+## Antes do commit
+
+```powershell
+git status --short
+git diff --check
+git diff
+git diff --cached --stat
 ```
 
-A aplicação se conecta por padrão ao PostgreSQL através da porta:
-
-```text
-5432
-```
-
-Exemplo de conexão:
-
-```text
-jdbc:postgresql://localhost:5432/financeiro
-```
-
-
----
-
-# 3. NÃO colocar senha no application.properties
-
-O arquivo:
-
-```text
-src/main/resources/application.properties
-```
-
-está configurado utilizando variáveis de ambiente:
-
-```properties
-spring.application.name=financeiro
-
-spring.datasource.url=${DB_URL}
-spring.datasource.username=${DB_USER}
-spring.datasource.password=${DB_PASSWORD}
-
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=true
-```
-
-NÃO substitua essas variáveis pela sua senha diretamente no arquivo.
-
-Por exemplo, NÃO faça:
-
-```properties
-spring.datasource.password=minhasenha123
-```
-
-Isso pode fazer com que sua senha seja enviada para o GitHub.
-
-
----
-
-# 4. Criar o arquivo .env
-
-Na raiz do repositório, crie um arquivo chamado:
-
-```text
-.env
-```
-
-A estrutura ficará aproximadamente assim:
-
-```text
-Sistema-Gest-o-Financeira/
-│
-├── .env
-├── .env.example
-├── .gitignore
-│
-└── financeiro/
-    └── financeiro/
-        ├── pom.xml
-        └── src/
-```
-
-Dentro do `.env`, coloque:
-
-```env
-DB_URL=jdbc:postgresql://localhost:5432/financeiro
-DB_USER=postgres
-DB_PASSWORD=SUA_SENHA_DO_POSTGRES
-```
-
-Substitua:
-
-```text
-SUA_SENHA_DO_POSTGRES
-```
-
-pela senha configurada no seu PostgreSQL.
-
-Exemplo:
-
-```env
-DB_URL=jdbc:postgresql://localhost:5432/financeiro
-DB_USER=postgres
-DB_PASSWORD=senha_exemplo
-```
-
-IMPORTANTE: nunca compartilhe sua senha real.
-
-
----
-
-# 5. O arquivo .env NÃO deve ir para o GitHub
-
-O `.env` contém informações privadas.
-
-Por isso, o `.gitignore` do projeto deve conter:
-
-```gitignore
-.env
-```
-
-Antes de fazer qualquer commit, execute:
-
-```bash
-git status
-```
-
-O arquivo `.env` NÃO deve aparecer entre os arquivos que serão enviados.
-
-Se `.env` aparecer no `git status`, NÃO faça o commit até corrigir o problema.
-
-
----
-
-# 6. Carregar as variáveis de ambiente
-
-IMPORTANTE:
-
-Criar o arquivo `.env` não faz com que o Spring Boot leia automaticamente esse arquivo quando a aplicação é iniciada diretamente.
-
-Antes de executar o projeto, abra o terminal na raiz do repositório e execute:
-
-```bash
-set -a
-source .env
-set +a
-```
-
-Esses comandos carregam:
-
-```text
-DB_URL
-DB_USER
-DB_PASSWORD
-```
-
-como variáveis de ambiente do terminal atual.
-
-É necessário fazer isso novamente quando abrir um terminal novo.
-
-
----
-
-# 7. Verificar se as variáveis foram carregadas
-
-Para verificar a URL:
-
-```bash
-echo $DB_URL
-```
-
-Deve aparecer:
-
-```text
-jdbc:postgresql://localhost:5432/financeiro
-```
-
-Para verificar o usuário:
-
-```bash
-echo $DB_USER
-```
-
-Deve aparecer algo como:
-
-```text
-postgres
-```
-
-NÃO é necessário executar:
-
-```bash
-echo $DB_PASSWORD
-```
-
-Evite mostrar sua senha no terminal.
-
-
----
-
-# 8. Banco de dados e Flyway
-
-O projeto utiliza Flyway para controlar a estrutura do banco de dados.
-
-As migrations estão em:
-
-```text
-src/main/resources/db/migration/
-```
-
-Atualmente:
-
-```text
-V1__criar_tabelas.sql
-V2__criar_indices.sql
-V3__criar_views.sql
-```
-
-O Flyway executa os arquivos em ordem:
-
-```text
-V1
- ↓
-V2
- ↓
-V3
-```
-
-O V1 cria as tabelas do sistema.
-
-O V2 cria os índices.
-
-O V3 cria as views.
-
-Ao executar o projeto pela primeira vez em um banco vazio, o Flyway deve executar as migrations necessárias automaticamente.
-
-
----
-
-# 9. IMPORTANTE: não alterar migrations antigas
-
-Depois que uma migration do Flyway já foi utilizada e compartilhada pelo grupo, NÃO altere o arquivo antigo.
-
-Por exemplo, não modificar:
-
-```text
-V1__criar_tabelas.sql
-V2__criar_indices.sql
-V3__criar_views.sql
-```
-
-Se for necessário alterar o banco posteriormente, crie uma nova migration.
-
-Exemplo:
-
-```text
-V4__adicionar_campo_telefone.sql
-```
-
-Depois:
-
-```text
-V5__alterar_alguma_tabela.sql
-```
-
-Isso mantém o histórico do banco organizado e evita problemas com o Flyway.
-
-
----
-
-# 10. Executar o projeto
-
-Entre na pasta que contém o `pom.xml`.
-
-No projeto atual:
-
-```bash
-cd financeiro/financeiro
-```
-
-Depois execute:
-
-```bash
-./mvnw spring-boot:run
-```
-
-Caso o projeto não possua `mvnw`, utilize:
-
-```bash
-mvn spring-boot:run
-```
-
-
----
-
-# 11. Verificar se iniciou corretamente
-
-Se tudo estiver funcionando, o terminal deverá mostrar mensagens indicando que:
-
-```text
-PostgreSQL conectou
-Spring Boot iniciou
-Tomcat iniciou na porta 8080
-Flyway validou/executou as migrations
-```
-
-Uma mensagem semelhante a:
-
-```text
-Tomcat started on port 8080
-```
-
-indica que o servidor web foi iniciado.
-
-
----
-
-# 12. Acessar o sistema
-
-Com a aplicação executando, acesse:
-
-```text
-http://localhost:8080
-```
-
-No GitHub Codespaces, utilize a URL disponibilizada na aba:
-
-```text
-PORTS
-```
-
-para a porta:
-
-```text
-8080
-```
-
-
----
-
-# 13. Tela de login do Spring Security
-
-Caso apareça uma tela de login automaticamente, isso não significa que ocorreu um erro.
-
-O projeto possui Spring Security.
-
-Enquanto a autenticação definitiva do sistema ainda não estiver configurada, o Spring pode gerar automaticamente um usuário e uma senha temporária.
-
-No terminal poderá aparecer:
-
-```text
-Using generated security password: ...
-```
-
-O usuário padrão é:
-
-```text
-user
-```
-
-e a senha é a senha temporária exibida no terminal.
-
-Essa autenticação é apenas para desenvolvimento.
-
-Posteriormente, o sistema utilizará os usuários cadastrados no banco de dados.
-
-
----
-
-# 14. Erro relacionado a DB_URL, DB_USER ou DB_PASSWORD
-
-Se aparecer algum erro indicando que:
-
-```text
-DB_URL
-DB_USER
-DB_PASSWORD
-```
-
-não foram encontrados, provavelmente as variáveis de ambiente não foram carregadas.
-
-Volte para a raiz do projeto e execute novamente:
-
-```bash
-set -a
-source .env
-set +a
-```
-
-Depois execute o Spring novamente.
-
-
----
-
-# 15. Erro de conexão com PostgreSQL
-
-Se aparecer algo como:
-
-```text
-Connection refused
-```
-
-ou algum erro de conexão com:
-
-```text
-localhost:5432
-```
-
-verifique:
-
-1. Se o PostgreSQL está executando.
-2. Se o banco `financeiro` existe.
-3. Se a porta é `5432`.
-4. Se `DB_USER` está correto.
-5. Se `DB_PASSWORD` está correto.
-6. Se `DB_URL` está correto.
-
-
----
-
-# 16. Antes de fazer commit
-
-Sempre execute:
-
-```bash
-git status
-```
-
-Confira cuidadosamente os arquivos.
-
-NUNCA envie para o GitHub:
-
-```text
-.env
-senhas
-tokens
-chaves privadas
-credenciais do banco
-```
-
-Os arquivos abaixo podem ser versionados normalmente:
-
-```text
-.env.example
-application.properties
-V1__criar_tabelas.sql
-V2__criar_indices.sql
-V3__criar_views.sql
-código Java
-HTML
-CSS
-JavaScript
-```
-
-
----
-
-# RESUMO PARA RODAR O PROJETO
-
-Depois que o ambiente estiver configurado, normalmente será necessário apenas:
-
-### 1. Abrir o terminal na raiz
-
-### 2. Carregar as variáveis
-
-```bash
-set -a
-source .env
-set +a
-```
-
-### 3. Entrar na pasta do Spring
-
-```bash
-cd financeiro/financeiro
-```
-
-### 4. Rodar
-
-```bash
-./mvnw spring-boot:run
-```
-
-### 5. Abrir a aplicação
-
-```text
-http://localhost:8080
-```
-
-ou utilizar a URL da porta 8080 fornecida pelo GitHub Codespaces.
-
-
----
-
-# IMPORTANTE
-
-O arquivo `.env` é individual.
-
-Cada integrante deve possuir o próprio `.env`.
-
-Não envie o `.env` para o GitHub.
-
-Não coloque senhas diretamente no código.
-
-Em caso de alteração na estrutura do banco, não edite migrations antigas que já foram compartilhadas. Crie uma nova migration do Flyway.
+Revise POM, Compose, `.env.example`, `.gitignore`, configuração do Wrapper e este guia. As exclusões de arquivos `target/` devem ocorrer apenas no índice, mantendo os arquivos locais. Não inclua credenciais nem arquivos individuais da IDE. Nenhum commit ou push faz parte desta configuração.
