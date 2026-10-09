@@ -1,7 +1,8 @@
+
 -- =========================================================
 -- SISTEMA FINANCEIRO ONG
 -- V3 - Criação das Views
--- PostgreSQL
+-- MySQL 8
 -- =========================================================
 
 
@@ -57,7 +58,6 @@ INNER JOIN usuario u
 
 CREATE OR REPLACE VIEW vw_resumo_financeiro AS
 SELECT
-
     COALESCE(
         SUM(
             CASE
