@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentações | Gestão Financeira</title>
+    <link rel="stylesheet" href="/css/movimentacoes.css">
+    <script src="/js/movimentacoes.js" defer></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">Gestão<span>Financeira</span></div>
+            <nav>
+                <a href="/">Início</a>
+                <a href="/movimentacoes" class="active">Movimentações</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div>
+                    <p class="eyebrow">CONTROLE FINANCEIRO</p>
+                    <h1>Movimentações</h1>
+                    <p class="subtitle">Acompanhe entradas, saídas e o histórico financeiro.</p>
+                </div>
+                <button class="primary-btn" id="openModal">+ Nova movimentação</button>
+            </header>
+
+            <section class="cards">
+                <article class="card">
+                    <span>Entradas</span>
+                    <strong id="totalEntradas">R$ 0,00</strong>
+                    <small>Valores recebidos</small>
+                </article>
+                <article class="card">
+                    <span>Saídas</span>
+                    <strong id="totalSaidas">R$ 0,00</strong>
+                    <small>Valores pagos</small>
+                </article>
+                <article class="card">
+                    <span>Saldo</span>
+                    <strong id="saldo">R$ 0,00</strong>
+                    <small>Entradas menos saídas</small>
+                </article>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2 id="listTitle">Movimentações recentes</h2>
+                        <p>Consulte os registros financeiros.</p>
+                    </div>
+                    <button class="secondary-btn" id="verTudo">Ver tudo</button>
+                </div>
+
+                <div class="filters" id="filters" hidden>
+                    <input id="pesquisa" placeholder="Pesquisar descrição...">
+                    <select id="filtroTipo">
+                        <option value="">Todos os tipos</option>
+                        <option value="entrada">Entradas</option>
+                        <option value="saida">Saídas</option>
+                    </select>
+                    <input type="date" id="filtroData">
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movimentacoesBody"></tbody>
+                    </table>
+                </div>
+                <p id="emptyState" class="empty" hidden>Nenhuma movimentação encontrada.</p>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-backdrop" id="modal" hidden>
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Nova movimentação</h2>
+                <button id="closeModal" class="close-btn" aria-label="Fechar">×</button>
+            </div>
+
+            <form id="movimentacaoForm">
+                <label>Tipo
+                    <select id="tipo" required>
+                        <option value="entrada">Entrada</option>
+                        <option value="saida">Saída</option>
+                    </select>
+                </label>
+                <label>Descrição
+                    <input id="descricao" required placeholder="Ex.: Doação recebida">
+                </label>
+                <label>Categoria
+                    <input id="categoria" required placeholder="Ex.: Doações">
+                </label>
+                <label>Valor (R$)
+                    <input id="valor" type="number" min="0.01" step="0.01" required>
+                </label>
+                <label>Data
+                    <input id="data" type="date" required>
+                </label>
+                <div class="form-actions">
+                    <button type="button" class="secondary-btn" id="cancelar">Cancelar</button>
+                    <button type="submit" class="primary-btn">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
