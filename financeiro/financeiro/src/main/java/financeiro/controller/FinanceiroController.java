@@ -1,6 +1,7 @@
 
 package financeiro.controller;
 
+import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -9,26 +10,29 @@ public class FinanceiroController {
 
     @GetMapping("/")
     public String inicio() {
-        return "redirect:/dashboard";
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model) {
+        model.addAttribute("paginaAtiva", "dashboard");
         return "dashboard";
     }
 
-    @GetMapping("/movimentacoes")
-    public String movimentacoes() {
-        return "movimentacoes";
-    }
-
     @GetMapping("/relatorios")
-    public String relatorios() {
+    public String relatorios(Model model) {
+        model.addAttribute("paginaAtiva", "relatorios");
         return "relatorios";
     }
 
-     @GetMapping("/configuracoes")
-    public String configuracoes() {
+    @GetMapping("/configuracoes")
+    public String configuracoes(Model model) {
+        model.addAttribute("paginaAtiva", "configuracoes");
         return "configuracoes";
     }
 }

@@ -1,0 +1,347 @@
+
+/* ========================================
+   SIDEBAR — GESTÃO FINANCEIRA
+======================================== */
+
+.sidebar {
+    position: sticky;
+    top: 0;
+
+    width: 255px;
+    min-width: 255px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 30px 17px;
+
+    background: #ffffff;
+    border-right: 1px solid #eaedf1;
+
+    z-index: 100;
+}
+
+/* ========================================
+   MARCA
+======================================== */
+
+.sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 4px 10px 30px;
+    margin-bottom: 18px;
+
+    border-bottom: 1px solid #f0f1f3;
+}
+
+.brand-symbol {
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    background: #fff0f2;
+    color: #a71930;
+
+    border-radius: 14px;
+}
+
+.brand-symbol svg {
+    width: 23px;
+    height: 23px;
+    stroke-width: 1.8;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.brand-text strong {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    color: #242832;
+}
+
+.brand-text strong span {
+    color: #a71930;
+}
+
+.brand-text small {
+    color: #969ba5;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+/* ========================================
+   LINKS DE NAVEGAÇÃO
+======================================== */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.sidebar .nav-item {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    width: 100%;
+    min-height: 47px;
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+
+    color: #858b97;
+    background: transparent;
+
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.sidebar .nav-item svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke-width: 1.9;
+}
+
+.sidebar .nav-item:hover {
+    background: #f7f8fa;
+    color: #30343e;
+}
+
+.sidebar .nav-item.active,
+.sidebar .nav-item[aria-current="page"] {
+    background: #fff0f2;
+    color: #a71930;
+    font-weight: 600;
+}
+
+.sidebar .nav-item.active::before {
+    content: "";
+    position: absolute;
+
+    left: 0;
+    top: 11px;
+    bottom: 11px;
+
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+
+    background: #a71930;
+}
+
+/* ========================================
+   RODAPÉ
+======================================== */
+
+.sidebar-footer {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-top: auto;
+    padding: 17px 10px 5px;
+
+    border-top: 1px solid #eff0f3;
+}
+
+.sidebar-footer-icon {
+    display: grid;
+    place-items: center;
+
+    width: 35px;
+    height: 35px;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+    background: #eef8f3;
+    color: #179568;
+}
+
+.sidebar-footer-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.sidebar-footer strong {
+    display: block;
+    color: #414651;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.sidebar-footer small {
+    display: block;
+    margin-top: 3px;
+    color: #9ba1ab;
+    font-size: 9px;
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 1100px) {
+    .sidebar {
+        width: 215px;
+        min-width: 215px;
+        padding: 25px 12px;
+    }
+
+    .sidebar .brand {
+        gap: 8px;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .brand-symbol {
+        width: 36px;
+        height: 36px;
+    }
+
+    .brand-text strong {
+        font-size: 11px;
+    }
+
+    .sidebar .nav-item {
+        padding: 12px;
+    }
+}
+
+/* ========================================
+   MOBILE — NAVEGAÇÃO INFERIOR
+======================================== */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        width: 100%;
+        min-width: 0;
+        height: calc(74px + env(safe-area-inset-bottom));
+
+        padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+
+        background: rgba(255,255,255,0.97);
+
+        border-right: none;
+        border-top: 1px solid #eceef2;
+        border-radius: 17px 17px 0 0;
+
+        box-shadow: 0 -5px 22px rgba(20, 25, 35, 0.05);
+        backdrop-filter: blur(14px);
+
+        z-index: 100;
+    }
+
+    .sidebar .brand,
+    .sidebar-footer {
+        display: none;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+
+        gap: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    .sidebar .nav-item {
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 5px;
+        min-width: 0;
+        min-height: 55px;
+
+        padding: 7px 2px;
+
+        background: transparent;
+        border-radius: 10px;
+
+        color: #a1a5ad;
+
+        font-size: 9px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .sidebar .nav-item svg {
+        width: 21px;
+        height: 21px;
+        stroke-width: 1.9;
+    }
+
+    .sidebar .nav-item.active,
+    .sidebar .nav-item[aria-current="page"] {
+        background: transparent;
+        color: #a71930;
+        font-weight: 700;
+    }
+
+    .sidebar .nav-item.active::before {
+        display: none;
+    }
+
+    .sidebar .nav-item:hover {
+        background: transparent;
+    }
+
+    .sidebar .nav-item span {
+        white-space: nowrap;
+    }
+
+    .main {
+        margin-left: 0;
+        padding-bottom: calc(110px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 380px) {
+    .sidebar .nav-item {
+        font-size: 8px;
+    }
+
+    .sidebar .nav-item svg {
+        width: 19px;
+        height: 19px;
+    }
+}

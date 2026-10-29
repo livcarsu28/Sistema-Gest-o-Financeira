@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<aside th:fragment="sidebar" class="sidebar">
+
+    <!-- IDENTIDADE -->
+    <div class="brand">
+        <div class="brand-symbol">
+            <i data-lucide="heart-handshake"></i>
+        </div>
+
+        <div class="brand-text">
+            <strong>Gestão<span>Financeira</span></strong>
+            <small>Resgate de Vidas</small>
+        </div>
+    </div>
+
+    <!-- NAVEGAÇÃO -->
+    <nav class="sidebar-nav" aria-label="Navegação principal">
+
+        <a th:href="@{/dashboard}"
+           th:classappend="${paginaAtiva == 'dashboard'} ? 'active' : ''"
+           class="nav-item">
+
+            <i data-lucide="house"></i>
+            <span>Início</span>
+        </a>
+
+        <a th:href="@{/movimentacoes}"
+           th:classappend="${paginaAtiva == 'movimentacoes'} ? 'active' : ''"
+           class="nav-item">
+
+            <i data-lucide="arrow-left-right"></i>
+            <span>Movimentações</span>
+        </a>
+
+        <a th:href="@{/relatorios}"
+           th:classappend="${paginaAtiva == 'relatorios'} ? 'active' : ''"
+           class="nav-item">
+
+            <i data-lucide="chart-no-axes-combined"></i>
+            <span>Relatórios</span>
+        </a>
+
+        <a th:href="@{/configuracoes}"
+           th:classappend="${paginaAtiva == 'configuracoes'} ? 'active' : ''"
+           class="nav-item">
+
+            <i data-lucide="settings-2"></i>
+            <span>Configurações</span>
+        </a>
+
+    </nav>
+
+    <!-- RODAPÉ DESKTOP -->
+    <div class="sidebar-footer">
+        <div class="sidebar-footer-icon">
+            <i data-lucide="shield-check"></i>
+        </div>
+
+        <div>
+            <strong>Gestão segura</strong>
+            <small>Sistema financeiro da ONG</small>
+        </div>
+    </div>
+
+</aside>
+
+</body>
+</html>

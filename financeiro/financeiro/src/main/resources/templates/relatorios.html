@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ONG | Gestão Financeira</title>
+        <link rel="stylesheet" href="/css/app.css">
+        <script defer src="/js/app.js"></script>
+    </head>
+    <body>
+        <div class="layout">
+            <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+            <main class="main">
+                <header class="page-head">
+                    <div>
+                        <h1>Relatórios</h1>
+                        <p>Aqui ficará a consulta completa, inclusive períodos anteriores a três meses.</p>
+                    </div>
+                </header>
+                <section class="history">
+                    <a href="/movimentacoes">Ir para movimentações →</a>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>

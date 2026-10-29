@@ -1,120 +1,122 @@
 
-const movimentacoes = [
-    { descricao: "Doação recebida", categoria: "Doações", data: "2026-10-07", tipo: "entrada", valor: 500 },
-    { descricao: "Compra de materiais", categoria: "Materiais", data: "2026-10-06", tipo: "saida", valor: 120 },
-    { descricao: "Contribuição mensal", categoria: "Doações", data: "2026-10-05", tipo: "entrada", valor: 350 },
-    { descricao: "Conta de energia", categoria: "Despesas", data: "2026-10-03", tipo: "saida", valor: 180 }
-];
+document.addEventListener("DOMContentLoaded", () => {
 
-const $ = id => document.getElementById(id);
-const moeda = valor => valor.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL"
-});
+    const modal = document.getElementById("modal");
+    const abrirModal = document.getElementById("openModal");
+    const fecharModal = modal?.querySelector("[data-close]");
+    const formulario = modal?.querySelector("form");
+    const campoData = document.getElementById("dataMov");
 
-let mostrarTudo = false;
+    const pesquisa = document.getElementById("search");
+    const botoesFiltro = document.querySelectorAll("[data-filter]");
+    const movimentacoes = document.querySelectorAll("#items .item");
 
-function renderizar() {
-    const entradas = movimentacoes
-        .filter(m => m.tipo === "entrada")
-        .reduce((s, m) => s + m.valor, 0);
+    // ABRIR MODAL
+    abrirModal?.addEventListener("click", () => {
 
-    const saidas = movimentacoes
-        .filter(m => m.tipo === "saida")
-        .reduce((s, m) => s + m.valor, 0);
+        formulario?.reset();
 
-    $("totalEntradas").textContent = moeda(entradas);
-    $("totalSaidas").textContent = moeda(saidas);
-    $("saldo").textContent = moeda(entradas - saidas);
+        if (campoData) {
+            const hoje = new Date();
+            const dataLocal = new Date(
+                hoje.getTime() - hoje.getTimezoneOffset() * 60000
+            );
 
-    const pesquisa = $("pesquisa").value.toLowerCase();
-    const tipo = $("filtroTipo").value;
-    const data = $("filtroData").value;
+            campoData.value = dataLocal.toISOString().slice(0, 10);
+        }
 
-    let lista = [...movimentacoes].sort((a, b) =>
-        b.data.localeCompare(a.data)
-    );
+        modal.hidden = false;
+    });
 
-    if (mostrarTudo) {
-        lista = lista.filter(m =>
-            m.descricao.toLowerCase().includes(pesquisa) &&
-            (!tipo || m.tipo === tipo) &&
-            (!data || m.data === data)
-        );
-    } else {
-        lista = lista.slice(0, 5);
+    // FECHAR MODAL
+    function fechar() {
+        if (modal) {
+            modal.hidden = true;
+        }
     }
 
-    $("movimentacoesBody").replaceChildren();
+    fecharModal?.addEventListener("click", fechar);
 
-    lista.forEach(m => {
-        const tr = document.createElement("tr");
-        const valores = [
-            m.descricao,
-            m.categoria,
-            new Date(m.data + "T12:00:00").toLocaleDateString("pt-BR"),
-            m.tipo === "entrada" ? "Entrada" : "Saída",
-            (m.tipo === "entrada" ? "+ " : "- ") + moeda(m.valor)
-        ];
+    modal?.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            fechar();
+        }
+    });
 
-        valores.forEach((valor, i) => {
-            const td = document.createElement("td");
-            td.textContent = valor;
-            if (i === 3) td.className = "tag";
-            if (i === 4) td.className = "value-" + m.tipo;
-            tr.appendChild(td);
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            fechar();
+        }
+    });
+
+    // FILTROS DE MOVIMENTAÇÕES
+    let filtroAtual = "TODAS";
+
+    function filtrarMovimentacoes() {
+        const texto = pesquisa?.value.toLowerCase().trim() || "";
+
+        movimentacoes.forEach((item) => {
+            const tipo = item.dataset.tipo || "";
+            const descricao = (
+                item.dataset.descricao || ""
+            ).toLowerCase();
+
+            const correspondeTipo =
+                filtroAtual === "TODAS" || tipo === filtroAtual;
+
+            const correspondePesquisa =
+                descricao.includes(texto);
+
+            item.hidden = !(correspondeTipo && correspondePesquisa);
         });
+    }
 
-        $("movimentacoesBody").appendChild(tr);
+    botoesFiltro.forEach((botao) => {
+        botao.addEventListener("click", () => {
+
+            botoesFiltro.forEach((b) => {
+                b.classList.remove("selected");
+            });
+
+            botao.classList.add("selected");
+
+            filtroAtual = botao.dataset.filter;
+
+            filtrarMovimentacoes();
+        });
     });
 
-    $("emptyState").hidden = lista.length > 0;
-}
+    pesquisa?.addEventListener("input", filtrarMovimentacoes);
 
-function fecharModal() {
-    $("modal").hidden = true;
-}
+    
+const recorrente = document.getElementById("recorrente");
+const camposRecorrencia = document.getElementById("camposRecorrencia");
+const tipoRecorrencia = document.getElementById("tipoRecorrencia");
+const campoDiaMes = document.getElementById("campoDiaMes");
+const campoDiaSemana = document.getElementById("campoDiaSemana");
+const diaMes = document.getElementById("diaMes");
 
-$("openModal").addEventListener("click", () => {
-    $("movimentacaoForm").reset();
-    $("data").value = new Date().toLocaleDateString("en-CA");
-    $("modal").hidden = false;
-});
+function atualizarRecorrencia() {
+    const ativo = recorrente.checked;
+    const mensal = tipoRecorrencia.value === "MENSAL";
 
-$("closeModal").addEventListener("click", fecharModal);
-$("cancelar").addEventListener("click", fecharModal);
+    camposRecorrencia.hidden = !ativo;
 
-$("modal").addEventListener("click", e => {
-    if (e.target === $("modal")) fecharModal();
-});
+    tipoRecorrencia.disabled = !ativo;
 
-$("verTudo").addEventListener("click", () => {
-    mostrarTudo = !mostrarTudo;
-    $("filters").hidden = !mostrarTudo;
-    $("listTitle").textContent = mostrarTudo
-        ? "Todas as movimentações"
-        : "Movimentações recentes";
-    $("verTudo").textContent = mostrarTudo ? "Ver recentes" : "Ver tudo";
-    renderizar();
-});
+    campoDiaMes.hidden = !ativo || !mensal;
+    diaMes.disabled = !ativo || !mensal;
 
-["pesquisa", "filtroTipo", "filtroData"].forEach(id => {
-    $(id).addEventListener("input", renderizar);
-});
-
-$("movimentacaoForm").addEventListener("submit", e => {
-    e.preventDefault();
-
-    movimentacoes.push({
-        tipo: $("tipo").value,
-        descricao: $("descricao").value.trim(),
-        categoria: $("categoria").value.trim(),
-        valor: Number($("valor").value),
-        data: $("data").value
+    campoDiaSemana.hidden = !ativo || mensal;
+    document.querySelectorAll('input[name="diasSemana"]')
+    .forEach(checkbox => {
+        checkbox.disabled = !ativo || mensal;
     });
+}
 
-    fecharModal();
-    renderizar();
+recorrente.addEventListener("change", atualizarRecorrencia);
+tipoRecorrencia.addEventListener("change", atualizarRecorrencia);
+
+atualizarRecorrencia();
+
 });
-
-renderizar();

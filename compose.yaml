@@ -3,9 +3,9 @@ services:
     image: mysql:8.4
     environment:
       MYSQL_DATABASE: financeiro
-      MYSQL_USER: ${DB_USER:?Defina DB_USER com um usuario diferente de root}
-      MYSQL_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Defina MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "127.0.0.1:3306:3306"
     volumes:

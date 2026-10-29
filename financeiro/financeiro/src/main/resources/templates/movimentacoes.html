@@ -1,121 +1,760 @@
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movimentações | Gestão Financeira</title>
-    <link rel="stylesheet" href="/css/movimentacoes.css">
-    <script src="/js/movimentacoes.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Movimentações | Gestão Financeira ONG</title>
+
+    <!-- Fonte Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Estilos existentes -->
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/movimentacoes.css}">
+
+    <!-- Biblioteca de ícones -->
+    <script
+        defer
+        src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js">
+    </script>
+
+    <!-- JavaScript do sistema -->
+    <script defer th:src="@{/js/app.js}"></script>
+    <script defer th:src="@{/js/movimentacoes.js}"></script>
+
 </head>
+
 <body>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="brand">Gestão<span>Financeira</span></div>
-            <nav>
-                <a href="/">Início</a>
-                <a href="/movimentacoes" class="active">Movimentações</a>
-            </nav>
-        </aside>
 
-        <main class="main">
-            <header class="header">
-                <div>
-                    <p class="eyebrow">CONTROLE FINANCEIRO</p>
-                    <h1>Movimentações</h1>
-                    <p class="subtitle">Acompanhe entradas, saídas e o histórico financeiro.</p>
-                </div>
-                <button class="primary-btn" id="openModal">+ Nova movimentação</button>
-            </header>
+<div class="layout">
 
-            <section class="cards">
-                <article class="card">
-                    <span>Entradas</span>
-                    <strong id="totalEntradas">R$ 0,00</strong>
-                    <small>Valores recebidos</small>
-                </article>
-                <article class="card">
-                    <span>Saídas</span>
-                    <strong id="totalSaidas">R$ 0,00</strong>
-                    <small>Valores pagos</small>
-                </article>
-                <article class="card">
-                    <span>Saldo</span>
-                    <strong id="saldo">R$ 0,00</strong>
-                    <small>Entradas menos saídas</small>
-                </article>
-            </section>
+    <!-- =====================================
+         SIDEBAR ORIGINAL
+         ===================================== -->
 
-            <section class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2 id="listTitle">Movimentações recentes</h2>
-                        <p>Consulte os registros financeiros.</p>
-                    </div>
-                    <button class="secondary-btn" id="verTudo">Ver tudo</button>
-                </div>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-                <div class="filters" id="filters" hidden>
-                    <input id="pesquisa" placeholder="Pesquisar descrição...">
-                    <select id="filtroTipo">
-                        <option value="">Todos os tipos</option>
-                        <option value="entrada">Entradas</option>
-                        <option value="saida">Saídas</option>
-                    </select>
-                    <input type="date" id="filtroData">
-                </div>
 
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Descrição</th>
-                                <th>Categoria</th>
-                                <th>Data</th>
-                                <th>Tipo</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="movimentacoesBody"></tbody>
-                    </table>
-                </div>
-                <p id="emptyState" class="empty" hidden>Nenhuma movimentação encontrada.</p>
-            </section>
-        </main>
-    </div>
+    <!-- =====================================
+         CONTEÚDO PRINCIPAL
+         ===================================== -->
 
-    <div class="modal-backdrop" id="modal" hidden>
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Nova movimentação</h2>
-                <button id="closeModal" class="close-btn" aria-label="Fechar">×</button>
+    <main class="main">
+
+        <!-- CABEÇALHO -->
+
+        <header class="page-head">
+
+            <div class="page-title">
+
+                <span class="eyebrow">
+                    RESGATE DE VIDAS
+                </span>
+
+                <h1>Movimentações</h1>
+
+                <p class="subtitle">
+                    Acompanhe e gerencie as entradas e saídas
+                    da organização.
+                </p>
+
             </div>
 
-            <form id="movimentacaoForm">
-                <label>Tipo
-                    <select id="tipo" required>
-                        <option value="entrada">Entrada</option>
-                        <option value="saida">Saída</option>
-                    </select>
-                </label>
-                <label>Descrição
-                    <input id="descricao" required placeholder="Ex.: Doação recebida">
-                </label>
-                <label>Categoria
-                    <input id="categoria" required placeholder="Ex.: Doações">
-                </label>
-                <label>Valor (R$)
-                    <input id="valor" type="number" min="0.01" step="0.01" required>
-                </label>
-                <label>Data
-                    <input id="data" type="date" required>
-                </label>
-                <div class="form-actions">
-                    <button type="button" class="secondary-btn" id="cancelar">Cancelar</button>
-                    <button type="submit" class="primary-btn">Adicionar</button>
+            <button
+                class="bell"
+                type="button"
+                aria-label="Notificações"
+                title="Notificações">
+
+                <i data-lucide="bell"></i>
+
+            </button>
+
+        </header>
+
+
+        <!-- =====================================
+             RESUMO FINANCEIRO
+             ===================================== -->
+
+        <section class="summary">
+
+            <!-- ENTRADAS -->
+
+            <article class="summary-card green-bg">
+
+                <div class="summary-icon green">
+                    <i data-lucide="arrow-down-left"></i>
                 </div>
-            </form>
+
+                <div class="summary-content">
+
+                    <small>
+                        Total de entradas
+                    </small>
+
+                    <b th:text="${'R$ ' + #numbers.formatDecimal(entradas,1,'POINT',2,'COMMA')}">
+                        R$ 0,00
+                    </b>
+
+                    <span class="summary-caption">
+                        Valores recebidos
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- SAÍDAS -->
+
+            <article class="summary-card red-bg">
+
+                <div class="summary-icon red">
+                    <i data-lucide="arrow-up-right"></i>
+                </div>
+
+                <div class="summary-content">
+
+                    <small>
+                        Total de saídas
+                    </small>
+
+                    <b th:text="${'R$ ' + #numbers.formatDecimal(saidas,1,'POINT',2,'COMMA')}">
+                        R$ 0,00
+                    </b>
+
+                    <span class="summary-caption">
+                        Valores utilizados
+                    </span>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================
+             BUSCA
+             ===================================== -->
+
+        <div class="search">
+
+            <i data-lucide="search"></i>
+
+            <input
+                id="search"
+                type="search"
+                placeholder="Buscar movimentação..."
+                aria-label="Buscar movimentação"
+                autocomplete="off"
+            >
+
         </div>
-    </div>
+
+
+        <!-- =====================================
+             FILTROS
+             ===================================== -->
+
+        <div class="tabs" role="group" aria-label="Filtrar movimentações">
+
+            <button
+                class="selected"
+                type="button"
+                data-filter="TODAS">
+
+                Todas
+
+            </button>
+
+            <button
+                type="button"
+                data-filter="ENTRADA">
+
+                Entradas
+
+            </button>
+
+            <button
+                type="button"
+                data-filter="SAIDA">
+
+                Saídas
+
+            </button>
+
+        </div>
+
+
+        <!-- =====================================
+             HISTÓRICO
+             ===================================== -->
+
+        <section class="history">
+
+            <div class="history-head">
+
+                <div>
+
+                    <small class="eyebrow">
+                        HISTÓRICO
+                    </small>
+
+                    <h2>
+                        Movimentações recentes
+                    </h2>
+
+                    <p class="history-subtitle">
+                        Últimas atividades financeiras
+                    </p>
+
+                </div>
+
+                <div class="history-head-icon">
+                    <i data-lucide="list-filter"></i>
+                </div>
+
+            </div>
+
+
+            <!-- LISTA DE MOVIMENTAÇÕES -->
+
+            <div class="items" id="items">
+
+                <article
+                    class="item"
+                    th:each="m : ${lista}"
+                    th:attr="data-tipo=${m.tipo},data-descricao=${m.descricao}">
+
+                    <!-- ÍCONE -->
+
+                    <div
+                        class="item-icon"
+                        th:classappend="${m.tipo == 'ENTRADA'} ? 'green' : 'red'">
+
+                        <i
+                            th:if="${m.tipo == 'ENTRADA'}"
+                            data-lucide="arrow-down-left">
+                        </i>
+
+                        <i
+                            th:if="${m.tipo == 'SAIDA'}"
+                            data-lucide="arrow-up-right">
+                        </i>
+
+                    </div>
+
+
+                    <!-- INFORMAÇÕES -->
+
+                    <div class="item-info">
+
+                        <strong
+                            th:text="${m.descricao}">
+                            Descrição
+                        </strong>
+
+                        <small>
+
+                            <span
+                                th:text="${#temporals.format(m.data,'dd/MM/yyyy')}">
+                                Data
+                            </span>
+
+                            <span class="item-separator">·</span>
+
+                            <span
+                                th:text="${m.statusPagamento}">
+                                PAGO
+                            </span>
+
+                        </small>
+
+                    </div>
+
+
+                    <!-- VALOR -->
+
+                    <b
+                        class="amount"
+                        th:classappend="${m.tipo == 'ENTRADA'} ? 'positive' : 'negative'"
+                        th:text="${(m.tipo == 'ENTRADA' ? '+ ' : '- ') + 'R$ ' + #numbers.formatDecimal(m.valor,1,'POINT',2,'COMMA')}">
+
+                        R$ 0,00
+
+                    </b>
+
+                </article>
+
+
+                <!-- LISTA VAZIA -->
+
+                <p
+                    class="empty"
+                    th:if="${#lists.isEmpty(lista)}">
+
+                    Nenhuma movimentação neste período.
+
+                </p>
+
+            </div>
+
+
+            <!-- VER MAIS -->
+
+            <a
+                class="more"
+                th:href="@{/movimentacoes/historico}">
+
+                Ver histórico completo
+
+                <i data-lucide="chevron-right"></i>
+
+            </a>
+
+        </section>
+
+
+        <!-- =====================================
+             BOTÃO FLUTUANTE
+             ===================================== -->
+
+        <button
+            class="fab"
+            id="openModal"
+            type="button"
+            aria-label="Nova movimentação"
+            title="Adicionar movimentação">
+
+            <i data-lucide="plus"></i>
+
+        </button>
+
+
+        <!-- =====================================
+             MENSAGENS DO SISTEMA
+             ===================================== -->
+
+        <p
+            class="notice success"
+            th:if="${sucesso}"
+            th:text="${sucesso}">
+        </p>
+
+        <p
+            class="notice error"
+            th:if="${erro}"
+            th:text="${erro}">
+        </p>
+
+
+        <!-- =====================================
+             MODAL DE MOVIMENTAÇÃO
+             ===================================== -->
+
+        <div
+            class="overlay"
+            id="modal"
+            hidden>
+
+            <section
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modalTitle">
+
+
+                <!-- CABEÇALHO MODAL -->
+
+                <header class="modal-top">
+
+                    <button
+                        class="back"
+                        type="button"
+                        data-close
+                        aria-label="Fechar formulário">
+
+                        <i data-lucide="arrow-left"></i>
+
+                    </button>
+
+                    <div>
+
+                        <h2 id="modalTitle">
+                            Nova movimentação
+                        </h2>
+
+                        <small>
+                            Registre uma entrada ou saída
+                        </small>
+
+                    </div>
+
+                </header>
+
+
+                <!-- =====================================
+                     FORMULÁRIO
+                     ===================================== -->
+
+                <form
+                    th:action="@{/movimentacoes}"
+                    method="post">
+
+
+                    <!-- TIPO -->
+
+                    <div class="toggle">
+
+                        <label>
+
+                            <input
+                                type="radio"
+                                name="tipo"
+                                value="ENTRADA"
+                                checked>
+
+                            <span>
+                                <i data-lucide="arrow-down-left"></i>
+                                Entrada
+                            </span>
+
+                        </label>
+
+
+                        <label>
+
+                            <input
+                                type="radio"
+                                name="tipo"
+                                value="SAIDA">
+
+                            <span>
+                                <i data-lucide="arrow-up-right"></i>
+                                Saída
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- VALOR -->
+
+                    <label>
+
+                        Valor *
+
+                        <input
+                            name="valor"
+                            type="number"
+                            step="0.01"
+                            min="0.01"
+                            placeholder="0,00"
+                            required>
+
+                    </label>
+
+
+                    <!-- DESCRIÇÃO -->
+
+                    <label>
+
+                        Descrição *
+
+                        <input
+                            name="descricao"
+                            maxlength="500"
+                            placeholder="Ex.: Doação mensal"
+                            required>
+
+                    </label>
+
+
+                    <!-- CATEGORIA -->
+
+                    <label>
+
+                        Categoria *
+
+                        <select
+                            name="categoriaId"
+                            required>
+
+                            <option value="">
+                                Selecione uma categoria
+                            </option>
+
+                            <option
+                                th:each="c : ${categorias}"
+                                th:value="${c.id}"
+                                th:text="${c.nome}">
+                            </option>
+
+                        </select>
+
+                    </label>
+
+
+                    <!-- DATA -->
+
+                    <label>
+
+                        Data *
+
+                        <input
+                            name="data"
+                            type="date"
+                            id="dataMov"
+                            required>
+
+                    </label>
+
+
+                    <!-- FORMA DE PAGAMENTO -->
+
+                    <label>
+
+                        Forma de pagamento
+
+                        <select name="formaPagamentoId">
+
+                            <option value="">
+                                Selecione uma forma de pagamento
+                            </option>
+
+                            <option
+                                th:each="f : ${formas}"
+                                th:value="${f.id}"
+                                th:text="${f.nome}">
+                            </option>
+
+                        </select>
+
+                    </label>
+
+
+                    <!-- =====================================
+                         RECORRÊNCIA
+                         ===================================== -->
+
+                    <label class="switchline">
+
+                        <span class="switchline-text">
+
+                            <i data-lucide="repeat-2"></i>
+
+                            Movimentação recorrente
+
+                        </span>
+
+                        <input
+                            id="recorrente"
+                            name="recorrente"
+                            type="checkbox"
+                            value="true">
+
+                    </label>
+
+
+                    <!-- CAMPOS DA RECORRÊNCIA -->
+
+                    <div
+                        id="camposRecorrencia"
+                        class="recorrencia-box"
+                        hidden>
+
+
+                        <!-- TIPO RECORRÊNCIA -->
+
+                        <label>
+
+                            Tipo de recorrência
+
+                            <select
+                                id="tipoRecorrencia"
+                                name="tipoRecorrencia"
+                                disabled>
+
+                                <option value="MENSAL">
+                                    Mensal — dia do mês
+                                </option>
+
+                                <option value="SEMANAL">
+                                    Semanal — dias da semana
+                                </option>
+
+                            </select>
+
+                        </label>
+
+
+                        <!-- DIA DO MÊS -->
+
+                        <label id="campoDiaMes">
+
+                            Dia do mês
+
+                            <select
+                                id="diaMes"
+                                name="diaMes"
+                                disabled>
+
+                                <option
+                                    th:each="dia : ${#numbers.sequence(1,31)}"
+                                    th:value="${dia}"
+                                    th:text="${'Dia ' + dia}">
+                                </option>
+
+                            </select>
+
+                        </label>
+
+
+                        <!-- DIAS DA SEMANA -->
+
+                        <div
+                            id="campoDiaSemana"
+                            hidden>
+
+                            <label>
+                                Selecione os dias da semana
+                            </label>
+
+                            <div class="dias-semana">
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="diasSemana"
+                                        value="MONDAY"
+                                        disabled>
+                                    Segunda-feira
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="diasSemana"
+                                        value="TUESDAY"
+                                        disabled>
+                                    Terça-feira
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="diasSemana"
+                                        value="WEDNESDAY"
+                                        disabled>
+                                    Quarta-feira
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="diasSemana"
+                                        value="THURSDAY"
+                                        disabled>
+                                    Quinta-feira
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="diasSemana"
+                                        value="FRIDAY"
+                                        disabled>
+                                    Sexta-feira
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="diasSemana"
+                                        value="SATURDAY"
+                                        disabled>
+                                    Sábado
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="diasSemana"
+                                        value="SUNDAY"
+                                        disabled>
+                                    Domingo
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OBSERVAÇÕES -->
+
+                    <label>
+
+                        Observações
+                        <small>(opcional)</small>
+
+                        <textarea
+                            name="observacoes"
+                            maxlength="30"
+                            rows="3"
+                            placeholder="Observação breve (até 30 caracteres)"></textarea>
+
+                    </label>
+
+
+                    <!-- SALVAR -->
+
+                    <button
+                        class="submit"
+                        type="submit">
+
+                        <i data-lucide="check"></i>
+
+                        Salvar movimentação
+
+                    </button>
+
+                </form>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================
+     INICIALIZAÇÃO DOS ÍCONES
+     ===================================== -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+</script>
+
 </body>
 </html>

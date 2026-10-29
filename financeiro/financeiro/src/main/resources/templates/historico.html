@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ONG | Gestão Financeira</title>
+        <link rel="stylesheet" href="/css/app.css">
+        <script defer src="/js/app.js"></script>
+    </head>
+    <body>
+        <div class="layout">
+            <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+            <main class="main">
+                <header class="page-head">
+                    <div>
+                        <a href="/movimentacoes" class="back-link">← Voltar</a>
+                        <h1>Histórico de movimentações</h1>
+                        <p>Consulte as movimentações por mês</p>
+                    </div>
+                </header>
+                <div class="period">
+                    <label for="periodo">Período selecionado</label>
+                    <select id="periodo" onchange="location.href='/movimentacoes/historico?periodo='+this.value">
+                        <option th:each="p:${periodos}" th:value="${p}" th:selected="${p.equals(mes)}" th:text="${#temporals.format(p.atDay(1),'MMMM yyyy')}"></option>
+                    </select>
+                    <p>Disponíveis: mês atual e três meses anteriores. Para períodos mais antigos, consulte o <a href="/relatorios">relatório completo</a>.</p>
+                </div>
+                <div class="search">
+                    ⌕ 
+                    <input id="search" placeholder="Buscar neste mês">
+                </div>
+                <div class="tabs">
+                    <button class="selected" data-filter="TODAS">Todas</button>
+                    <button data-filter="ENTRADA">Entradas</button>
+                    <button data-filter="SAIDA">Saídas</button>
+                </div>
+                <section class="history">
+                    <div class="history-head">
+                        <h2>Movimentações do período</h2>
+                    </div>
+                    <div class="items" id="items">
+                        <article class="item" th:each="m : ${lista}" th:attr]="data-tipo=${m.tipo},data-descricao=${m.descricao}">
+                            <div class="item-icon" th:classappend="${m.tipo == 'ENTRADA'} ? 'green' : 'red'" th:text="${m.tipo == 'ENTRADA'} ? '↑' : '↓'">↑</div>
+                            <div class="item-info">
+                                <strong th:text="${m.descricao}">Descrição</strong>
+                                <small><span th:text="${#temporals.format(m.data,'dd/MM/yyyy')}">Data</span> · <span th:text="${m.statusPagamento}">PAGO</span></small>
+                            </div>
+                            <b class="amount" th:classappend="${m.tipo == 'ENTRADA'} ? 'positive' : 'negative'" th:text="${(m.tipo == 'ENTRADA' ? '+ ' : '- ') + 'R$ ' + #numbers.formatDecimal(m.valor,1,'POINT',2,'COMMA')}">R$ 0,00</b>
+                        </article>
+                        <p class="empty" th:if="${#lists.isEmpty(lista)}">Nenhuma movimentação neste período.</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
