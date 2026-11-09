@@ -1,56 +1,114 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>ONG | Gestão Financeira</title>
-        <link rel="stylesheet" href="/css/app.css">
-        <script defer src="/js/app.js"></script>
-    </head>
-    <body>
-        <div class="layout">
-            <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-            <main class="main">
-                <header class="page-head">
-                    <div>
-                        <a href="/movimentacoes" class="back-link">← Voltar</a>
-                        <h1>Histórico de movimentações</h1>
-                        <p>Consulte as movimentações por mês</p>
-                    </div>
-                </header>
-                <div class="period">
-                    <label for="periodo">Período selecionado</label>
-                    <select id="periodo" onchange="location.href='/movimentacoes/historico?periodo='+this.value">
-                        <option th:each="p:${periodos}" th:value="${p}" th:selected="${p.equals(mes)}" th:text="${#temporals.format(p.atDay(1),'MMMM yyyy')}"></option>
-                    </select>
-                    <p>Disponíveis: mês atual e três meses anteriores. Para períodos mais antigos, consulte o <a href="/relatorios">relatório completo</a>.</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Histórico de movimentações | Gestão Financeira</title>
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/css/historico.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <script defer th:src="@{/js/app.js}"></script>
+</head>
+<body class="historico-pagina">
+    <div class="layout">
+        <aside class="barra-lateral">
+        <a class="marca" th:href="@{/dashboard}" aria-label="Resgate de Vidas – Criança Feliz, início">
+            <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="" width="64" height="64">
+            <span class="marca-texto"><strong>Resgate de Vidas</strong><span>Criança Feliz</span></span>
+        </a>
+        <p class="marca-sistema">Gestão financeira</p>
+        <nav class="navegacao" aria-label="Navegação principal">
+            <p class="navegacao-titulo">Principal</p>
+            <ul class="navegacao-lista"><li><a class="navegacao-link" th:href="@{/dashboard}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a></li>
+<li><a class="navegacao-link" th:href="@{/movimentacoes}" aria-current="page"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg><span>Movimentações</span></a></li>
+<li>
+    <a class="navegacao-link" th:href="@{/calendario}">
+        <svg class="icone" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <path d="M8 3v4m8-4v4M3 10h18"/>
+        </svg>
+        <span>Calendário</span>
+    </a>
+</li>
+<li><a class="navegacao-link" th:href="@{/relatorios}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6"/></svg><span>Relatórios</span></a></li>
+<li><a class="navegacao-link" th:href="@{/configuracoes}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1"/></svg><span>Dados da ONG</span></a></li>
+</ul>
+        </nav>
+    </aside>
+        <main class="main">
+            <header class="page-head">
+                <div>
+                    <a th:href="@{/movimentacoes}" class="back-link">← Voltar</a>
+                    <h1>Histórico de movimentações</h1>
+                    <p>Consulte as movimentações por mês</p>
                 </div>
-                <div class="search">
-                    ⌕ 
-                    <input id="search" placeholder="Buscar neste mês">
+            </header>
+
+            <form class="period" method="get" th:action="@{/movimentacoes/historico}">
+                <label for="periodo">Período selecionado</label>
+                <select id="periodo" name="periodo" onchange="this.form.requestSubmit()">
+                    <option th:each="p : ${periodos}"
+                            th:value="${p}"
+                            th:selected="${p.equals(mes)}"
+                            th:text="${#temporals.format(p.atDay(1), 'MMMM yyyy')}">
+                    </option>
+                </select>
+                <p>
+                    Disponíveis: mês atual e três meses anteriores.
+                    Para períodos mais antigos, consulte o
+                    <a th:href="@{/relatorios}">relatório completo</a>.
+                </p>
+            </form>
+
+            <div class="search">
+                <span aria-hidden="true">⌕</span>
+                <input id="search" type="search"
+                       placeholder="Buscar neste mês" aria-label="Buscar neste mês">
+            </div>
+
+            <div class="tabs">
+                <button type="button" class="selected" data-filter="TODAS">Todas</button>
+                <button type="button" data-filter="ENTRADA">Entradas</button>
+                <button type="button" data-filter="SAIDA">Saídas</button>
+            </div>
+
+            <section class="history">
+                <div class="history-head">
+                    <h2>Movimentações do período</h2>
                 </div>
-                <div class="tabs">
-                    <button class="selected" data-filter="TODAS">Todas</button>
-                    <button data-filter="ENTRADA">Entradas</button>
-                    <button data-filter="SAIDA">Saídas</button>
+
+                <div class="items" id="items">
+                    <article class="item" th:each="m : ${lista}"
+                             th:attr="data-tipo=${m.tipo},data-descricao=${m.descricao}">
+                        <div class="item-icon"
+                             th:classappend="${m.tipo == 'ENTRADA' ? 'green' : 'red'}"
+                             th:text="${m.tipo == 'ENTRADA' ? '↑' : '↓'}">↑</div>
+
+                        <div class="item-info">
+                            <strong th:text="${m.descricao}">Descrição</strong>
+                            <small>
+                                <span th:text="${#temporals.format(m.data, 'dd/MM/yyyy')}">Data</span>
+                                · <span th:text="${m.statusPagamento}">PAGO</span>
+                            </small>
+                        </div>
+
+                        <b class="amount"
+                           th:classappend="${m.tipo == 'ENTRADA' ? 'positive' : 'negative'}"
+                           th:text="${(m.tipo == 'ENTRADA' ? '+ ' : '- ') + 'R$ ' + #numbers.formatDecimal(m.valor, 1, 'POINT', 2, 'COMMA')}">
+                            R$ 0,00
+                        </b>
+                    </article>
+
+                    <p class="empty" th:if="${#lists.isEmpty(lista)}">
+                        Nenhuma movimentação neste período.
+                    </p>
                 </div>
-                <section class="history">
-                    <div class="history-head">
-                        <h2>Movimentações do período</h2>
-                    </div>
-                    <div class="items" id="items">
-                        <article class="item" th:each="m : ${lista}" th:attr]="data-tipo=${m.tipo},data-descricao=${m.descricao}">
-                            <div class="item-icon" th:classappend="${m.tipo == 'ENTRADA'} ? 'green' : 'red'" th:text="${m.tipo == 'ENTRADA'} ? '↑' : '↓'">↑</div>
-                            <div class="item-info">
-                                <strong th:text="${m.descricao}">Descrição</strong>
-                                <small><span th:text="${#temporals.format(m.data,'dd/MM/yyyy')}">Data</span> · <span th:text="${m.statusPagamento}">PAGO</span></small>
-                            </div>
-                            <b class="amount" th:classappend="${m.tipo == 'ENTRADA'} ? 'positive' : 'negative'" th:text="${(m.tipo == 'ENTRADA' ? '+ ' : '- ') + 'R$ ' + #numbers.formatDecimal(m.valor,1,'POINT',2,'COMMA')}">R$ 0,00</b>
-                        </article>
-                        <p class="empty" th:if="${#lists.isEmpty(lista)}">Nenhuma movimentação neste período.</p>
-                    </div>
-                </section>
-            </main>
-        </div>
-    </body>
+            </section>
+        </main>
+    </div>
+</body>
 </html>

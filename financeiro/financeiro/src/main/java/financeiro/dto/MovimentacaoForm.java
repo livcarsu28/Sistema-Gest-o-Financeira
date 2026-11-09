@@ -11,7 +11,7 @@ import java.util.List;
         @NotBlank @Pattern(regexp="ENTRADA|SAIDA") 
         public String tipo;
 
-        @NotNull @DecimalMin("0.01")
+        @NotNull @DecimalMin("0.01") @Digits(integer = 10, fraction = 2)
         public BigDecimal valor;
 
         @NotBlank @Size(max=500)
@@ -38,4 +38,7 @@ public List<DayOfWeek> diasSemana;
 
         @Size(max=30) 
         public String conta;
+
+        @Size(max = 30)
+        public String observacoes;
     }

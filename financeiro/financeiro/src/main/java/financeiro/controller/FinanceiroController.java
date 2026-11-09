@@ -24,6 +24,12 @@ public class FinanceiroController {
         return "dashboard";
     }
 
+    @GetMapping("/calendario")
+    public String calendario(Model model) {
+        model.addAttribute("paginaAtiva", "calendario");
+        return "calendario";
+    }
+
     @GetMapping("/relatorios")
     public String relatorios(Model model) {
         model.addAttribute("paginaAtiva", "relatorios");

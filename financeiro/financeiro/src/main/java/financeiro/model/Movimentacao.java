@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Column(nullable=false,precision=12,scale=2) public BigDecimal valor;
 @Column(length=500) public String descricao;
 @Column(length=30) public String conta;
+@Column(length=30) public String observacao;
 public Boolean recorrente=false;
 @Column(name="numero_parcelas") public Integer numeroParcelas=1;
 @Column(name="parcela_atual") public Integer parcelaAtual=1;
@@ -29,4 +30,18 @@ public Integer diaMes;
 
 @Column(name = "dias_semana", length = 100)
 public String diasSemana;
+
+@Column(length = 36)
+public String serie;
+
+@Column(name = "ordem_serie")
+public Integer ordemSerie;
+
+@Column(name = "data_programada")
+public LocalDate dataProgramada;
+
+public boolean excluida;
+
+@Column(name = "serie_encerrada")
+public boolean serieEncerrada;
 }

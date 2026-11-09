@@ -1,0 +1,282 @@
+.historico-pagina {
+    --hist-vinho: #7b0404;
+    --hist-rosa: #fdf2f2;
+    --hist-fundo: #f7f5f2;
+    --hist-branco: #fff;
+    --hist-texto: #352323;
+    --hist-secundario: #716c69;
+    --hist-borda: #e8e3dd;
+    --hist-entrada: #176247;
+    --hist-saida: #992b36;
+    --hist-sombra: 0 3px 14px rgb(53 35 35 / 5%);
+
+    background: var(--hist-fundo);
+    color: var(--hist-texto);
+    font-family: Poppins, "Segoe UI", sans-serif;
+}
+
+/* Área principal e cabeçalho */
+.historico-pagina .main {
+    flex: 1;
+    min-width: 0;
+    max-width: 1120px;
+    padding: 44px clamp(20px, 4vw, 48px) 48px;
+}
+
+.historico-pagina .page-head {
+    margin-bottom: 26px;
+}
+
+.historico-pagina .back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    margin-bottom: 14px;
+    padding: 0 12px;
+    border: 1px solid var(--hist-borda);
+    border-radius: 10px;
+    background: var(--hist-branco);
+    color: var(--hist-vinho);
+    font-size: .75rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.historico-pagina .back-link:hover {
+    background: var(--hist-rosa);
+}
+
+.historico-pagina .page-head h1 {
+    margin: 0 0 6px;
+    font-size: clamp(1.35rem, 3vw, 1.9rem);
+    line-height: 1.25;
+    letter-spacing: -.025em;
+}
+
+.historico-pagina .page-head p {
+    margin: 0;
+    color: var(--hist-secundario);
+    font-size: .875rem;
+}
+
+/* Seletor de mês */
+.historico-pagina .period {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 16px;
+    padding: 18px 20px;
+    border: 1px solid var(--hist-borda);
+    border-radius: 16px;
+    background: var(--hist-branco);
+    box-shadow: var(--hist-sombra);
+}
+
+.historico-pagina .period label {
+    margin: 0;
+    font-size: .8125rem;
+    font-weight: 600;
+}
+
+.historico-pagina .period select {
+    width: min(100%, 280px);
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--hist-borda);
+    border-radius: 10px;
+    background: var(--hist-fundo);
+    color: var(--hist-texto);
+    font-size: .8125rem;
+}
+
+.historico-pagina .period p {
+    margin: 2px 0 0;
+    color: var(--hist-secundario);
+    font-size: .75rem;
+    line-height: 1.6;
+}
+
+.historico-pagina .period a {
+    color: var(--hist-vinho);
+    font-weight: 600;
+}
+
+/* Busca e filtros */
+.historico-pagina .search {
+    gap: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--hist-borda);
+    border-radius: 12px;
+    background: var(--hist-branco);
+    color: var(--hist-vinho);
+}
+
+.historico-pagina .search input {
+    min-width: 0;
+    min-height: 46px;
+    padding: 10px 0;
+    color: var(--hist-texto);
+    font-size: .8125rem;
+}
+
+.historico-pagina .search:focus-within {
+    border-color: var(--hist-vinho);
+    box-shadow: 0 0 0 3px rgb(123 4 4 / 10%);
+}
+
+.historico-pagina .tabs {
+    gap: 4px;
+    margin-bottom: 22px;
+    padding: 4px;
+    border: 1px solid var(--hist-borda);
+    border-radius: 12px;
+    background: #efeae6;
+}
+
+.historico-pagina .tabs button {
+    min-height: 40px;
+    padding: 8px;
+    color: var(--hist-secundario);
+    font-size: .75rem;
+    font-weight: 500;
+}
+
+.historico-pagina .tabs button.selected {
+    background: var(--hist-branco);
+    color: var(--hist-vinho);
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgb(53 35 35 / 8%);
+}
+
+/* Lista de movimentações */
+.historico-pagina .history {
+    overflow: hidden;
+    border: 1px solid var(--hist-borda);
+    border-radius: 16px;
+    background: var(--hist-branco);
+    box-shadow: var(--hist-sombra);
+}
+
+.historico-pagina .history-head {
+    margin: 0;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--hist-borda);
+}
+
+.historico-pagina .history-head h2 {
+    margin: 0;
+    font-size: .9375rem;
+    font-weight: 600;
+}
+
+.historico-pagina .items {
+    border-radius: 0;
+}
+
+.historico-pagina .item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--hist-borda);
+}
+
+.historico-pagina .item[hidden] {
+    display: none;
+}
+
+.historico-pagina .item:last-child {
+    border-bottom: 0;
+}
+
+.historico-pagina .item-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+.historico-pagina .item-icon.green {
+    background: #e9f7f1;
+    color: var(--hist-entrada);
+}
+
+.historico-pagina .item-icon.red {
+    background: var(--hist-rosa);
+    color: var(--hist-saida);
+}
+
+.historico-pagina .item-info strong {
+    color: var(--hist-texto);
+    font-size: .8125rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.historico-pagina .item-info small {
+    color: var(--hist-secundario);
+    font-size: .6875rem;
+}
+
+.historico-pagina .amount {
+    font-size: .8125rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.historico-pagina .amount.positive {
+    color: var(--hist-entrada);
+}
+
+.historico-pagina .amount.negative {
+    color: var(--hist-saida);
+}
+
+.historico-pagina .empty {
+    margin: 0;
+    padding: 28px 16px;
+    color: var(--hist-secundario);
+    font-size: .8125rem;
+}
+
+.historico-pagina :is(a, select, button):focus-visible {
+    outline: 2px solid var(--hist-vinho);
+    outline-offset: 3px;
+}
+
+/* Espaço para a barra inferior nos tamanhos em que ela aparece */
+@media (max-width: 999px) {
+    .historico-pagina .main {
+        padding-bottom: calc(116px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 600px) {
+    .historico-pagina .main {
+        padding-top: 24px;
+        padding-inline: 14px;
+    }
+
+    .historico-pagina .period,
+    .historico-pagina .history-head,
+    .historico-pagina .item {
+        padding-inline: 12px;
+    }
+
+    .historico-pagina .period select {
+        width: 100%;
+    }
+
+    .historico-pagina .item {
+        gap: 8px;
+    }
+
+    .historico-pagina .item-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .historico-pagina .amount {
+        font-size: .75rem;
+    }
+}

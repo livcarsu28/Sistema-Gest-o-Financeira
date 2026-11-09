@@ -104,97 +104,6 @@ p {
 }
 
 /* ==========================================
-   SIDEBAR
-========================================== */
-
-.sidebar {
-    width: 255px;
-    min-width: 255px;
-    min-height: 100vh;
-
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-
-    padding: 32px 16px;
-
-    display: flex;
-    flex-direction: column;
-
-    position: sticky;
-    top: 0;
-    height: 100vh;
-}
-
-.brand {
-    font-size: 19px;
-    font-weight: 800;
-    letter-spacing: -0.7px;
-    line-height: 1.4;
-
-    padding: 0 14px;
-    margin-bottom: 46px;
-}
-
-.brand span {
-    color: var(--primary);
-}
-
-.sidebar nav,
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.sidebar nav a,
-.sidebar-nav a {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-
-    min-height: 46px;
-    padding: 12px 15px;
-
-    border-radius: 12px;
-
-    color: #858b97;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.sidebar nav a:hover,
-.sidebar-nav a:hover {
-    background: #f6f7f9;
-    color: var(--text);
-}
-
-.sidebar nav a.active,
-.sidebar-nav a.active,
-.sidebar nav a[aria-current="page"],
-.sidebar-nav a[aria-current="page"] {
-    background: var(--primary-light);
-    color: var(--primary);
-    font-weight: 600;
-}
-
-.sidebar nav a svg,
-.sidebar-nav a svg,
-.sidebar nav a i,
-.sidebar-nav a i {
-    width: 19px;
-    height: 19px;
-    flex-shrink: 0;
-}
-
-.sidebar-footer {
-    margin-top: auto;
-    padding: 18px 14px 0;
-    border-top: 1px solid var(--border);
-    font-size: 10px;
-    color: var(--muted);
-}
-
-/* ==========================================
    CABEÇALHO
 ========================================== */
 
@@ -779,10 +688,6 @@ select:disabled {
 ========================================== */
 
 @media (max-width: 1100px) {
-    .sidebar {
-        width: 215px;
-        min-width: 215px;
-    }
 
     .main {
         padding: 30px;
@@ -810,19 +715,12 @@ select:disabled {
         display: block;
     }
 
-    .sidebar {
-        display: none;
-    }
 
     .main {
         padding: 24px 16px 100px;
         max-width: 100%;
     }
 
-    .brand {
-        margin-bottom: 14px;
-        font-size: 17px;
-    }
 
     .header {
         align-items: flex-start;
@@ -1203,5 +1101,12 @@ select:disabled {
     .table-wrap td {
         padding: 14px 12px;
         font-size: 11px;
+    }
+}
+
+@media (max-width: 768px) {
+    .fab {
+        bottom: calc(90px + env(safe-area-inset-bottom));
+        z-index: 101;
     }
 }

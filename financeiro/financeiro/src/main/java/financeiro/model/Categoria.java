@@ -12,4 +12,6 @@ import jakarta.persistence.*;
     public Integer id;
     public String nome;
     public Boolean ativo;
+    @Column(length = 7)
+    public String cor;
 }

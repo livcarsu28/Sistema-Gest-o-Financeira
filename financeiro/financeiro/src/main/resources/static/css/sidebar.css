@@ -1,347 +1,59 @@
+/* Navegação extraída do Dashboard da equipe e compartilhada entre os módulos. */
+@font-face { font-family: Poppins; src: url("../fonts/poppins-400.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: Poppins; src: url("../fonts/poppins-500.ttf") format("truetype"); font-weight: 500; font-display: swap; }
+@font-face { font-family: Poppins; src: url("../fonts/poppins-600.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+@font-face { font-family: Poppins; src: url("../fonts/poppins-700.ttf") format("truetype"); font-weight: 700; font-display: swap; }
 
-/* ========================================
-   SIDEBAR — GESTÃO FINANCEIRA
-======================================== */
+.barra-lateral {
+    --vinho: #7B0404;
+    --vinho-suave: #FDF2F2;
+    --vinho-borda-suave: #F0CDCD;
+    --secundario: #716C69;
+    --cartao: #FFFFFF;
+    --borda: #E8E3DD;
+    font-family: Poppins, "Segoe UI", sans-serif;
+    line-height: 1.5;
+}
+.barra-lateral, .barra-lateral * { box-sizing: border-box; }
+.barra-lateral :is(.marca-sistema, .navegacao-titulo) { margin-block: 0; }
+.barra-lateral .icone { width: 22px; height: 22px; flex: 0 0 auto; }
+.barra-lateral a:focus-visible { outline: 3px solid #E0C218; outline-offset: 3px; }
 
-.sidebar {
-    position: sticky;
-    top: 0;
+.barra-lateral { height: 0; }
+.barra-lateral .marca, .barra-lateral .marca-sistema, .barra-lateral .navegacao-titulo { display: none; }
+.barra-lateral .navegacao { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cartao); border-top: 1px solid var(--borda); padding: 8px 6px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 24px rgba(53, 35, 35, 0.04); }
+.barra-lateral .navegacao-lista { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; padding: 0; gap: 2px; list-style: none; }
+.barra-lateral .navegacao-link { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; min-height: 60px; padding: 8px 0; border-radius: 12px; font-size: .625rem; text-decoration: none; color: var(--secundario); }
+.barra-lateral .navegacao-link:hover { color: var(--vinho); background: var(--vinho-suave); }
+.barra-lateral .navegacao-link[aria-current="page"] { color: var(--vinho); background: var(--vinho-suave); font-weight: 600; }
 
-    width: 255px;
-    min-width: 255px;
-    height: 100vh;
-
-    display: flex;
-    flex-direction: column;
-
-    padding: 30px 17px;
-
-    background: #ffffff;
-    border-right: 1px solid #eaedf1;
-
-    z-index: 100;
+@media (min-width: 600px) {
+    .barra-lateral .navegacao-link { font-size: .75rem; }
 }
 
-/* ========================================
-   MARCA
-======================================== */
-
-.sidebar .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 4px 10px 30px;
-    margin-bottom: 18px;
-
-    border-bottom: 1px solid #f0f1f3;
+@media (max-width: 999px) {
+    .barra-lateral .navegacao { padding: .7rem .55rem calc(.7rem + env(safe-area-inset-bottom)); }
+    .barra-lateral .navegacao-link { gap: .24rem; min-height: 48px; padding: 4px 0; font-size: .625rem; }
+    .barra-lateral .navegacao-link[aria-current="page"] { background: transparent; }
+    .barra-lateral ~ .main { padding-bottom: calc(126px + env(safe-area-inset-bottom)); }
+    .barra-lateral ~ .main .fab { bottom: calc(90px + env(safe-area-inset-bottom)); z-index: 101; }
 }
 
-.brand-symbol {
-    width: 43px;
-    height: 43px;
-
-    display: grid;
-    place-items: center;
-
-    flex-shrink: 0;
-
-    background: #fff0f2;
-    color: #a71930;
-
-    border-radius: 14px;
-}
-
-.brand-symbol svg {
-    width: 23px;
-    height: 23px;
-    stroke-width: 1.8;
-}
-
-.brand-text {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-}
-
-.brand-text strong {
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    white-space: nowrap;
-    color: #242832;
-}
-
-.brand-text strong span {
-    color: #a71930;
-}
-
-.brand-text small {
-    color: #969ba5;
-    font-size: 10px;
-    font-weight: 500;
-}
-
-/* ========================================
-   LINKS DE NAVEGAÇÃO
-======================================== */
-
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.sidebar .nav-item {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-    gap: 13px;
-
-    width: 100%;
-    min-height: 47px;
-
-    padding: 12px 14px;
-
-    border-radius: 12px;
-
-    color: #858b97;
-    background: transparent;
-
-    text-decoration: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.sidebar .nav-item svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    stroke-width: 1.9;
-}
-
-.sidebar .nav-item:hover {
-    background: #f7f8fa;
-    color: #30343e;
-}
-
-.sidebar .nav-item.active,
-.sidebar .nav-item[aria-current="page"] {
-    background: #fff0f2;
-    color: #a71930;
-    font-weight: 600;
-}
-
-.sidebar .nav-item.active::before {
-    content: "";
-    position: absolute;
-
-    left: 0;
-    top: 11px;
-    bottom: 11px;
-
-    width: 3px;
-    border-radius: 0 4px 4px 0;
-
-    background: #a71930;
-}
-
-/* ========================================
-   RODAPÉ
-======================================== */
-
-.sidebar-footer {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-
-    margin-top: auto;
-    padding: 17px 10px 5px;
-
-    border-top: 1px solid #eff0f3;
-}
-
-.sidebar-footer-icon {
-    display: grid;
-    place-items: center;
-
-    width: 35px;
-    height: 35px;
-
-    flex-shrink: 0;
-
-    border-radius: 11px;
-    background: #eef8f3;
-    color: #179568;
-}
-
-.sidebar-footer-icon svg {
-    width: 18px;
-    height: 18px;
-}
-
-.sidebar-footer strong {
-    display: block;
-    color: #414651;
-    font-size: 10px;
-    font-weight: 600;
-}
-
-.sidebar-footer small {
-    display: block;
-    margin-top: 3px;
-    color: #9ba1ab;
-    font-size: 9px;
-}
-
-/* ========================================
-   TABLET
-======================================== */
-
-@media (max-width: 1100px) {
-    .sidebar {
-        width: 215px;
-        min-width: 215px;
-        padding: 25px 12px;
-    }
-
-    .sidebar .brand {
-        gap: 8px;
-        padding-left: 6px;
-        padding-right: 6px;
-    }
-
-    .brand-symbol {
-        width: 36px;
-        height: 36px;
-    }
-
-    .brand-text strong {
-        font-size: 11px;
-    }
-
-    .sidebar .nav-item {
-        padding: 12px;
-    }
-}
-
-/* ========================================
-   MOBILE — NAVEGAÇÃO INFERIOR
-======================================== */
-
-@media (max-width: 768px) {
-
-    .sidebar {
-        position: fixed;
-        top: auto;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        width: 100%;
-        min-width: 0;
-        height: calc(74px + env(safe-area-inset-bottom));
-
-        padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
-
-        background: rgba(255,255,255,0.97);
-
-        border-right: none;
-        border-top: 1px solid #eceef2;
-        border-radius: 17px 17px 0 0;
-
-        box-shadow: 0 -5px 22px rgba(20, 25, 35, 0.05);
-        backdrop-filter: blur(14px);
-
-        z-index: 100;
-    }
-
-    .sidebar .brand,
-    .sidebar-footer {
-        display: none;
-    }
-
-    .sidebar-nav {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-
-        gap: 0;
-        height: 100%;
-        width: 100%;
-    }
-
-    .sidebar .nav-item {
-        flex: 1;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        gap: 5px;
-        min-width: 0;
-        min-height: 55px;
-
-        padding: 7px 2px;
-
-        background: transparent;
-        border-radius: 10px;
-
-        color: #a1a5ad;
-
-        font-size: 9px;
-        font-weight: 500;
-        text-align: center;
-    }
-
-    .sidebar .nav-item svg {
-        width: 21px;
-        height: 21px;
-        stroke-width: 1.9;
-    }
-
-    .sidebar .nav-item.active,
-    .sidebar .nav-item[aria-current="page"] {
-        background: transparent;
-        color: #a71930;
-        font-weight: 700;
-    }
-
-    .sidebar .nav-item.active::before {
-        display: none;
-    }
-
-    .sidebar .nav-item:hover {
-        background: transparent;
-    }
-
-    .sidebar .nav-item span {
-        white-space: nowrap;
-    }
-
-    .main {
-        margin-left: 0;
-        padding-bottom: calc(110px + env(safe-area-inset-bottom));
-    }
-}
-
-@media (max-width: 380px) {
-    .sidebar .nav-item {
-        font-size: 8px;
-    }
-
-    .sidebar .nav-item svg {
-        width: 19px;
-        height: 19px;
-    }
+@media (min-width: 1000px) {
+    .barra-lateral { display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; height: 100dvh; padding: 32px 20px 24px; background: var(--vinho); color: var(--cartao); }
+    .barra-lateral .marca { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .barra-lateral .marca img { width: 48px; height: 48px; object-fit: contain; padding: 4px; border-radius: 50%; background: var(--cartao); }
+    .barra-lateral .marca-texto { display: flex; flex-direction: column; font-family: "Goudy Old Style", "Palatino Linotype", Georgia, serif; color: var(--cartao); line-height: 1.25; }
+    .barra-lateral .marca-texto strong { font-size: 1.15rem; }
+    .barra-lateral .marca-texto > span { font-size: .875rem; }
+    .barra-lateral .marca-sistema { display: block; margin: 22px 10px 0; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18); font-size: .6875rem; color: var(--vinho-suave); }
+    .barra-lateral .navegacao { position: static; margin-top: 36px; padding: 0; border: 0; background: transparent; box-shadow: none; }
+    .barra-lateral .navegacao-titulo { display: block; margin: 0 10px 10px; color: var(--vinho-borda-suave); font-size: .625rem; text-transform: uppercase; letter-spacing: .12em; }
+    .barra-lateral .navegacao-lista { grid-template-columns: 1fr; gap: 8px; }
+    .barra-lateral .navegacao-link { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 12px 16px; min-height: 46px; border-radius: 10px; font-size: .75rem; font-weight: 500; color: var(--vinho-suave); }
+    .barra-lateral .navegacao-link .icone { width: 20px; height: 20px; }
+    .barra-lateral .navegacao-link:hover { background: rgba(255, 255, 255, 0.08); color: var(--cartao); }
+    .barra-lateral .navegacao-link[aria-current="page"] { color: var(--vinho); background: var(--cartao); font-weight: 600; }
+    .barra-lateral { flex: 0 0 248px; width: 248px; }
+    .barra-lateral ~ .main { min-width: 0; }
 }

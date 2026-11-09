@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     abrirModal?.addEventListener("click", () => {
 
         formulario?.reset();
+        atualizarRecorrencia();
 
         if (campoData) {
             const hoje = new Date();
@@ -26,12 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         modal.hidden = false;
+        document.body.classList.add("modal-open");
     });
 
     // FECHAR MODAL
     function fechar() {
         if (modal) {
             modal.hidden = true;
+            document.body.classList.remove("modal-open");
         }
     }
 
@@ -89,34 +92,34 @@ document.addEventListener("DOMContentLoaded", () => {
     pesquisa?.addEventListener("input", filtrarMovimentacoes);
 
     
-const recorrente = document.getElementById("recorrente");
-const camposRecorrencia = document.getElementById("camposRecorrencia");
-const tipoRecorrencia = document.getElementById("tipoRecorrencia");
-const campoDiaMes = document.getElementById("campoDiaMes");
-const campoDiaSemana = document.getElementById("campoDiaSemana");
-const diaMes = document.getElementById("diaMes");
+    const recorrente = document.getElementById("recorrente");
+    const camposRecorrencia = document.getElementById("camposRecorrencia");
+    const tipoRecorrencia = document.getElementById("tipoRecorrencia");
+    const campoDiaMes = document.getElementById("campoDiaMes");
+    const campoDiaSemana = document.getElementById("campoDiaSemana");
+    const diaMes = document.getElementById("diaMes");
 
-function atualizarRecorrencia() {
-    const ativo = recorrente.checked;
-    const mensal = tipoRecorrencia.value === "MENSAL";
+    function atualizarRecorrencia() {
+        const ativo = recorrente.checked;
+        const mensal = tipoRecorrencia.value === "MENSAL";
 
-    camposRecorrencia.hidden = !ativo;
+        camposRecorrencia.hidden = !ativo;
 
-    tipoRecorrencia.disabled = !ativo;
+        tipoRecorrencia.disabled = !ativo;
 
-    campoDiaMes.hidden = !ativo || !mensal;
-    diaMes.disabled = !ativo || !mensal;
+        campoDiaMes.hidden = !ativo || !mensal;
+        diaMes.disabled = !ativo || !mensal;
 
-    campoDiaSemana.hidden = !ativo || mensal;
-    document.querySelectorAll('input[name="diasSemana"]')
-    .forEach(checkbox => {
-        checkbox.disabled = !ativo || mensal;
-    });
-}
+        campoDiaSemana.hidden = !ativo || mensal;
+        document.querySelectorAll('input[name="diasSemana"]')
+        .forEach(checkbox => {
+            checkbox.disabled = !ativo || mensal;
+        });
+    }
 
-recorrente.addEventListener("change", atualizarRecorrencia);
-tipoRecorrencia.addEventListener("change", atualizarRecorrencia);
+    recorrente.addEventListener("change", atualizarRecorrencia);
+    tipoRecorrencia.addEventListener("change", atualizarRecorrencia);
 
-atualizarRecorrencia();
+    atualizarRecorrencia();
 
 });
