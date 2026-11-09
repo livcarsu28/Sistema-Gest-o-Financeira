@@ -5,6 +5,10 @@ const rotuloCopiar = document.getElementById("rotulo-copiar");
 let temporizador;
 
 if (botaoCopiar && chavePix && statusCopia && rotuloCopiar) {
+    if (!chavePix.dataset.chave?.trim()) {
+        botaoCopiar.disabled = true;
+    }
+
     botaoCopiar.addEventListener("click", async () => {
         const chave = chavePix.dataset.chave?.trim();
         if (botaoCopiar.disabled || !chave) return;
