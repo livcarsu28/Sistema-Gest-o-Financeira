@@ -1,26 +1,506 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>ONG | Gestão Financeira</title>
-        <link rel="stylesheet" href="/css/app.css">
-        <script defer src="/js/app.js"></script>
-    </head>
-    <body>
-        <div class="layout">
-            <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-            <main class="main">
-                <header class="page-head">
-                    <div>
-                        <h1>Configurações</h1>
-                        <p>Página preparada para as configurações da ONG.</p>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ajustes | Resgate de Vidas</title>
+    <link rel="stylesheet" th:href="@{/css/configuracoes.css}">
+    <script th:src="@{/js/configuracoes.js}" defer></script>
+</head>
+
+<body class="configuracoes-body">
+    <a class="configuracoes-pular" href="#conteudo-principal">Ir para o conteúdo</a>
+
+    <div class="configuracoes-layout">
+        <!-- Barra lateral para Desktop (consistente com as demais telas do sistema) -->
+        <aside class="configuracoes-sidebar">
+            <a class="configuracoes-sidebar-marca" th:href="@{/dashboard}"
+                aria-label="Resgate de Vidas – Criança Feliz, início">
+                <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="" width="52" height="52">
+                <span class="configuracoes-sidebar-marca-texto">
+                    <strong>Resgate de Vidas</strong>
+                    <span>Criança Feliz</span>
+                </span>
+            </a>
+            <p class="configuracoes-sidebar-marca-sistema">Gestão financeira</p>
+            <nav class="configuracoes-sidebar-nav" aria-label="Navegação lateral">
+                <p class="configuracoes-sidebar-nav-titulo">Principal</p>
+                <ul class="configuracoes-sidebar-nav-lista">
+                    <li>
+                        <a class="configuracoes-sidebar-nav-link" th:href="@{/dashboard}">
+                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                                focusable="false">
+                                <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
+                            </svg>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="configuracoes-sidebar-nav-link" th:href="@{/movimentacoes}">
+                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                                focusable="false">
+                                <path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4" />
+                            </svg>
+                            <span>Movimentações</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="configuracoes-sidebar-nav-link" th:href="@{/relatorios}">
+                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                                focusable="false">
+                                <path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6" />
+                            </svg>
+                            <span>Relatórios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="configuracoes-sidebar-nav-link ativo" th:href="@{/configuracoes}" aria-current="page">
+                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                                focusable="false">
+                                <path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1" />
+                            </svg>
+                            <span>Dados da ONG</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="configuracoes-main" id="conteudo-principal" tabindex="-1">
+            <div class="configuracoes-container">
+                <!-- 5.1. Cabeçalho -->
+                <header class="configuracoes-header">
+                    <div class="configuracoes-header-info">
+                        <p class="configuracoes-instituicao">RESGATE DE VIDAS</p>
+                        <h1 class="configuracoes-titulo">Ajustes</h1>
+                        <p class="configuracoes-subtitulo">Personalize as configurações</p>
                     </div>
+                    <button type="button" class="configuracoes-btn-sino" id="btn-sino-header"
+                        aria-label="Notificações e avisos">
+                        <svg class="configuracoes-icone-sino" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                            focusable="false">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                        </svg>
+                    </button>
                 </header>
-                <section class="history">
-                    <a href="/movimentacoes">Ir para movimentações →</a>
-                </section>
-            </main>
+
+                <!-- Grid de Cards -->
+                <div class="configuracoes-grid-cards">
+                    <!-- 5.2. Perfil de acesso -->
+                    <section class="configuracoes-card-perfil configuracoes-card-destaque"
+                        aria-labelledby="titulo-perfil">
+                        <div class="configuracoes-perfil-esq">
+                            <div class="configuracoes-perfil-icone-wrapper" aria-hidden="true">
+                                <svg class="configuracoes-perfil-icone" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    <path d="m9 12 2 2 4-4" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 id="titulo-perfil" class="configuracoes-perfil-titulo">Perfil de acesso</h2>
+                                <p class="configuracoes-perfil-descricao">Acesso completo</p>
+                            </div>
+                        </div>
+                        <div class="configuracoes-perfil-seletor-box" title="Perfil ativo do usuário">
+                            <select class="configuracoes-perfil-select" id="perfil-select"
+                                aria-label="Perfil de acesso">
+                                <option value="Administrador" selected>Administrador</option>
+                            </select>
+                            <svg class="configuracoes-perfil-chevron" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                aria-hidden="true" focusable="false">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                    </section>
+
+                    <!-- 5.3. Gerenciamento de imagens -->
+                    <section class="configuracoes-card configuracoes-card-destaque" aria-labelledby="titulo-imagens">
+                        <div class="configuracoes-card-cabecalho">
+                            <div class="configuracoes-badge-icone" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 id="titulo-imagens" class="configuracoes-card-titulo">Imagens</h2>
+                                <p class="configuracoes-card-subtitulo">Organize os registros da instituição</p>
+                            </div>
+                        </div>
+
+                        <div class="configuracoes-card-conteudo">
+                            <!-- Campo Categoria -->
+                            <div class="configuracoes-campo-grupo">
+                                <label for="select-categoria" class="configuracoes-label">Categoria</label>
+                                <div class="configuracoes-select-container">
+                                    <select id="select-categoria" class="configuracoes-select">
+                                        <option value="Projetos" selected>Projetos</option>
+                                        <option value="Doações">Doações</option>
+                                        <option value="Eventos">Eventos</option>
+                                        <option value="Instalações">Instalações</option>
+                                        <option value="Materiais">Materiais</option>
+                                        <option value="Geral">Geral</option>
+                                    </select>
+                                    <svg class="configuracoes-select-chevron" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Área de Upload -->
+                            <div class="configuracoes-upload" id="area-upload" role="button" tabindex="0"
+                                aria-label="Fazer upload de imagem">
+                                <input type="file" id="input-arquivo-imagem" class="configuracoes-input-file"
+                                    accept="image/png, image/jpeg, image/jpg" aria-hidden="true">
+
+                                <div class="configuracoes-upload-estado-inicial" id="upload-estado-inicial">
+                                    <div class="configuracoes-upload-icone-box" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="17 8 12 3 7 8" />
+                                            <line x1="12" x2="12" y1="3" y2="15" />
+                                        </svg>
+                                    </div>
+                                    <strong class="configuracoes-upload-rotulo">Fazer upload</strong>
+                                    <span class="configuracoes-upload-ajuda">PNG ou JPG de até 10 MB</span>
+                                </div>
+
+                                <!-- Estado com arquivo selecionado -->
+                                <div class="configuracoes-upload-estado-selecionado" id="upload-estado-selecionado"
+                                    hidden>
+                                    <div class="configuracoes-upload-preview-container">
+                                        <img id="upload-preview-img" src="" alt="Pré-visualização da imagem"
+                                            class="configuracoes-upload-preview-img" hidden>
+                                        <svg id="upload-preview-icone-padrao"
+                                            class="configuracoes-preview-icone-placeholder" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                            stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                    </div>
+                                    <div class="configuracoes-upload-info-arquivo">
+                                        <strong id="upload-nome-arquivo"
+                                            class="configuracoes-upload-nome">arquivo.jpg</strong>
+                                        <span id="upload-tamanho-arquivo" class="configuracoes-upload-tamanho">0
+                                            KB</span>
+                                    </div>
+                                    <button type="button" class="configuracoes-upload-btn-remover"
+                                        id="btn-remover-imagem" aria-label="Remover imagem selecionada">
+                                        Remover
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="configuracoes-mensagem-feedback" id="feedback-upload" role="alert"
+                                aria-live="polite"></div>
+                        </div>
+                    </section>
+
+                    <!-- 5.4. Chave PIX -->
+                    <section class="configuracoes-card" aria-labelledby="titulo-pix">
+                        <div class="configuracoes-card-cabecalho">
+                            <div class="configuracoes-badge-icone" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="9" />
+                                    <path d="M12 6v12M14.5 9.5a2.5 2.5 0 0 0-5 0c0 3 5 2 5 5a2.5 2.5 0 0 1-5 0" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 id="titulo-pix" class="configuracoes-card-titulo">Chave PIX</h2>
+                                <p class="configuracoes-card-subtitulo">Recebimentos da instituição</p>
+                            </div>
+                        </div>
+
+                        <div class="configuracoes-card-conteudo">
+                            <div class="configuracoes-linha-dados">
+                                <div class="configuracoes-coluna-dados">
+                                    <span class="configuracoes-rotulo-dado">Chave cadastrada</span>
+                                    <p class="configuracoes-valor-destaque" id="texto-chave-pix">
+                                        financeiro@resgatedevidas.org.br</p>
+                                </div>
+                                <button type="button" class="configuracoes-btn-editar" id="btn-abrir-modal-pix"
+                                    aria-label="Editar chave PIX">
+                                    <svg class="configuracoes-btn-editar-icone" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                        stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                        <path d="m15 5 4 4" />
+                                    </svg>
+                                    <span>Editar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 5.5. Endereço da instituição -->
+                    <section class="configuracoes-card" aria-labelledby="titulo-endereco">
+                        <div class="configuracoes-card-cabecalho">
+                            <div class="configuracoes-badge-icone" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="3" y1="21" x2="21" y2="21" />
+                                    <line x1="6" y1="18" x2="6" y2="11" />
+                                    <line x1="10" y1="18" x2="10" y2="11" />
+                                    <line x1="14" y1="18" x2="14" y2="11" />
+                                    <line x1="18" y1="18" x2="18" y2="11" />
+                                    <polygon points="12 3 21 8 3 8" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 id="titulo-endereco" class="configuracoes-card-titulo">Endereço da instituição</h2>
+                                <p class="configuracoes-card-subtitulo">Localização oficial</p>
+                            </div>
+                        </div>
+
+                        <div class="configuracoes-card-conteudo">
+                            <div class="configuracoes-linha-dados">
+                                <div class="configuracoes-coluna-dados">
+                                    <p class="configuracoes-valor-destaque" id="texto-endereco-linha1">Rua da Esperança,
+                                        128 - Centro</p>
+                                    <p class="configuracoes-valor-secundario" id="texto-endereco-linha2">São Paulo - SP
+                                        · CEP 01010-001</p>
+                                </div>
+                                <button type="button" class="configuracoes-btn-editar" id="btn-abrir-modal-endereco"
+                                    aria-label="Editar endereço da instituição">
+                                    <svg class="configuracoes-btn-editar-icone" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                        stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                        <path d="m15 5 4 4" />
+                                    </svg>
+                                    <span>Editar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 5.6. Notificações -->
+                    <section class="configuracoes-card configuracoes-card-destaque"
+                        aria-labelledby="titulo-notificacoes">
+                        <div class="configuracoes-card-cabecalho">
+                            <div class="configuracoes-badge-icone" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 id="titulo-notificacoes" class="configuracoes-card-titulo">Notificações</h2>
+                                <p class="configuracoes-card-subtitulo">Escolha os avisos que deseja receber</p>
+                            </div>
+                        </div>
+
+                        <div class="configuracoes-card-conteudo configuracoes-notificacoes-container">
+                            <!-- Opção 1: Lançamentos -->
+                            <div class="configuracoes-notificacao-linha">
+                                <div class="configuracoes-notificacao-texto">
+                                    <strong class="configuracoes-notificacao-nome">Lançamentos</strong>
+                                    <p class="configuracoes-notificacao-descricao">Novas entradas e saídas</p>
+                                </div>
+                                <label class="configuracoes-switch" for="switch-notif-lancamentos">
+                                    <input type="checkbox" id="switch-notif-lancamentos" role="switch"
+                                        aria-checked="true" checked>
+                                    <span class="configuracoes-switch-trilho" aria-hidden="true"></span>
+                                    <span class="sr-only">Ativar notificações de lançamentos</span>
+                                </label>
+                            </div>
+
+                            <!-- Opção 2: Lembretes -->
+                            <div class="configuracoes-notificacao-linha">
+                                <div class="configuracoes-notificacao-texto">
+                                    <strong class="configuracoes-notificacao-nome">Lembretes</strong>
+                                    <p class="configuracoes-notificacao-descricao">Anotações e pendências</p>
+                                </div>
+                                <label class="configuracoes-switch" for="switch-notif-lembretes">
+                                    <input type="checkbox" id="switch-notif-lembretes" role="switch" aria-checked="true"
+                                        checked>
+                                    <span class="configuracoes-switch-trilho" aria-hidden="true"></span>
+                                    <span class="sr-only">Ativar notificações de lembretes</span>
+                                </label>
+                            </div>
+
+                            <!-- Opção 3: Relatórios -->
+                            <div class="configuracoes-notificacao-linha">
+                                <div class="configuracoes-notificacao-texto">
+                                    <strong class="configuracoes-notificacao-nome">Relatórios</strong>
+                                    <p class="configuracoes-notificacao-descricao">Relatórios disponíveis</p>
+                                </div>
+                                <label class="configuracoes-switch" for="switch-notif-relatorios">
+                                    <input type="checkbox" id="switch-notif-relatorios" role="switch"
+                                        aria-checked="false">
+                                    <span class="configuracoes-switch-trilho" aria-hidden="true"></span>
+                                    <span class="sr-only">Ativar notificações de relatórios</span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                </div> <!-- .configuracoes-grid-cards -->
+            </div> <!-- .configuracoes-container -->
+        </main>
+    </div>
+
+    <!-- 6. Navegação Inferior Fixa (Mobile) -->
+    <nav class="configuracoes-nav-inferior" aria-label="Navegação móvel principal">
+        <ul class="configuracoes-nav-inferior-lista">
+            <li>
+                <a class="configuracoes-nav-inferior-link" th:href="@{/dashboard}">
+                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                        focusable="false">
+                        <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
+                    </svg>
+                    <span>Início</span>
+                </a>
+            </li>
+            <li>
+                <a class="configuracoes-nav-inferior-link" th:href="@{/movimentacoes}">
+                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                        focusable="false">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    <span>Movimentações</span>
+                </a>
+            </li>
+            <li>
+                <a class="configuracoes-nav-inferior-link" th:href="@{/relatorios}">
+                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                        focusable="false">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    <span>Relatórios</span>
+                </a>
+            </li>
+            <li>
+                <a class="configuracoes-nav-inferior-link ativo" th:href="@{/configuracoes}" aria-current="page">
+                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                        focusable="false">
+                        <path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1" />
+                    </svg>
+                    <span>Dados da ONG</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Modal: Editar Chave PIX -->
+    <div class="configuracoes-modal-backdrop" id="modal-pix" hidden role="dialog" aria-modal="true"
+        aria-labelledby="modal-pix-titulo">
+        <div class="configuracoes-modal">
+            <div class="configuracoes-modal-cabecalho">
+                <h2 id="modal-pix-titulo" class="configuracoes-modal-titulo">Editar chave PIX</h2>
+                <button type="button" class="configuracoes-modal-btn-fechar" id="btn-fechar-modal-pix"
+                    aria-label="Fechar janela">×</button>
+            </div>
+            <form id="form-editar-pix" class="configuracoes-modal-form" novalidate>
+                <div class="configuracoes-form-campo">
+                    <label for="input-editar-chave-pix" class="configuracoes-label">Chave PIX da instituição</label>
+                    <input type="text" id="input-editar-chave-pix" class="configuracoes-input" required
+                        placeholder="exemplo@resgatedevidas.org.br" autocomplete="off">
+                    <span class="configuracoes-campo-erro" id="erro-pix" aria-live="polite"></span>
+                </div>
+                <div class="configuracoes-modal-acoes">
+                    <button type="button" class="configuracoes-btn-cancelar"
+                        id="btn-cancelar-modal-pix">Cancelar</button>
+                    <button type="submit" class="configuracoes-btn-salvar">Salvar</button>
+                </div>
+            </form>
         </div>
-    </body>
+    </div>
+
+    <!-- Modal: Editar Endereço -->
+    <div class="configuracoes-modal-backdrop" id="modal-endereco" hidden role="dialog" aria-modal="true"
+        aria-labelledby="modal-endereco-titulo">
+        <div class="configuracoes-modal">
+            <div class="configuracoes-modal-cabecalho">
+                <h2 id="modal-endereco-titulo" class="configuracoes-modal-titulo">Editar endereço oficial</h2>
+                <button type="button" class="configuracoes-modal-btn-fechar" id="btn-fechar-modal-endereco"
+                    aria-label="Fechar janela">×</button>
+            </div>
+            <form id="form-editar-endereco" class="configuracoes-modal-form" novalidate>
+                <div class="configuracoes-form-campo">
+                    <label for="input-logradouro" class="configuracoes-label">Logradouro (Rua, Avenida, etc.)</label>
+                    <input type="text" id="input-logradouro" class="configuracoes-input" required
+                        placeholder="Ex.: Rua da Esperança" autocomplete="street-address">
+                </div>
+                <div class="configuracoes-form-linha-2">
+                    <div class="configuracoes-form-campo">
+                        <label for="input-numero" class="configuracoes-label">Número</label>
+                        <input type="text" id="input-numero" class="configuracoes-input" required
+                            placeholder="Ex.: 128">
+                    </div>
+                    <div class="configuracoes-form-campo">
+                        <label for="input-bairro" class="configuracoes-label">Bairro</label>
+                        <input type="text" id="input-bairro" class="configuracoes-input" required
+                            placeholder="Ex.: Centro">
+                    </div>
+                </div>
+                <div class="configuracoes-form-linha-2">
+                    <div class="configuracoes-form-campo">
+                        <label for="input-cidade" class="configuracoes-label">Cidade</label>
+                        <input type="text" id="input-cidade" class="configuracoes-input" required
+                            placeholder="Ex.: São Paulo">
+                    </div>
+                    <div class="configuracoes-form-campo" style="max-width: 90px;">
+                        <label for="input-uf" class="configuracoes-label">UF</label>
+                        <input type="text" id="input-uf" class="configuracoes-input" maxlength="2" required
+                            placeholder="SP" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="configuracoes-form-campo">
+                    <label for="input-cep" class="configuracoes-label">CEP</label>
+                    <input type="text" id="input-cep" class="configuracoes-input" maxlength="9" required
+                        placeholder="01010-001" autocomplete="postal-code">
+                    <span class="configuracoes-campo-erro" id="erro-endereco" aria-live="polite"></span>
+                </div>
+                <div class="configuracoes-modal-acoes">
+                    <button type="button" class="configuracoes-btn-cancelar"
+                        id="btn-cancelar-modal-endereco">Cancelar</button>
+                    <button type="submit" class="configuracoes-btn-salvar">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Feedback / Notificação Flutuante -->
+    <div class="configuracoes-toast" id="toast-notificacao" role="status" aria-live="polite" hidden>
+        <div class="configuracoes-toast-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+        </div>
+        <span class="configuracoes-toast-texto" id="toast-mensagem">Configurações salvas.</span>
+    </div>
+
+</body>
+
 </html>
