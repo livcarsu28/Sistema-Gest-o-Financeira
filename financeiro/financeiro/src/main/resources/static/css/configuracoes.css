@@ -77,6 +77,13 @@
     transform: translateY(0);
 }
 
+.configuracoes-body a:focus-visible,
+.configuracoes-body button:focus-visible,
+.configuracoes-main:focus-visible {
+    outline: 3px solid var(--dourado);
+    outline-offset: 2px;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;
