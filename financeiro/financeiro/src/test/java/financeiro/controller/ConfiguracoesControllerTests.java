@@ -20,6 +20,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SecurityConfig.class)
 class ConfiguracoesControllerTests {
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private financeiro.service.PixService pixService;
+
+    @org.junit.jupiter.api.BeforeEach
+    void configurarPix() {
+        org.mockito.Mockito.when(pixService.consultar()).thenReturn(
+                new financeiro.service.PixService.DadosPix(null, "Nenhuma chave Pix cadastrada."));
+    }
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private financeiro.service.DashboardService dashboardService;
+
     @Autowired
     private MockMvc mockMvc;
 

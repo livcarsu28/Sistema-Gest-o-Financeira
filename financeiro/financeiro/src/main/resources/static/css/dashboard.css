@@ -8,6 +8,8 @@
     --vinho-escuro: #5B0202;
     --vinho-hover: #920606;
     --vinho-suave: #FDF2F2;
+    --entrada: #237A4B;
+    --entrada-suave: #EDF7F0;
     --vinho-borda-suave: #F0CDCD;
     --texto: #352323;
     --secundario: #716C69;
@@ -38,7 +40,7 @@ a:focus-visible, button:focus-visible, main:focus-visible { outline: 3px solid v
 .navegacao-link:hover { color: var(--vinho); background: var(--vinho-suave); }
 .navegacao-link[aria-current="page"] { color: var(--vinho); background: var(--vinho-suave); font-weight: 600; }
 .conteudo { width: 100%; min-width: 0; padding: 0 20px calc(110px + env(safe-area-inset-bottom)); }
-.cabecalho { display: flex; flex-direction: column; gap: 24px; margin: 0 -20px 24px; padding: 24px 20px 30px; color: var(--cartao); background: var(--vinho); border-radius: 0 0 30px 30px; }
+.cabecalho { display: flex; flex-direction: column; gap: 24px; margin: 0 -20px 24px; padding: 24px 20px 30px; color: var(--cartao); background: linear-gradient(125deg, #920606 0%, var(--vinho) 45%, var(--vinho-escuro) 100%); border-radius: 0 0 30px 30px; }
 .cabecalho-apresentacao { display: flex; gap: 14px; align-items: center; min-width: 0; }
 .cabecalho-logo { width: 58px; height: 58px; flex-shrink: 0; object-fit: contain; border-radius: 50%; background: var(--cartao); padding: 5px; }
 .sobretitulo { font-size: 1rem; font-weight: 600; color: var(--cartao); }
@@ -53,27 +55,21 @@ h1 { font-size: clamp(1.65rem, 3vw, 2.25rem); line-height: 1.25; letter-spacing:
 .periodo strong { font-size: .75rem; font-weight: 500; }
 .secao-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 h2 { font-size: 1rem; font-weight: 600; letter-spacing: -.025em; }
-.secao-legenda { font-size: .6875rem; color: var(--secundario); }
-.aviso-integracao { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0 20px; color: var(--secundario); font-size: .6875rem; }
-.aviso-integracao .icone { width: 17px; height: 19px; }
 .resumo { display: grid; gap: 16px; }
 .saldo { position: relative; overflow: hidden; background: rgb(255 255 255 / 8%); border: 1px solid rgb(255 255 255 / 22%); color: var(--cartao); padding: 22px; border-radius: var(--raio-card); box-shadow: 0 4px 16px rgba(123, 4, 4, 0.22); }
 .saldo dt { display: flex; align-items: center; justify-content: space-between; font-size: .875rem; font-weight: 500; }
 .saldo dt .icone { color: var(--cartao); }
 .saldo-valor { font-size: 3.25rem; font-weight: 600; letter-spacing: -.045em; line-height: 1.4; margin: 12px 0; overflow-wrap: anywhere; }
 .saldo-descricao { color: var(--vinho-suave); font-size: .6875rem; max-width: 280px; }
-.saldo-status { display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(255, 255, 255, 0.22); margin-top: 14px; padding-top: 12px; font-size: .625rem; color: var(--vinho-suave); }
-.saldo-status > span { width: 6px; height: 6px; border-radius: 50%; background: var(--cartao); flex-shrink: 0; }
 .indicadores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .indicador { padding: 16px 14px; border: 1px solid var(--borda-suave); background: var(--cartao); border-radius: var(--raio-card); box-shadow: var(--sombra-card); min-width: 0; }
 .indicador dt { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: .75rem; font-weight: 500; }
 .indicador dt .icone { box-sizing: content-box; padding: 10px; border-radius: 10px; width: 20px; height: 20px; color: var(--vinho); background: var(--vinho-suave); }
+.indicador-entrada dt .icone, .acao-entrada .acao-icone { color: var(--entrada); background: var(--entrada-suave); }
 .indicador-valor { font-size: 1.75rem; font-weight: 600; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
-.indicador-descricao { font-size: .625rem; color: var(--secundario); margin-top: 4px; }
 .indicador-movimentacoes { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
 .indicador-movimentacoes dt { flex-direction: row; align-items: center; }
 .indicador-movimentacoes .indicador-valor { margin: 0; align-self: center; }
-.indicador-movimentacoes .indicador-descricao { grid-column: 1 / -1; padding-left: 52px; }
 .secoes-inferiores { display: grid; gap: 20px; margin-top: 24px; }
 .painel { padding: 22px; border: 1px solid var(--borda-suave); border-radius: var(--raio-card); background: var(--cartao); box-shadow: var(--sombra-card); min-width: 0; }
 .painel-descricao { margin-top: 6px; font-size: .75rem; color: var(--secundario); }
@@ -107,8 +103,6 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
 .anotacoes-icone { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--vinho-suave); color: var(--vinho); flex-shrink: 0; }
 .anotacoes-vazio h3 { font-size: .8125rem; font-weight: 500; }
 .anotacoes-vazio p { color: var(--secundario); font-size: .6875rem; margin-top: 4px; max-width: 440px; }
-.rodape { margin-top: 28px; color: var(--secundario); font-size: .625rem; text-align: center; }
-.rodape span { display: block; margin-top: 4px; }
 
 @media (min-width: 600px) {
     .conteudo { padding-right: 32px; padding-left: 32px; }
@@ -121,7 +115,6 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .indicador-movimentacoes { grid-column: auto; display: block; }
     .indicador-movimentacoes dt { flex-direction: column; align-items: flex-start; }
     .indicador-movimentacoes .indicador-valor { margin-top: 8px; }
-    .indicador-movimentacoes .indicador-descricao { padding: 0; }
     .acoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .anotacoes-vazio { flex-direction: row; text-align: left; justify-content: center; }
 }
@@ -139,7 +132,6 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .saldo dt { font-size: .75rem; }
     .saldo-valor { margin: .3rem 0 .4rem; font-size: 1.65rem; }
     .saldo-descricao { font-size: .6875rem; }
-    .saldo-status { margin-top: 10px; padding-top: 10px; }
     .periodo { gap: .35rem; margin-top: 12px; }
     .periodo .icone { width: 16px; height: 16px; }
     .secao { position: relative; display: flex; flex-direction: column; margin-top: -2.8rem; }
@@ -150,9 +142,7 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .indicador dt .icone { box-sizing: border-box; grid-column: 1; grid-row: 1 / 3; align-self: center; width: 2rem; height: 2rem; padding: .45rem; }
     .indicador dt > span { grid-column: 2; grid-row: 1; color: var(--secundario); }
     .indicador .indicador-valor { grid-column: 2; grid-row: 2; margin: 0; font-size: .875rem; }
-    .indicador .indicador-descricao { grid-column: 1 / -1; margin-top: 6px; padding: 0; font-size: .625rem; }
     .indicador-movimentacoes { grid-column: 1 / -1; }
-    .aviso-integracao { margin-bottom: 0; }
     .secoes-inferiores { gap: 24px; margin-top: 24px; }
     .painel-acoes { order: -1; padding: 0; border: 0; background: transparent; box-shadow: none; }
     .acoes { gap: .72rem; margin-top: .75rem; }
@@ -189,36 +179,31 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .navegacao-link:hover { background: rgba(255, 255, 255, 0.08); color: var(--cartao); }
     .navegacao-link[aria-current="page"] { color: var(--vinho); background: var(--cartao); font-weight: 600; }
     .conteudo { padding: 0 32px 32px; max-width: 1600px; margin: 0 auto; }
-    .cabecalho { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px; margin: 0 0 24px; padding: 32px 0 0; border-radius: 0; color: var(--texto); background: transparent; }
+    .cabecalho { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px; margin: 0 0 24px; padding: 28px; border-radius: var(--raio-card); }
     .cabecalho-apresentacao { display: none; }
-    .cabecalho-saudacao > p { color: var(--secundario); }
     .cabecalho-saudacao h1 { font-size: 1.75rem; letter-spacing: -.02em; }
     .cabecalho .saldo { grid-column: 2; grid-row: 1; }
     .periodo { flex-shrink: 0; }
     .resumo { grid-template-columns: 1fr; }
     .indicadores { gap: 12px; }
-    .indicador { padding: 20px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px; }
+    .indicador { padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; gap: 8px; }
     .indicador dt { flex-direction: row; align-items: center; }
-    .indicador .indicador-valor { margin: 0; align-self: center; }
-    .indicador-descricao { grid-column: 1 / -1; }
+    .indicador .indicador-valor { margin: 0; font-size: clamp(1rem, 1.6vw, 1.75rem); white-space: nowrap; overflow-wrap: normal; }
     .indicador-movimentacoes dt { flex-direction: row; align-items: center; }
     .indicador dt { font-size: .6875rem; }
-    .saldo { padding: 24px; background: var(--vinho); border-color: var(--vinho); }
+    .saldo { padding: 24px; background: var(--vinho); border-color: rgb(255 255 255 / 18%); }
     .saldo-valor { font-size: 2.5rem; margin: 8px 0; }
     .secoes-inferiores { grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr); align-items: stretch; }
     .acoes { gap: 12px; }
     .acao { flex-wrap: wrap; gap: 10px; padding: 16px; min-height: 86px; }
     .acao-texto { flex: 1; min-width: 80px; }
     .acao-etiqueta { margin-left: 0; }
-    .rodape { display: flex; justify-content: space-between; }
-    .rodape span { margin: 0; }
 }
 
 @media (min-width: 1280px) {
     .conteudo { padding-right: 40px; padding-left: 40px; }
     .indicador { padding: 22px; }
     .indicador dt { font-size: .75rem; }
-    .indicador-valor { font-size: 2rem; }
     .painel { padding: 26px; }
     .acao { flex-wrap: nowrap; padding: 16px; }
     .acao-etiqueta { margin-left: 0; }
