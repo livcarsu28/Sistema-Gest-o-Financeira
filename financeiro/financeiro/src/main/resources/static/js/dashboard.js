@@ -19,6 +19,7 @@ if (botaoCopiar && chavePix && statusCopia && rotuloCopiar) {
             rotuloCopiar.textContent = "Chave copiada";
             statusCopia.textContent = "Chave Pix copiada.";
         } catch {
+            rotuloCopiar.textContent = "Copiar chave Pix";
             statusCopia.textContent = "Não foi possível copiar. Selecione a chave e copie manualmente.";
         }
 

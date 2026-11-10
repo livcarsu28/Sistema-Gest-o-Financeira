@@ -1,11 +1,18 @@
 package financeiro.controller;
 
+import java.math.BigDecimal;
+import java.time.YearMonth;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.security.autoconfigure.SecurityProperties;
 import org.springframework.context.annotation.Import;
 import financeiro.config.SecurityConfig;
+import financeiro.service.DashboardService;
+import financeiro.service.DashboardService.DadosDashboard;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -24,6 +31,24 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 @WebMvcTest(FinanceiroController.class)
 @Import(SecurityConfig.class)
 class FinanceiroControllerTests {
+
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private financeiro.service.PixService pixService;
+
+    @org.junit.jupiter.api.BeforeEach
+    void configurarPix() {
+        org.mockito.Mockito.when(pixService.consultar()).thenReturn(
+                new financeiro.service.PixService.DadosPix(null, "Nenhuma chave Pix cadastrada."));
+    }
+    @MockitoBean
+    private DashboardService dashboardService;
+
+    @BeforeEach
+    void configurarDashboard() {
+        org.mockito.Mockito.when(dashboardService.consultarDashboard()).thenReturn(
+                new DadosDashboard(YearMonth.of(2026, 11), BigDecimal.ZERO, BigDecimal.ZERO,
+                        BigDecimal.ZERO, 0));
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -99,6 +124,49 @@ class FinanceiroControllerTests {
                 .andExpect(view().name("dashboard"))
                 .andExpect(content().string(containsString("Olá, equipe.")))
                 .andExpect(content().string(containsString("/img/logo-resgate-de-vidas.png")))
-                .andExpect(content().string(containsString("Aguardando dados financeiros")));
+                .andExpect(content().string(containsString("novembro de 2026")))
+                .andExpect(content().string(containsString("R$\u00a00,00")))
+                .andExpect(content().string(containsString(">0</dd>")));
+    }
+
+    @Test
+    @WithMockUser
+    void dashboardExibeValoresMensaisFormatados() throws Exception {
+        org.mockito.Mockito.when(dashboardService.consultarDashboard()).thenReturn(
+                new DadosDashboard(YearMonth.of(2026, 11), new BigDecimal("1234.56"),
+                        new BigDecimal("2000.10"), new BigDecimal("-765.54"), 12));
+
+        mockMvc.perform(get("/dashboard").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("R$\u00a01.234,56")))
+                .andExpect(content().string(containsString("R$\u00a02.000,10")))
+                .andExpect(content().string(containsString("-R$\u00a0765,54")))
+                .andExpect(content().string(containsString(">12</dd>")));
+    }
+
+    @Test
+    @WithMockUser
+    void paginasExibemMesmaChavePixEFormularioTemCsrf() throws Exception {
+        org.mockito.Mockito.when(pixService.consultar()).thenReturn(
+                new financeiro.service.PixService.DadosPix("contato@example.org", "Chave Pix cadastrada."));
+
+        mockMvc.perform(get("/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("data-chave=\"contato@example.org\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(containsString(" disabled"))));
+        mockMvc.perform(get("/configuracoes"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("data-chave=\"contato@example.org\"")))
+                .andExpect(content().string(containsString("action=\"/configuracoes/pix\"")))
+                .andExpect(content().string(containsString("name=\"_csrf\"")));
+    }
+
+    @Test
+    @WithMockUser
+    void dashboardSemChaveDesabilitaCopia() throws Exception {
+        mockMvc.perform(get("/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Não cadastrada")))
+                .andExpect(content().string(containsString(" disabled=\"disabled\"")));
     }
 }

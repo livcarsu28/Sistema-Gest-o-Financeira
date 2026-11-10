@@ -234,8 +234,7 @@
                             <div class="configuracoes-linha-dados">
                                 <div class="configuracoes-coluna-dados">
                                     <span class="configuracoes-rotulo-dado">Chave cadastrada</span>
-                                    <p class="configuracoes-valor-destaque" id="texto-chave-pix">
-                                        financeiro@resgatedevidas.org.br</p>
+                                    <p class="configuracoes-valor-destaque" id="texto-chave-pix" th:attr="data-chave=${pix.chave}" th:text="${pix.disponivel() ? pix.chave : 'Não cadastrada'}">Não cadastrada</p><p class="configuracoes-card-subtitulo" id="mensagem-pix" th:text="${pix.mensagem}" role="status"></p>
                                 </div>
                                 <button type="button" class="configuracoes-btn-editar" id="btn-abrir-modal-pix"
                                     aria-label="Editar chave PIX">
@@ -420,11 +419,11 @@
                 <button type="button" class="configuracoes-modal-btn-fechar" id="btn-fechar-modal-pix"
                     aria-label="Fechar janela">×</button>
             </div>
-            <form id="form-editar-pix" class="configuracoes-modal-form" novalidate>
+            <form id="form-editar-pix" class="configuracoes-modal-form" th:action="@{/configuracoes/pix}" method="post" novalidate>
                 <div class="configuracoes-form-campo">
                     <label for="input-editar-chave-pix" class="configuracoes-label">Chave PIX da instituição</label>
-                    <input type="text" id="input-editar-chave-pix" class="configuracoes-input" required
-                        placeholder="exemplo@resgatedevidas.org.br" autocomplete="off">
+                    <input type="text" id="input-editar-chave-pix" name="chavePix" class="configuracoes-input" required maxlength="100" aria-describedby="erro-pix"
+                        placeholder="Informe a chave Pix" autocomplete="off">
                     <span class="configuracoes-campo-erro" id="erro-pix" aria-live="polite"></span>
                 </div>
                 <div class="configuracoes-modal-acoes">

@@ -229,18 +229,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputEditarChavePix = $("input-editar-chave-pix");
     const erroPix = $("erro-pix");
 
-    // Restaurar valor salvo anteriormente (se houver)
-    const chavePixSalva = localStorage.getItem("config_chave_pix");
-    if (chavePixSalva && textoChavePix) {
-        textoChavePix.textContent = chavePixSalva;
-    }
-
     function abrirModalPix() {
         if (!modalPix) return;
+        clearTimeout(timerToast);
+        if (toast) toast.hidden = true;
         if (inputEditarChavePix && textoChavePix) {
-            inputEditarChavePix.value = textoChavePix.textContent.trim();
+            inputEditarChavePix.value = textoChavePix.dataset.chave || "";
         }
         if (erroPix) erroPix.textContent = "";
+        inputEditarChavePix?.setAttribute("aria-invalid", "false");
         modalPix.hidden = false;
         setTimeout(() => inputEditarChavePix?.focus(), 50);
     }
@@ -277,21 +274,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (formEditarPix) {
-        formEditarPix.addEventListener("submit", (e) => {
+        formEditarPix.addEventListener("submit", async (e) => {
             e.preventDefault();
             const novoValor = inputEditarChavePix ? inputEditarChavePix.value.trim() : "";
             const erro = validarChavePix(novoValor);
 
             if (erro) {
                 if (erroPix) erroPix.textContent = erro;
+                inputEditarChavePix?.setAttribute("aria-invalid", "true");
                 inputEditarChavePix?.focus();
                 return;
             }
 
-            if (textoChavePix) textoChavePix.textContent = novoValor;
-            localStorage.setItem("config_chave_pix", novoValor);
-            fecharModalPix();
-            exibirToast("Chave PIX atualizada com sucesso!");
+            const botaoSalvar = formEditarPix.querySelector('button[type="submit"]');
+            if (botaoSalvar.disabled) return;
+            botaoSalvar.disabled = true;
+            formEditarPix.setAttribute("aria-busy", "true");
+            if (erroPix) erroPix.textContent = "";
+            inputEditarChavePix.setAttribute("aria-invalid", "false");
+            try {
+                const resposta = await fetch(formEditarPix.action, {
+                    method: "POST",
+                    headers: { "Accept": "application/json" },
+                    body: new URLSearchParams(new FormData(formEditarPix))
+                });
+                if (resposta.redirected || !resposta.headers.get("content-type")?.includes("application/json")) {
+                    throw new Error("Sua sessão expirou ou a solicitação foi recusada. Recarregue a página e tente novamente.");
+                }
+                const dados = await resposta.json();
+                if (!resposta.ok) throw new Error(dados.mensagem || "Não foi possível salvar a chave Pix.");
+                if (textoChavePix) {
+                    textoChavePix.textContent = dados.chave;
+                    textoChavePix.dataset.chave = dados.chave;
+                }
+                const mensagemPix = $("mensagem-pix");
+                if (mensagemPix) mensagemPix.textContent = "Chave Pix cadastrada para a instituição.";
+                fecharModalPix();
+                exibirToast(dados.mensagem);
+            } catch (erroSalvar) {
+                if (erroPix) erroPix.textContent = erroSalvar.message || "Não foi possível salvar a chave Pix. Tente novamente.";
+                inputEditarChavePix.setAttribute("aria-invalid", "true");
+                inputEditarChavePix.focus();
+            } finally {
+                botaoSalvar.disabled = false;
+                formEditarPix.removeAttribute("aria-busy");
+            }
         });
     }
 
