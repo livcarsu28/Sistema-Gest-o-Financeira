@@ -16,8 +16,8 @@ import financeiro.service.PixService;
 public class FinanceiroController {
 
     private static final Locale LOCALE_BRASIL = Locale.forLanguageTag("pt-BR");
-    private static final DateTimeFormatter FORMATADOR_PERIODO =
-            DateTimeFormatter.ofPattern("MMMM 'de' yyyy", LOCALE_BRASIL);
+    private static final DateTimeFormatter FORMATADOR_PERIODO = DateTimeFormatter.ofPattern("MMMM 'de' yyyy",
+            LOCALE_BRASIL);
 
     private final DashboardService dashboardService;
     private final PixService pixService;
@@ -53,11 +53,5 @@ public class FinanceiroController {
     @GetMapping("/relatorios")
     public String relatorios() {
         return "relatorios";
-    }
-
-     @GetMapping("/configuracoes")
-    public String configuracoes(Model model) {
-        model.addAttribute("pix", pixService.consultar());
-        return "configuracoes";
     }
 }

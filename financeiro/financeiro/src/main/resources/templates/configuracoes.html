@@ -74,7 +74,7 @@
         <!-- Conteúdo Principal -->
         <main class="configuracoes-main" id="conteudo-principal" tabindex="-1">
             <div class="configuracoes-container">
-                <!-- 5.1. Cabeçalho -->
+                <!-- Cabeçalho -->
                 <header class="configuracoes-header">
                     <div class="configuracoes-header-info">
                         <p class="configuracoes-instituicao">RESGATE DE VIDAS</p>
@@ -92,9 +92,15 @@
                     </button>
                 </header>
 
+                <!-- Feedback de Sucesso do Spring Boot -->
+                <div th:if="${sucesso}" class="configuracoes-toast-spring"
+                    style="background-color: #d4edda; color: #155724; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+                    <span th:text="${sucesso}"></span>
+                </div>
+
                 <!-- Grid de Cards -->
                 <div class="configuracoes-grid-cards">
-                    <!-- 5.2. Perfil de acesso -->
+                    <!-- Perfil de acesso -->
                     <section class="configuracoes-card-perfil configuracoes-card-destaque"
                         aria-labelledby="titulo-perfil">
                         <div class="configuracoes-perfil-esq">
@@ -124,7 +130,7 @@
                         </div>
                     </section>
 
-                    <!-- 5.3. Gerenciamento de imagens -->
+                    <!-- Gerenciamento de imagens -->
                     <section class="configuracoes-card configuracoes-card-destaque" aria-labelledby="titulo-imagens">
                         <div class="configuracoes-card-cabecalho">
                             <div class="configuracoes-badge-icone" aria-hidden="true">
@@ -214,7 +220,7 @@
                         </div>
                     </section>
 
-                    <!-- 5.4. Chave PIX -->
+                    <!-- Chave PIX -->
                     <section class="configuracoes-card" aria-labelledby="titulo-pix">
                         <div class="configuracoes-card-cabecalho">
                             <div class="configuracoes-badge-icone" aria-hidden="true">
@@ -234,7 +240,8 @@
                             <div class="configuracoes-linha-dados">
                                 <div class="configuracoes-coluna-dados">
                                     <span class="configuracoes-rotulo-dado">Chave cadastrada</span>
-                                    <p class="configuracoes-valor-destaque" id="texto-chave-pix" th:attr="data-chave=${pix.chave}" th:text="${pix.disponivel() ? pix.chave : 'Não cadastrada'}">Não cadastrada</p><p class="configuracoes-card-subtitulo" id="mensagem-pix" th:text="${pix.mensagem}" role="status"></p>
+                                    <p class="configuracoes-valor-destaque" id="texto-chave-pix"
+                                        th:text="${instituicao.chavePix ?: 'Não cadastrada'}"></p>
                                 </div>
                                 <button type="button" class="configuracoes-btn-editar" id="btn-abrir-modal-pix"
                                     aria-label="Editar chave PIX">
@@ -250,7 +257,7 @@
                         </div>
                     </section>
 
-                    <!-- 5.5. Endereço da instituição -->
+                    <!-- Endereço da instituição -->
                     <section class="configuracoes-card" aria-labelledby="titulo-endereco">
                         <div class="configuracoes-card-cabecalho">
                             <div class="configuracoes-badge-icone" aria-hidden="true">
@@ -273,10 +280,12 @@
                         <div class="configuracoes-card-conteudo">
                             <div class="configuracoes-linha-dados">
                                 <div class="configuracoes-coluna-dados">
-                                    <p class="configuracoes-valor-destaque" id="texto-endereco-linha1">Rua da Esperança,
-                                        128 - Centro</p>
-                                    <p class="configuracoes-valor-secundario" id="texto-endereco-linha2">São Paulo - SP
-                                        · CEP 01010-001</p>
+                                    <p class="configuracoes-valor-destaque" id="texto-endereco-linha1"
+                                        th:text="${instituicao.logradouro + ', ' + instituicao.numero + ' - ' + instituicao.bairro}">
+                                    </p>
+                                    <p class="configuracoes-valor-secundario" id="texto-endereco-linha2"
+                                        th:text="${instituicao.cidade + ' - ' + instituicao.uf + ' · CEP ' + instituicao.cep}">
+                                    </p>
                                 </div>
                                 <button type="button" class="configuracoes-btn-editar" id="btn-abrir-modal-endereco"
                                     aria-label="Editar endereço da instituição">
@@ -292,7 +301,7 @@
                         </div>
                     </section>
 
-                    <!-- 5.6. Notificações -->
+                    <!-- Notificações -->
                     <section class="configuracoes-card configuracoes-card-destaque"
                         aria-labelledby="titulo-notificacoes">
                         <div class="configuracoes-card-cabecalho">
@@ -310,7 +319,6 @@
                         </div>
 
                         <div class="configuracoes-card-conteudo configuracoes-notificacoes-container">
-                            <!-- Opção 1: Lançamentos -->
                             <div class="configuracoes-notificacao-linha">
                                 <div class="configuracoes-notificacao-texto">
                                     <strong class="configuracoes-notificacao-nome">Lançamentos</strong>
@@ -324,7 +332,6 @@
                                 </label>
                             </div>
 
-                            <!-- Opção 2: Lembretes -->
                             <div class="configuracoes-notificacao-linha">
                                 <div class="configuracoes-notificacao-texto">
                                     <strong class="configuracoes-notificacao-nome">Lembretes</strong>
@@ -338,7 +345,6 @@
                                 </label>
                             </div>
 
-                            <!-- Opção 3: Relatórios -->
                             <div class="configuracoes-notificacao-linha">
                                 <div class="configuracoes-notificacao-texto">
                                     <strong class="configuracoes-notificacao-nome">Relatórios</strong>
@@ -358,7 +364,7 @@
         </main>
     </div>
 
-    <!-- 6. Navegação Inferior Fixa (Mobile) -->
+    <!-- Navegação Inferior Fixa (Mobile) -->
     <nav class="configuracoes-nav-inferior" aria-label="Navegação móvel principal">
         <ul class="configuracoes-nav-inferior-lista">
             <li>
@@ -419,11 +425,13 @@
                 <button type="button" class="configuracoes-modal-btn-fechar" id="btn-fechar-modal-pix"
                     aria-label="Fechar janela">×</button>
             </div>
-            <form id="form-editar-pix" class="configuracoes-modal-form" th:action="@{/configuracoes/pix}" method="post" novalidate>
+            <form id="form-editar-pix" class="configuracoes-modal-form" th:action="@{/configuracoes/pix}" method="post"
+                novalidate>
                 <div class="configuracoes-form-campo">
                     <label for="input-editar-chave-pix" class="configuracoes-label">Chave PIX da instituição</label>
-                    <input type="text" id="input-editar-chave-pix" name="chavePix" class="configuracoes-input" required maxlength="100" aria-describedby="erro-pix"
-                        placeholder="Informe a chave Pix" autocomplete="off">
+                    <input type="text" id="input-editar-chave-pix" name="chavePix" class="configuracoes-input" required
+                        maxlength="100" aria-describedby="erro-pix" placeholder="Informe a chave Pix"
+                        th:value="${instituicao.chavePix}" autocomplete="off">
                     <span class="configuracoes-campo-erro" id="erro-pix" aria-live="polite"></span>
                 </div>
                 <div class="configuracoes-modal-acoes">
@@ -444,40 +452,42 @@
                 <button type="button" class="configuracoes-modal-btn-fechar" id="btn-fechar-modal-endereco"
                     aria-label="Fechar janela">×</button>
             </div>
-            <form id="form-editar-endereco" class="configuracoes-modal-form" novalidate>
+            <form id="form-editar-endereco" class="configuracoes-modal-form" th:action="@{/configuracoes/endereco}"
+                method="post" novalidate>
                 <div class="configuracoes-form-campo">
                     <label for="input-logradouro" class="configuracoes-label">Logradouro (Rua, Avenida, etc.)</label>
-                    <input type="text" id="input-logradouro" class="configuracoes-input" required
-                        placeholder="Ex.: Rua da Esperança" autocomplete="street-address">
+                    <input type="text" id="input-logradouro" name="logradouro" class="configuracoes-input" required
+                        placeholder="Ex.: Rua da Esperança" th:value="${instituicao.logradouro}"
+                        autocomplete="street-address">
                 </div>
                 <div class="configuracoes-form-linha-2">
                     <div class="configuracoes-form-campo">
                         <label for="input-numero" class="configuracoes-label">Número</label>
-                        <input type="text" id="input-numero" class="configuracoes-input" required
-                            placeholder="Ex.: 128">
+                        <input type="text" id="input-numero" name="numero" class="configuracoes-input" required
+                            placeholder="Ex.: 128" th:value="${instituicao.numero}">
                     </div>
                     <div class="configuracoes-form-campo">
                         <label for="input-bairro" class="configuracoes-label">Bairro</label>
-                        <input type="text" id="input-bairro" class="configuracoes-input" required
-                            placeholder="Ex.: Centro">
+                        <input type="text" id="input-bairro" name="bairro" class="configuracoes-input" required
+                            placeholder="Ex.: Centro" th:value="${instituicao.bairro}">
                     </div>
                 </div>
                 <div class="configuracoes-form-linha-2">
                     <div class="configuracoes-form-campo">
                         <label for="input-cidade" class="configuracoes-label">Cidade</label>
-                        <input type="text" id="input-cidade" class="configuracoes-input" required
-                            placeholder="Ex.: São Paulo">
+                        <input type="text" id="input-cidade" name="cidade" class="configuracoes-input" required
+                            placeholder="Ex.: São Paulo" th:value="${instituicao.cidade}">
                     </div>
                     <div class="configuracoes-form-campo" style="max-width: 90px;">
                         <label for="input-uf" class="configuracoes-label">UF</label>
-                        <input type="text" id="input-uf" class="configuracoes-input" maxlength="2" required
-                            placeholder="SP" style="text-transform: uppercase;">
+                        <input type="text" id="input-uf" name="uf" class="configuracoes-input" maxlength="2" required
+                            placeholder="SP" th:value="${instituicao.uf}" style="text-transform: uppercase;">
                     </div>
                 </div>
                 <div class="configuracoes-form-campo">
                     <label for="input-cep" class="configuracoes-label">CEP</label>
-                    <input type="text" id="input-cep" class="configuracoes-input" maxlength="9" required
-                        placeholder="01010-001" autocomplete="postal-code">
+                    <input type="text" id="input-cep" name="cep" class="configuracoes-input" maxlength="9" required
+                        placeholder="01010-001" th:value="${instituicao.cep}" autocomplete="postal-code">
                     <span class="configuracoes-campo-erro" id="erro-endereco" aria-live="polite"></span>
                 </div>
                 <div class="configuracoes-modal-acoes">
