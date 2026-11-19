@@ -10,6 +10,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.security.autoconfigure.SecurityProperties;
 import org.springframework.context.annotation.Import;
 import financeiro.config.SecurityConfig;
+import financeiro.config.TestSecurityConfig;
 import financeiro.service.DashboardService;
 import financeiro.service.DashboardService.DadosDashboard;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -29,7 +30,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 
 @WebMvcTest(FinanceiroController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, TestSecurityConfig.class})
 class FinanceiroControllerTests {
 
     @org.springframework.test.context.bean.override.mockito.MockitoBean
