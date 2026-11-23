@@ -14,7 +14,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**", "/js/**", "/fonts/**", "/img/**", "/error").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/fonts/**", "/img/**", "/error", "/api/publicacao-transparencia").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form.defaultSuccessUrl("/dashboard", true).permitAll())
                 .httpBasic(Customizer.withDefaults());

@@ -56,11 +56,6 @@ public class FinanceiroController {
         return "movimentacoes";
     }
 
-    @GetMapping("/relatorios")
-    public String relatorios() {
-        return "relatorios";
-    }
-
     @GetMapping("/configuracoes")
     public String configuracoes(Model model) {
         model.addAttribute("pix", pixService.consultar());
