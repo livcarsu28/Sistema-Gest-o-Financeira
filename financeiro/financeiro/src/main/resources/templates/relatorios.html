@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Relatórios Financeiros | Resgate de Vidas</title>
+    <link rel="stylesheet" th:href="@{/css/relatorios.css}">
+    <script th:src="@{/js/relatorios.js}" defer></script>
+</head>
+
+<body class="relatorios-body">
+    <a class="relatorios-pular" href="#conteudo-principal">Ir para o conteúdo</a>
+
+    <div class="relatorios-layout">
+        <!-- Barra lateral para Desktop -->
+        <aside class="relatorios-sidebar">
+            <a class="relatorios-sidebar-marca" th:href="@{/dashboard}" aria-label="Resgate de Vidas – Criança Feliz, início">
+                <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="" width="52" height="52">
+                <span class="relatorios-sidebar-marca-texto">
+                    <strong>Resgate de Vidas</strong>
+                    <span>Criança Feliz</span>
+                </span>
+            </a>
+            <p class="relatorios-sidebar-marca-sistema">Gestão financeira</p>
+            <nav class="relatorios-sidebar-nav" aria-label="Navegação lateral">
+                <p class="relatorios-sidebar-nav-titulo">Principal</p>
+                <ul class="relatorios-sidebar-nav-lista">
+                    <li>
+                        <a class="relatorios-sidebar-nav-link" th:href="@{/dashboard}">
+                            <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
+                            </svg>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="relatorios-sidebar-nav-link" th:href="@{/movimentacoes}">
+                            <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                <path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4" />
+                            </svg>
+                            <span>Movimentações</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="relatorios-sidebar-nav-link ativo" th:href="@{/relatorios}" aria-current="page">
+                            <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                <path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6" />
+                            </svg>
+                            <span>Relatórios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="relatorios-sidebar-nav-link" th:href="@{/configuracoes}">
+                            <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                <path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1" />
+                            </svg>
+                            <span>Dados da ONG</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="relatorios-main" id="conteudo-principal" tabindex="-1">
+            <!-- Cabeçalho -->
+            <header class="relatorios-cabecalho">
+                <div class="relatorios-cabecalho-topo">
+                    <div class="relatorios-cabecalho-identificacao">
+                        <img class="relatorios-cabecalho-logo" th:src="@{/img/logo-resgate-de-vidas.png}" alt="" width="56" height="56">
+                        <div>
+                            <p class="relatorios-sobretitulo">Resgate de Vidas — Criança Feliz</p>
+                            <h1>Relatórios Financeiros</h1>
+                        </div>
+                    </div>
+                    <div class="relatorios-cabecalho-acoes">
+                        <button type="button" class="botao-secundario" id="btn-imprimir">
+                            <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                            <span>Imprimir / PDF</span>
+                        </button>
+                        <button type="button" class="botao-primario" id="btn-abrir-publicacao">
+                            <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            <span>Publicar no Site</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Barra de Filtros de Período -->
+                <form class="relatorios-filtros-form" th:action="@{/relatorios}" method="get" id="form-filtros">
+                    <input type="hidden" name="aba" id="input-aba" th:value="${abaAtiva}">
+                    <div class="filtros-grupo">
+                        <label for="select-mes">Mês de Referência:</label>
+                        <select id="select-mes" name="mes" class="select-filtro">
+                            <option th:each="m : ${mesesOpcoes}"
+                                    th:value="${m.numero}"
+                                    th:text="${m.nome}"
+                                    th:selected="${m.numero == mesSelecionado}">Janeiro</option>
+                        </select>
+                    </div>
+                    <div class="filtros-grupo">
+                        <label for="select-ano">Ano:</label>
+                        <select id="select-ano" name="ano" class="select-filtro">
+                            <option th:each="a : ${anosOpcoes}"
+                                    th:value="${a}"
+                                    th:text="${a}"
+                                    th:selected="${a == anoSelecionado}">2026</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="botao-filtrar">Atualizar Relatório</button>
+                </form>
+
+                <!-- Barra de Abas de Navegação -->
+                <nav class="relatorios-abas" aria-label="Navegação entre relatórios">
+                    <button type="button" class="aba-btn" data-aba="mensal" th:classappend="${abaAtiva == 'mensal' ? 'ativo' : ''}">
+                        <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span>Relatório Mensal</span>
+                    </button>
+                    <button type="button" class="aba-btn" data-aba="anual" th:classappend="${abaAtiva == 'anual' ? 'ativo' : ''}">
+                        <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        <span>Consolidado Anual (12 Meses)</span>
+                    </button>
+                    <button type="button" class="aba-btn" data-aba="categorias" th:classappend="${abaAtiva == 'categorias' ? 'ativo' : ''}">
+                        <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                        <span>Por Categorias</span>
+                    </button>
+                    <button type="button" class="aba-btn" data-aba="publicacao" th:classappend="${abaAtiva == 'publicacao' ? 'ativo' : ''}">
+                        <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        <span>Transparência no Site</span>
+                    </button>
+                </nav>
+            </header>
+
+            <!-- ========================================================= -->
+            <!-- 1. ABA: RELATÓRIO MENSAL                                  -->
+            <!-- ========================================================= -->
+            <section id="aba-conteudo-mensal" class="aba-painel" th:classappend="${abaAtiva == 'mensal' ? 'ativo' : ''}">
+                <div class="periodo-destaque">
+                    <p class="periodo-texto">Demonstrativo financeiro referente a <strong th:text="${relatorioMensal.periodoFormatado}">Novembro de 2026</strong></p>
+                </div>
+
+                <!-- Cards de Indicadores Mensais -->
+                <div class="grid-indicadores">
+                    <article class="card-indicador entrada">
+                        <div class="indicador-topo">
+                            <span>Entradas Recebidas</span>
+                            <div class="indicador-icone-wrapper entrada">
+                                <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <strong class="indicador-valor" th:text="${totalEntradasFormatado}">R$ 0,00</strong>
+                        <p class="indicador-detalhe">Receitas efetivadas no período</p>
+                    </article>
+
+                    <article class="card-indicador saida">
+                        <div class="indicador-topo">
+                            <span>Despesas Pagas</span>
+                            <div class="indicador-icone-wrapper saida">
+                                <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <strong class="indicador-valor" th:text="${totalSaidasFormatado}">R$ 0,00</strong>
+                        <p class="indicador-detalhe">Total de gastos da ONG no período</p>
+                    </article>
+
+                    <article class="card-indicador saldo">
+                        <div class="indicador-topo">
+                            <span>Saldo do Mês</span>
+                            <div class="indicador-icone-wrapper saldo">
+                                <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            </div>
+                        </div>
+                        <strong class="indicador-valor" th:text="${saldoFormatado}">R$ 0,00</strong>
+                        <p class="indicador-detalhe">Entradas menos despesas pagas</p>
+                    </article>
+
+                    <article class="card-indicador pendente">
+                        <div class="indicador-topo">
+                            <span>Pendentes / Vencidos</span>
+                            <div class="indicador-icone-wrapper pendente">
+                                <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            </div>
+                        </div>
+                        <strong class="indicador-valor" th:text="${totalPendenteFormatado}">R$ 0,00</strong>
+                        <p class="indicador-detalhe" th:text="${relatorioMensal.quantidadeMovimentacoes + ' movimentações registradas'}">0 movimentações</p>
+                    </article>
+                </div>
+
+                <!-- Tabela de Movimentações do Mês -->
+                <div class="painel-relatorio">
+                    <div class="painel-cabecalho">
+                        <h2>Extrato Detalhado do Mês</h2>
+                        <span class="badge-total" th:text="${relatorioMensal.movimentacoes.size() + ' registros'}">0 registros</span>
+                    </div>
+
+                    <div class="tabela-container" th:if="${!relatorioMensal.movimentacoes.isEmpty()}">
+                        <table class="tabela-relatorio">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Tipo</th>
+                                    <th>Categoria</th>
+                                    <th>Descrição</th>
+                                    <th>Forma Pgto</th>
+                                    <th>Status</th>
+                                    <th class="col-valor">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${relatorioMensal.movimentacoes}">
+                                    <td th:text="${#temporals.format(item.data, 'dd/MM/yyyy HH:mm')}">01/01/2026</td>
+                                    <td>
+                                        <span class="badge-tipo" th:classappend="${item.tipo == 'ENTRADA' ? 'tipo-entrada' : 'tipo-saida'}" th:text="${item.tipo}">ENTRADA</span>
+                                    </td>
+                                    <td th:text="${item.categoria}">Categoria</td>
+                                    <td th:text="${item.descricao}">Descrição</td>
+                                    <td th:text="${item.formaPagamento}">Forma</td>
+                                    <td>
+                                        <span class="badge-status" th:classappend="${item.statusPagamento == 'PAGO' ? 'status-pago' : 'status-pendente'}" th:text="${item.statusPagamento}">PAGO</span>
+                                    </td>
+                                    <td class="col-valor" th:classappend="${item.tipo == 'ENTRADA' ? 'valor-positivo' : 'valor-negativo'}"
+                                        th:text="${(item.tipo == 'ENTRADA' ? '+ ' : '- ') + #numbers.formatCurrency(item.valor)}">R$ 0,00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="estado-vazio" th:if="${relatorioMensal.movimentacoes.isEmpty()}">
+                        <svg class="icone-vazio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="13" y2="17"></line></svg>
+                        <h3>Nenhuma movimentação registrada no mês selecionado</h3>
+                        <p>Utilize os filtros acima para consultar outros períodos ou adicione lançamentos na aba de Movimentações.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- 2. ABA: CONSOLIDADO ANUAL (12 MESES)                      -->
+            <!-- ========================================================= -->
+            <section id="aba-conteudo-anual" class="aba-painel" th:classappend="${abaAtiva == 'anual' ? 'ativo' : ''}">
+                <div class="periodo-destaque">
+                    <p class="periodo-texto">Consolidado das receitas e despesas do ano de <strong th:text="${relatorioAnual.ano}">2026</strong> (12 meses)</p>
+                </div>
+
+                <!-- Resumo Geral do Ano -->
+                <div class="grid-indicadores-anual">
+                    <div class="card-anual-destaque entrada">
+                        <span>Total de Receitas no Ano</span>
+                        <strong th:text="${totalEntradasAnoFormatado}">R$ 0,00</strong>
+                    </div>
+                    <div class="card-anual-destaque saida">
+                        <span>Total de Gastos no Ano</span>
+                        <strong th:text="${totalSaidasAnoFormatado}">R$ 0,00</strong>
+                    </div>
+                    <div class="card-anual-destaque saldo">
+                        <span>Saldo Anual Acumulado</span>
+                        <strong th:text="${saldoAnoFormatado}">R$ 0,00</strong>
+                    </div>
+                    <div class="card-anual-destaque media">
+                        <span>Média Mensal de Gastos</span>
+                        <strong th:text="${mediaMensalGastosFormatada}">R$ 0,00</strong>
+                    </div>
+                </div>
+
+                <!-- Tabela Comparativa dos 12 Meses -->
+                <div class="painel-relatorio">
+                    <div class="painel-cabecalho">
+                        <h2>Evolução Mês a Mês (Janeiro a Dezembro)</h2>
+                        <span class="badge-total">12 Meses</span>
+                    </div>
+
+                    <div class="tabela-container">
+                        <table class="tabela-relatorio">
+                            <thead>
+                                <tr>
+                                    <th>Mês</th>
+                                    <th class="col-valor">Receitas (Entradas)</th>
+                                    <th class="col-valor">Despesas (Saídas)</th>
+                                    <th class="col-valor">Saldo do Mês</th>
+                                    <th>Lançamentos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="m : ${relatorioAnual.meses}">
+                                    <td>
+                                        <strong th:text="${m.nomeMes}">Janeiro</strong>
+                                    </td>
+                                    <td class="col-valor valor-positivo" th:text="${#numbers.formatCurrency(m.entradas)}">R$ 0,00</td>
+                                    <td class="col-valor valor-negativo" th:text="${#numbers.formatCurrency(m.saidas)}">R$ 0,00</td>
+                                    <td class="col-valor" th:classappend="${m.saldo >= 0 ? 'valor-positivo' : 'valor-negativo'}"
+                                        th:text="${#numbers.formatCurrency(m.saldo)}">R$ 0,00</td>
+                                    <td>
+                                        <span class="badge-qtd" th:text="${m.quantidadeMovimentacoes + ' itens'}">0 itens</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="linha-total">
+                                    <td><strong>TOTAL ANUAL</strong></td>
+                                    <td class="col-valor valor-positivo" th:text="${totalEntradasAnoFormatado}">R$ 0,00</td>
+                                    <td class="col-valor valor-negativo" th:text="${totalSaidasAnoFormatado}">R$ 0,00</td>
+                                    <td class="col-valor" th:classappend="${relatorioAnual.saldoAno >= 0 ? 'valor-positivo' : 'valor-negativo'}"
+                                        th:text="${saldoAnoFormatado}">R$ 0,00</td>
+                                    <td>—</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- 3. ABA: TOTALIZADORES POR CATEGORIA                       -->
+            <!-- ========================================================= -->
+            <section id="aba-conteudo-categorias" class="aba-painel" th:classappend="${abaAtiva == 'categorias' ? 'ativo' : ''}">
+                <div class="periodo-destaque">
+                    <p class="periodo-texto">Distribuição financeira por categoria em <strong th:text="${relatorioMensal.periodoFormatado}">Novembro de 2026</strong></p>
+                </div>
+
+                <div class="painel-relatorio">
+                    <div class="painel-cabecalho">
+                        <h2>Detalhamento por Categoria</h2>
+                        <span class="badge-total" th:text="${totalizadoresCategorias.size() + ' categorias com movimento'}">0 categorias</span>
+                    </div>
+
+                    <div class="tabela-container" th:if="${!totalizadoresCategorias.isEmpty()}">
+                        <table class="tabela-relatorio">
+                            <thead>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Tipo</th>
+                                    <th>Movimentações</th>
+                                    <th class="col-valor">Total</th>
+                                    <th style="width: 250px;">Proporção</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cat : ${totalizadoresCategorias}">
+                                    <td>
+                                        <strong th:text="${cat.categoria}">Nome Categoria</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge-tipo" th:classappend="${cat.tipo == 'ENTRADA' ? 'tipo-entrada' : 'tipo-saida'}" th:text="${cat.tipo}">SAIDA</span>
+                                    </td>
+                                    <td th:text="${cat.quantidade + ' lançamentos'}">0 lançamentos</td>
+                                    <td class="col-valor" th:classappend="${cat.tipo == 'ENTRADA' ? 'valor-positivo' : 'valor-negativo'}"
+                                        th:text="${#numbers.formatCurrency(cat.totalValor)}">R$ 0,00</td>
+                                    <td>
+                                        <div class="barra-progresso-container">
+                                            <div class="barra-progresso"
+                                                 th:classappend="${cat.tipo == 'ENTRADA' ? 'barra-entrada' : 'barra-saida'}"
+                                                 th:style="'width: ' + ${cat.percentual} + '%'"></div>
+                                            <span class="rotulo-percentual" th:text="${cat.percentual + '%'}">0%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="estado-vazio" th:if="${totalizadoresCategorias.isEmpty()}">
+                        <svg class="icone-vazio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                        <h3>Nenhuma categoria com movimentação no período</h3>
+                        <p>Os totais por categoria serão computados automaticamente conforme os lançamentos forem registrados.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- 4. ABA: TRANSPARÊNCIA E PUBLICAÇÃO NO SITE                -->
+            <!-- ========================================================= -->
+            <section id="aba-conteudo-publicacao" class="aba-painel" th:classappend="${abaAtiva == 'publicacao' ? 'ativo' : ''}">
+                <div class="painel-publicacao-topo">
+                    <div class="publicacao-info-texto">
+                        <p class="secao-sobretitulo">Integração com o Site Institucional</p>
+                        <h2>Publicação de Dados Financeiros (Transparência)</h2>
+                        <p class="publicacao-descricao">
+                            Conforme os requisitos da ONG, as informações publicadas aqui alimentam automaticamente a seção
+                            <strong>"Faça uma Doação"</strong> do site institucional com o mês de referência, o total de gastos e o status de atualização.
+                        </p>
+                    </div>
+                    <button type="button" class="botao-primario botao-publicar-grande" id="btn-publicar-tela">
+                        <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <span>Publicar Dados do Mês no Site</span>
+                    </button>
+                </div>
+
+                <div class="grid-publicacao-cards">
+                    <!-- Card de Status Atual do Site -->
+                    <article class="card-status-publicacao">
+                        <div class="status-publicacao-cabecalho">
+                            <span class="status-rotulo">Situação no Site Institucional</span>
+                            <span class="badge-status-site" id="badge-status-site" th:text="${ultimaPublicacao.statusAtualizacao}">Atualizado</span>
+                        </div>
+                        <div class="status-dados">
+                            <div class="dado-item">
+                                <span class="dado-label">Mês de Referência Publicado:</span>
+                                <strong class="dado-valor" id="dado-mes-publicado" th:text="${ultimaPublicacao.periodoFormatado}">Novembro de 2026</strong>
+                            </div>
+                            <div class="dado-item">
+                                <span class="dado-label">Total de Gastos Informado:</span>
+                                <strong class="dado-valor valor-destaque" id="dado-gastos-publicado" th:text="${#numbers.formatCurrency(ultimaPublicacao.totalGastos)}">R$ 0,00</strong>
+                            </div>
+                            <div class="dado-item">
+                                <span class="dado-label">Última Publicação em:</span>
+                                <span class="dado-subtexto" id="dado-data-publicacao" th:text="${ultimaPublicacao.dataPublicacao != null ? #temporals.format(ultimaPublicacao.dataPublicacao, 'dd/MM/yyyy HH:mm') : 'Ainda não publicado'}">01/01/2026</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card explicativo do que será enviado -->
+                    <article class="card-previa-publicacao">
+                        <span class="status-rotulo">Prévia para Publicação Atual</span>
+                        <div class="previa-itens">
+                            <div class="previa-linha">
+                                <span>Período selecionado nos filtros:</span>
+                                <strong th:text="${relatorioMensal.periodoFormatado}">Novembro de 2026</strong>
+                            </div>
+                            <div class="previa-linha">
+                                <span>Total de despesas pagas a divulgar:</span>
+                                <strong class="valor-negativo" th:text="${totalSaidasFormatado}">R$ 0,00</strong>
+                            </div>
+                            <div class="previa-linha">
+                                <span>Total de receitas recebidas:</span>
+                                <strong class="valor-positivo" th:text="${totalEntradasFormatado}">R$ 0,00</strong>
+                            </div>
+                        </div>
+                        <p class="aviso-seguranca">
+                            <svg class="relatorios-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Recomendação: Revise todas as movimentações do mês antes de publicar para garantir que apenas despesas conferidas apareçam no site.
+                        </p>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL DE CONFIRMAÇÃO DE PUBLICAÇÃO NO SITE                -->
+    <!-- ========================================================= -->
+    <div class="modal-overlay" id="modal-publicacao" hidden aria-hidden="true" role="dialog" aria-labelledby="modal-titulo">
+        <div class="modal-conteudo">
+            <header class="modal-cabecalho">
+                <h3 id="modal-titulo">Publicar no Site Institucional</h3>
+                <button type="button" class="btn-fechar-modal" id="btn-fechar-modal" aria-label="Fechar modal">&times;</button>
+            </header>
+
+            <form id="form-confirmar-publicacao" th:action="@{/relatorios/api/publicar}" method="post">
+                <input type="hidden" name="mes" id="modal-input-mes" th:value="${mesSelecionado}">
+                <input type="hidden" name="ano" id="modal-input-ano" th:value="${anoSelecionado}">
+
+                <div class="modal-corpo">
+                    <p class="modal-instrucao">
+                        Você está prestes a atualizar as informações de transparência exibidas na seção <strong>Faça uma Doação</strong> do site:
+                    </p>
+
+                    <div class="resumo-publicacao-modal">
+                        <div class="item-modal">
+                            <span>Mês de Referência:</span>
+                            <strong id="modal-txt-mes" th:text="${relatorioMensal.periodoFormatado}">Novembro de 2026</strong>
+                        </div>
+                        <div class="item-modal">
+                            <span>Total de Gastos (Despesas):</span>
+                            <strong class="valor-destaque-modal" id="modal-txt-gastos" th:text="${totalSaidasFormatado}">R$ 0,00</strong>
+                        </div>
+                        <div class="item-modal">
+                            <span>Status após publicação:</span>
+                            <span class="badge-status-site">Atualizado</span>
+                        </div>
+                    </div>
+
+                    <div class="campo-observacao">
+                        <label for="modal-input-obs">Observação / Nota interna (opcional):</label>
+                        <textarea id="modal-input-obs" name="observacao" rows="2" placeholder="Ex: Prestação de contas aprovada pela diretoria."></textarea>
+                    </div>
+                </div>
+
+                <footer class="modal-rodape">
+                    <button type="button" class="botao-secundario" id="btn-cancelar-modal">Cancelar</button>
+                    <button type="submit" class="botao-primario" id="btn-confirmar-publicacao">Confirmar e Publicar</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast de Notificação -->
+    <div class="toast" id="toast-notificacao" hidden role="status" aria-live="polite">
+        <span id="toast-mensagem">Informações publicadas com sucesso!</span>
+    </div>
+</body>
+
+</html>
