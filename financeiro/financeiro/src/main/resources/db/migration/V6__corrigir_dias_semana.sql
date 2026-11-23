@@ -1,2 +1,2 @@
-ALTER TABLE movimentacao
-    ADD COLUMN dias_semana VARCHAR(100) NULL;
+-- Coluna dias_semana ja criada pela migration V5.
+SELECT 1;
