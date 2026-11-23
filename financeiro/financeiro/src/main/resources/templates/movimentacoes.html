@@ -1,122 +1,400 @@
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movimentações | Gestão Financeira</title>
-    <link rel="stylesheet" href="/css/movimentacoes.css">
-    <script src="/js/movimentacoes.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Movimentações | Gestão Financeira ONG</title>
+
+    <!-- Fonte Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Estilos existentes -->
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/movimentacoes.css}">
+    <link rel="stylesheet" th:href="@{/css/modal-movimentacao.css}">
+
+    <!-- Biblioteca de ícones -->
+    <script
+        defer
+        src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js">
+    </script>
+
+    <!-- JavaScript do sistema -->
+    <script defer th:src="@{/js/app.js}"></script>
+    <script defer th:src="@{/js/movimentacoes.js}"></script>
+
 </head>
+
 <body>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="brand">Gestão<span>Financeira</span></div>
-            <nav aria-label="Navegação principal">
-                <a href="/dashboard">Início</a>
-                <a href="/movimentacoes" class="active" aria-current="page">Movimentações</a>
-                <a href="/configuracoes">Dados da ONG</a>
-            </nav>
-        </aside>
 
-        <main class="main">
-            <header class="header">
-                <div>
-                    <p class="eyebrow">CONTROLE FINANCEIRO</p>
-                    <h1>Movimentações</h1>
-                    <p class="subtitle">Acompanhe entradas, saídas e o histórico financeiro.</p>
-                </div>
-                <button class="primary-btn" id="openModal">+ Nova movimentação</button>
-            </header>
+<div class="layout">
 
-            <section class="cards">
-                <article class="card">
-                    <span>Entradas</span>
-                    <strong id="totalEntradas">R$ 0,00</strong>
-                    <small>Valores recebidos</small>
-                </article>
-                <article class="card">
-                    <span>Saídas</span>
-                    <strong id="totalSaidas">R$ 0,00</strong>
-                    <small>Valores pagos</small>
-                </article>
-                <article class="card">
-                    <span>Saldo</span>
-                    <strong id="saldo">R$ 0,00</strong>
-                    <small>Entradas menos saídas</small>
-                </article>
-            </section>
+ <aside class="barra-lateral">
+        <a class="marca" th:href="@{/dashboard}" aria-label="Resgate de Vidas – Criança Feliz, início">
+            <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="" width="64" height="64">
+            <span class="marca-texto"><strong>Resgate de Vidas</strong><span>Criança Feliz</span></span>
+        </a>
+        <p class="marca-sistema">Gestão financeira</p>
+        <nav class="navegacao" aria-label="Navegação principal">
+            <p class="navegacao-titulo">Principal</p>
+            <ul class="navegacao-lista"><li><a class="navegacao-link" th:href="@{/dashboard}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a></li>
+<li><a class="navegacao-link" th:href="@{/movimentacoes}" aria-current="page"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg><span>Movimentações</span></a></li>
+<li>
+    <a class="navegacao-link" th:href="@{/calendario}">
+        <svg class="icone" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <path d="M8 3v4m8-4v4M3 10h18"/>
+        </svg>
+        <span>Calendário</span>
+    </a>
+</li>
+<li><a class="navegacao-link" th:href="@{/relatorios}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6"/></svg><span>Relatórios</span></a></li>
+<li><a class="navegacao-link" th:href="@{/configuracoes}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1"/></svg><span>Dados da ONG</span></a></li>
+</ul>
+        </nav>
+    </aside>
+    <!-- =====================================
+         CONTEÚDO PRINCIPAL
+         ===================================== -->
 
-            <section class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2 id="listTitle">Movimentações recentes</h2>
-                        <p>Consulte os registros financeiros.</p>
-                    </div>
-                    <button class="secondary-btn" id="verTudo">Ver tudo</button>
-                </div>
+    <main class="main">
 
-                <div class="filters" id="filters" hidden>
-                    <input id="pesquisa" placeholder="Pesquisar descrição...">
-                    <select id="filtroTipo">
-                        <option value="">Todos os tipos</option>
-                        <option value="entrada">Entradas</option>
-                        <option value="saida">Saídas</option>
-                    </select>
-                    <input type="date" id="filtroData">
-                </div>
+        <!-- CABEÇALHO -->
 
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Descrição</th>
-                                <th>Categoria</th>
-                                <th>Data</th>
-                                <th>Tipo</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="movimentacoesBody"></tbody>
-                    </table>
-                </div>
-                <p id="emptyState" class="empty" hidden>Nenhuma movimentação encontrada.</p>
-            </section>
-        </main>
-    </div>
+        <header class="page-head">
 
-    <div class="modal-backdrop" id="modal" hidden>
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Nova movimentação</h2>
-                <button id="closeModal" class="close-btn" aria-label="Fechar">×</button>
+            <div class="page-title">
+
+                <span class="eyebrow">
+                    RESGATE DE VIDAS
+                </span>
+
+                <h1>Movimentações</h1>
+
+                <p class="subtitle">
+                    Acompanhe e gerencie as entradas e saídas
+                    da organização.
+                </p>
+
             </div>
 
-            <form id="movimentacaoForm">
-                <label>Tipo
-                    <select id="tipo" required>
-                        <option value="entrada">Entrada</option>
-                        <option value="saida">Saída</option>
-                    </select>
-                </label>
-                <label>Descrição
-                    <input id="descricao" required placeholder="Ex.: Doação recebida">
-                </label>
-                <label>Categoria
-                    <input id="categoria" required placeholder="Ex.: Doações">
-                </label>
-                <label>Valor (R$)
-                    <input id="valor" type="number" min="0.01" step="0.01" required>
-                </label>
-                <label>Data
-                    <input id="data" type="date" required>
-                </label>
-                <div class="form-actions">
-                    <button type="button" class="secondary-btn" id="cancelar">Cancelar</button>
-                    <button type="submit" class="primary-btn">Adicionar</button>
+            <button
+                class="bell"
+                type="button"
+                aria-label="Notificações"
+                title="Notificações">
+
+                <i data-lucide="bell"></i>
+
+            </button>
+
+        </header>
+
+
+        <!-- =====================================
+             RESUMO FINANCEIRO
+             ===================================== -->
+
+        <section class="summary">
+
+            <!-- ENTRADAS -->
+
+            <article class="summary-card green-bg">
+
+                <div class="summary-icon green">
+                    <i data-lucide="arrow-down-left"></i>
                 </div>
-            </form>
+
+                <div class="summary-content">
+
+                    <small>
+                        Total de entradas
+                    </small>
+
+                    <b th:text="${'R$ ' + #numbers.formatDecimal(entradas,1,'POINT',2,'COMMA')}">
+                        R$ 0,00
+                    </b>
+
+                    <span class="summary-caption">
+                        Valores recebidos
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- SAÍDAS -->
+
+            <article class="summary-card red-bg">
+
+                <div class="summary-icon red">
+                    <i data-lucide="arrow-up-right"></i>
+                </div>
+
+                <div class="summary-content">
+
+                    <small>
+                        Total de saídas
+                    </small>
+
+                    <b th:text="${'R$ ' + #numbers.formatDecimal(saidas,1,'POINT',2,'COMMA')}">
+                        R$ 0,00
+                    </b>
+
+                    <span class="summary-caption">
+                        Valores utilizados
+                    </span>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================
+             BUSCA
+             ===================================== -->
+
+        <div class="search">
+
+            <i data-lucide="search"></i>
+
+            <input
+                id="search"
+                type="search"
+                placeholder="Buscar movimentação..."
+                aria-label="Buscar movimentação"
+                autocomplete="off"
+            >
+
         </div>
-    </div>
+
+
+        <!-- =====================================
+             FILTROS
+             ===================================== -->
+
+        <div class="tabs" role="group" aria-label="Filtrar movimentações">
+
+            <button
+                class="selected"
+                type="button"
+                data-filter="TODAS">
+
+                Todas
+
+            </button>
+
+            <button
+                type="button"
+                data-filter="ENTRADA">
+
+                Entradas
+
+            </button>
+
+            <button
+                type="button"
+                data-filter="SAIDA">
+
+                Saídas
+
+            </button>
+
+        </div>
+
+
+        <!-- =====================================
+             HISTÓRICO
+             ===================================== -->
+
+        <section class="history">
+
+            <div class="history-head">
+
+                <div>
+
+                    <small class="eyebrow">
+                        HISTÓRICO
+                    </small>
+
+                    <h2>
+                        Movimentações recentes
+                    </h2>
+
+                    <p class="history-subtitle">
+                        Últimas atividades financeiras
+                    </p>
+
+                </div>
+
+                <div class="history-head-icon">
+                    <i data-lucide="list-filter"></i>
+                </div>
+
+            </div>
+
+
+            <!-- LISTA DE MOVIMENTAÇÕES -->
+
+            <div class="items" id="items">
+
+                <article
+                    class="item"
+                    th:each="m : ${lista}"
+                    th:attr="data-tipo=${m.tipo},data-descricao=${m.descricao}">
+
+                    <!-- ÍCONE -->
+
+                    <div
+                        class="item-icon"
+                        th:classappend="${m.tipo == 'ENTRADA'} ? 'green' : 'red'">
+
+                        <i
+                            th:if="${m.tipo == 'ENTRADA'}"
+                            data-lucide="arrow-down-left">
+                        </i>
+
+                        <i
+                            th:if="${m.tipo == 'SAIDA'}"
+                            data-lucide="arrow-up-right">
+                        </i>
+
+                    </div>
+
+
+                    <!-- INFORMAÇÕES -->
+
+                    <div class="item-info">
+
+                        <strong
+                            th:text="${m.descricao}">
+                            Descrição
+                        </strong>
+
+                        <small>
+
+                            <span
+                                th:text="${#temporals.format(m.data,'dd/MM/yyyy')}">
+                                Data
+                            </span>
+
+                            <span class="item-separator">·</span>
+
+                            <span
+                                th:text="${m.statusPagamento}">
+                                PAGO
+                            </span>
+
+                        </small>
+
+                    </div>
+
+
+                    <!-- VALOR -->
+
+                    <b
+                        class="amount"
+                        th:classappend="${m.tipo == 'ENTRADA'} ? 'positive' : 'negative'"
+                        th:text="${(m.tipo == 'ENTRADA' ? '+ ' : '- ') + 'R$ ' + #numbers.formatDecimal(m.valor,1,'POINT',2,'COMMA')}">
+
+                        R$ 0,00
+
+                    </b>
+
+                </article>
+
+
+                <!-- LISTA VAZIA -->
+
+                <p
+                    class="empty"
+                    th:if="${#lists.isEmpty(lista)}">
+
+                    Nenhuma movimentação neste período.
+
+                </p>
+
+            </div>
+
+
+            <!-- VER MAIS -->
+
+            <a
+                class="more"
+                th:href="@{/movimentacoes/historico}">
+
+                Ver histórico completo
+
+                <i data-lucide="chevron-right"></i>
+
+            </a>
+
+        </section>
+
+
+        <!-- =====================================
+             BOTÃO FLUTUANTE
+             ===================================== -->
+
+        <button
+            class="fab"
+            id="openModal"
+            type="button"
+            aria-label="Nova movimentação"
+            title="Adicionar movimentação">
+
+            <i data-lucide="plus"></i>
+
+        </button>
+
+
+        <!-- =====================================
+             MENSAGENS DO SISTEMA
+             ===================================== -->
+
+        <p
+            class="notice success"
+            th:if="${sucesso}"
+            th:text="${sucesso}">
+        </p>
+
+        <p
+            class="notice error"
+            th:if="${erro}"
+            th:text="${erro}">
+        </p>
+
+
+       <div th:replace="~{fragments/modal-movimentacao :: modal}"></div>
+    </main>
+</div>
+<!-- =====================================
+     INICIALIZAÇÃO DOS ÍCONES
+     ===================================== -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+</script>
+
 </body>
 </html>

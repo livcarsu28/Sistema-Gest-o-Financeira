@@ -1,11 +1,15 @@
 
 package financeiro.controller;
 
+<<<<<<< HEAD
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+=======
+import org.springframework.ui.Model;
+>>>>>>> movimentacoes
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +39,17 @@ public class FinanceiroController {
 
     @GetMapping("/")
     public String inicio() {
-        return "redirect:/dashboard";
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
+<<<<<<< HEAD
         var dados = dashboardService.consultarDashboard();
         var moeda = NumberFormat.getCurrencyInstance(LOCALE_BRASIL);
         model.addAttribute("periodoReferencia", dados.periodo().format(FORMATADOR_PERIODO));
@@ -48,14 +58,19 @@ public class FinanceiroController {
         model.addAttribute("saidasFormatadas", moeda.format(dados.saidas()));
         model.addAttribute("quantidadeMovimentacoes", dados.quantidadeMovimentacoes());
         model.addAttribute("pix", pixService.consultar());
+=======
+        model.addAttribute("paginaAtiva", "dashboard");
+>>>>>>> movimentacoes
         return "dashboard";
     }
 
-    @GetMapping("/movimentacoes")
-    public String movimentacoes() {
-        return "movimentacoes";
+    @GetMapping("/calendario")
+    public String calendario(Model model) {
+        model.addAttribute("paginaAtiva", "calendario");
+        return "calendario";
     }
 
+<<<<<<< HEAD
     @GetMapping("/configuracoes")
     public String configuracoes(Model model) {
         model.addAttribute("pix", pixService.consultar());
@@ -72,6 +87,17 @@ public class FinanceiroController {
                     "00000-000");
         }
         model.addAttribute("instituicao", instituicao);
+=======
+    @GetMapping("/relatorios")
+    public String relatorios(Model model) {
+        model.addAttribute("paginaAtiva", "relatorios");
+        return "relatorios";
+    }
+
+    @GetMapping("/configuracoes")
+    public String configuracoes(Model model) {
+        model.addAttribute("paginaAtiva", "configuracoes");
+>>>>>>> movimentacoes
         return "configuracoes";
     }
 }

@@ -1,0 +1,173 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="modal"
+     class="mov-dialog" id="modal" hidden>
+    <section class="mov-dialog__panel" role="dialog" aria-modal="true"
+             aria-labelledby="modalTitle" aria-describedby="modalSubtitle">
+        <header class="mov-dialog__header">
+            <span class="mov-dialog__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 8h16m-4-4 4 4-4 4M20 16H4m4-4-4 4 4 4"/>
+                </svg>
+            </span>
+            <div class="mov-dialog__heading">
+                <p class="mov-dialog__eyebrow">Gestão financeira</p>
+                <h2 id="modalTitle">Nova movimentação</h2>
+                <p id="modalSubtitle">Registre uma entrada ou saída.</p>
+            </div>
+            <button class="mov-dialog__close" type="button" data-close
+                    aria-label="Fechar formulário">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                    <path d="m6 6 12 12M18 6 6 18"/>
+                </svg>
+            </button>
+        </header>
+
+        <form class="mov-dialog__form" th:action="@{/movimentacoes}" method="post">
+            <div class="mov-dialog__body">
+                <fieldset class="mov-dialog__fieldset">
+                    <legend>Tipo de movimentação</legend>
+                    <div class="mov-dialog__segments">
+                        <label class="mov-dialog__choice mov-dialog__choice--entrada">
+                            <input type="radio" name="tipo" value="ENTRADA" checked>
+                            <span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round"
+                                     stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M17 7 7 17m0-7v7h7"/>
+                                </svg>
+                                Entrada
+                            </span>
+                        </label>
+                        <label class="mov-dialog__choice mov-dialog__choice--saida">
+                            <input type="radio" name="tipo" value="SAIDA">
+                            <span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round"
+                                     stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M7 17 17 7m-7 0h7v7"/>
+                                </svg>
+                                Saída
+                            </span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <div class="mov-dialog__grid">
+                    <label class="mov-dialog__field" for="movValor">
+                        <span>Valor <span class="mov-dialog__required" aria-hidden="true">*</span></span>
+                        <span class="mov-dialog__money">
+                            <span aria-hidden="true">R$</span>
+                            <input id="movValor" name="valor" type="number" inputmode="decimal"
+                                   min="0.01" step="0.01" placeholder="0,00" required>
+                        </span>
+                    </label>
+
+                    <label class="mov-dialog__field" for="dataMov">
+                        <span>Data <span class="mov-dialog__required" aria-hidden="true">*</span></span>
+                        <input id="dataMov" name="data" type="date" required>
+                    </label>
+
+                    <label class="mov-dialog__field mov-dialog__field--wide" for="movDescricao">
+                        <span>Descrição <span class="mov-dialog__required" aria-hidden="true">*</span></span>
+                        <input id="movDescricao" name="descricao" type="text" maxlength="500"
+                               placeholder="Ex.: Doação mensal" required>
+                    </label>
+
+                    <label class="mov-dialog__field" for="movCategoria">
+                        <span>Categoria <span class="mov-dialog__required" aria-hidden="true">*</span></span>
+                        <select id="movCategoria" name="categoriaId" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nome}"></option>
+                        </select>
+                    </label>
+
+                    <label class="mov-dialog__field" for="movFormaPagamento">
+                        <span>Forma de pagamento</span>
+                        <select id="movFormaPagamento" name="formaPagamentoId">
+                            <option value="">Selecione uma forma</option>
+                            <option th:each="f : ${formas}" th:value="${f.id}" th:text="${f.nome}"></option>
+                        </select>
+                    </label>
+                </div>
+
+                <section class="mov-dialog__recurrence" aria-label="Recorrência">
+                    <label class="mov-dialog__switch" for="recorrente">
+                        <span>
+                            <strong>Movimentação recorrente</strong>
+                            <small>Escolha se ela se repete todo mês ou toda semana.</small>
+                        </span>
+                        <input id="recorrente" name="recorrente" type="checkbox"
+                               value="true" aria-controls="camposRecorrencia">
+                        <span class="mov-dialog__track" aria-hidden="true"></span>
+                    </label>
+
+                    <div class="mov-dialog__grid mov-dialog__recurrence-fields"
+                         id="camposRecorrencia" hidden>
+                        <label class="mov-dialog__field" for="tipoRecorrencia">
+                            <span>Frequência</span>
+                            <select id="tipoRecorrencia" name="tipoRecorrencia" disabled>
+                                <option value="MENSAL">Mensal</option>
+                                <option value="SEMANAL">Semanal</option>
+                            </select>
+                        </label>
+
+                        <label class="mov-dialog__field" id="campoDiaMes" for="diaMes">
+                            <span>Dia do mês</span>
+                            <select id="diaMes" name="diaMes" disabled>
+                                <option th:each="dia : ${#numbers.sequence(1,31)}"
+                                        th:value="${dia}" th:text="${'Dia ' + dia}"></option>
+                            </select>
+                        </label>
+
+                        <fieldset class="mov-dialog__fieldset mov-dialog__field--wide"
+                                  id="campoDiaSemana" hidden>
+                            <legend>Dias da semana</legend>
+                            <div class="mov-dialog__days">
+                                <label class="mov-dialog__choice">
+                                    <input type="checkbox" name="diasSemana" value="MONDAY"
+                                           aria-label="Segunda-feira" disabled><span>Seg</span>
+                                </label>
+                                <label class="mov-dialog__choice">
+                                    <input type="checkbox" name="diasSemana" value="TUESDAY"
+                                           aria-label="Terça-feira" disabled><span>Ter</span>
+                                </label>
+                                <label class="mov-dialog__choice">
+                                    <input type="checkbox" name="diasSemana" value="WEDNESDAY"
+                                           aria-label="Quarta-feira" disabled><span>Qua</span>
+                                </label>
+                                <label class="mov-dialog__choice">
+                                    <input type="checkbox" name="diasSemana" value="THURSDAY"
+                                           aria-label="Quinta-feira" disabled><span>Qui</span>
+                                </label>
+                                <label class="mov-dialog__choice">
+                                    <input type="checkbox" name="diasSemana" value="FRIDAY"
+                                           aria-label="Sexta-feira" disabled><span>Sex</span>
+                                </label>
+                                <label class="mov-dialog__choice">
+                                    <input type="checkbox" name="diasSemana" value="SATURDAY"
+                                           aria-label="Sábado" disabled><span>Sáb</span>
+                                </label>
+                                <label class="mov-dialog__choice">
+                                    <input type="checkbox" name="diasSemana" value="SUNDAY"
+                                           aria-label="Domingo" disabled><span>Dom</span>
+                                </label>
+                            </div>
+                        </fieldset>
+                    </div>
+                </section>
+
+                <label class="mov-dialog__field" for="movObservacoes">
+                    <span>Observações <small>(opcional)</small></span>
+                    <textarea id="movObservacoes" name="observacoes" rows="2"
+                              maxlength="30" placeholder="Até 30 caracteres"></textarea>
+                </label>
+            </div>
+
+            <footer class="mov-dialog__footer">
+                <button class="mov-dialog__cancel" type="button" data-close>Cancelar</button>
+                <button class="mov-dialog__submit" type="submit">Salvar movimentação</button>
+            </footer>
+        </form>
+    </section>
+</div>

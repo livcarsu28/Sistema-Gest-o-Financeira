@@ -19,3 +19,5 @@ target/
 *.key
 *.p12
 *.pfx
+.env
+**/target/

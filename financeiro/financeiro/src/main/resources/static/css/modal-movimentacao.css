@@ -1,0 +1,418 @@
+.mov-dialog {
+    --mov-vinho: #7b0404;
+    --mov-vinho-hover: #5b0202;
+    --mov-rosa: #fdf2f2;
+    --mov-fundo: #f7f5f2;
+    --mov-texto: #352323;
+    --mov-secundario: #716c69;
+    --mov-borda: #e8e3dd;
+    --mov-branco: #fff;
+
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgb(38 21 22 / 48%);
+    color: var(--mov-texto);
+    font-family: Poppins, "Segoe UI", sans-serif;
+}
+
+.mov-dialog[hidden],
+.mov-dialog [hidden] {
+    display: none;
+}
+
+.mov-dialog__panel {
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 640px);
+    max-height: calc(100dvh - 48px);
+    min-height: 0;
+    overflow: hidden;
+    border: 1px solid var(--mov-borda);
+    border-radius: 24px;
+    background: var(--mov-branco);
+    box-shadow: 0 24px 64px rgb(53 35 35 / 24%);
+}
+
+.mov-dialog__header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--mov-borda);
+}
+
+.mov-dialog__icon,
+.mov-dialog__close {
+    display: grid;
+    place-items: center;
+}
+
+.mov-dialog__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--mov-rosa);
+    color: var(--mov-vinho);
+}
+
+.mov-dialog__icon svg,
+.mov-dialog__close svg {
+    width: 22px;
+    height: 22px;
+}
+
+.mov-dialog__heading h2 {
+    margin: 2px 0 3px;
+    font-size: 1.25rem;
+    line-height: 1.2;
+}
+
+.mov-dialog__heading p {
+    margin: 0;
+    color: var(--mov-secundario);
+    font-size: .75rem;
+}
+
+.mov-dialog__heading .mov-dialog__eyebrow {
+    color: var(--mov-vinho);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.mov-dialog__close {
+    align-self: start;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--mov-borda);
+    border-radius: 12px;
+    background: var(--mov-branco);
+    color: var(--mov-vinho);
+}
+
+.mov-dialog__close:hover,
+.mov-dialog__cancel:hover {
+    background: var(--mov-rosa);
+}
+
+.mov-dialog__form {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 0;
+    min-height: 0;
+    margin: 0;
+}
+
+.mov-dialog__body {
+    display: grid;
+    gap: 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 20px 24px;
+}
+
+.mov-dialog__fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.mov-dialog__fieldset legend {
+    margin-bottom: 7px;
+    padding: 0;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.mov-dialog__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 16px;
+}
+
+.mov-dialog__field {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-width: 0;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.mov-dialog__field--wide {
+    grid-column: 1 / -1;
+}
+
+.mov-dialog__field :is(input, select, textarea) {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid var(--mov-borda);
+    border-radius: 10px;
+    background: var(--mov-branco);
+    color: var(--mov-texto);
+    font: inherit;
+    font-size: .875rem;
+    font-weight: 400;
+}
+
+.mov-dialog__field textarea {
+    min-height: 58px;
+    resize: vertical;
+}
+
+.mov-dialog__field small,
+.mov-dialog__switch small {
+    color: var(--mov-secundario);
+    font-size: .6875rem;
+    font-weight: 400;
+}
+
+.mov-dialog__required {
+    color: var(--mov-vinho);
+}
+
+.mov-dialog__money {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding-left: 12px;
+    border: 1px solid var(--mov-borda);
+    border-radius: 10px;
+    background: var(--mov-branco);
+    color: var(--mov-vinho);
+}
+
+.mov-dialog__money input {
+    min-height: 42px;
+    padding-left: 0;
+    border: 0;
+    background: transparent;
+}
+
+.mov-dialog__segments,
+.mov-dialog__days {
+    display: grid;
+    gap: 6px;
+}
+
+.mov-dialog__segments {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 4px;
+    border: 1px solid var(--mov-borda);
+    border-radius: 13px;
+    background: var(--mov-fundo);
+}
+
+.mov-dialog__days {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.mov-dialog__choice,
+.mov-dialog__switch {
+    position: relative;
+    cursor: pointer;
+}
+
+.mov-dialog :is(.mov-dialog__segments, .mov-dialog__days) .mov-dialog__choice {
+    display: grid;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.mov-dialog .mov-dialog__choice input,
+.mov-dialog .mov-dialog__switch input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+}
+
+.mov-dialog__choice span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    color: var(--mov-secundario);
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.mov-dialog__choice svg {
+    width: 17px;
+    height: 17px;
+}
+
+.mov-dialog__choice input:checked + span {
+    border-color: var(--mov-borda);
+    background: var(--mov-branco);
+    color: var(--mov-vinho);
+    box-shadow: 0 2px 5px rgb(53 35 35 / 8%);
+}
+
+.mov-dialog__choice--entrada input:checked + span {
+    color: #176247;
+}
+
+.mov-dialog__days .mov-dialog__choice span {
+    border-color: var(--mov-borda);
+    background: var(--mov-branco);
+}
+
+.mov-dialog__days .mov-dialog__choice input:checked + span {
+    border-color: var(--mov-vinho);
+    background: var(--mov-vinho);
+    color: var(--mov-branco);
+}
+
+.mov-dialog__recurrence {
+    border: 1px solid var(--mov-borda);
+    border-radius: 14px;
+    background: var(--mov-fundo);
+}
+
+.mov-dialog__switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 54px;
+    padding: 10px 12px;
+}
+
+.mov-dialog__switch strong,
+.mov-dialog__switch small {
+    display: block;
+}
+
+.mov-dialog__switch strong {
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.mov-dialog__track {
+    flex: 0 0 40px;
+    height: 22px;
+    padding: 3px;
+    border-radius: 20px;
+    background: #bfb5b1;
+}
+
+.mov-dialog__track::after {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--mov-branco);
+    content: "";
+}
+
+.mov-dialog__switch input:checked + .mov-dialog__track {
+    background: var(--mov-vinho);
+}
+
+.mov-dialog__switch input:checked + .mov-dialog__track::after {
+    transform: translateX(18px);
+}
+
+.mov-dialog__recurrence-fields {
+    padding: 12px;
+    border-top: 1px solid var(--mov-borda);
+}
+
+.mov-dialog :focus-visible,
+.mov-dialog__choice input:focus-visible + span,
+.mov-dialog__switch input:focus-visible + .mov-dialog__track,
+.mov-dialog__money:focus-within {
+    outline: 2px solid var(--mov-vinho);
+    outline-offset: 2px;
+}
+
+.mov-dialog__money input:focus-visible {
+    outline: 0;
+}
+
+.mov-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 24px;
+    border-top: 1px solid var(--mov-borda);
+    background: var(--mov-branco);
+}
+
+.mov-dialog__footer button {
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.mov-dialog__cancel {
+    border: 1px solid var(--mov-borda);
+    background: var(--mov-branco);
+    color: var(--mov-vinho);
+}
+
+.mov-dialog__submit {
+    border: 1px solid var(--mov-vinho);
+    background: var(--mov-vinho);
+    color: var(--mov-branco);
+}
+
+.mov-dialog__submit:hover {
+    background: var(--mov-vinho-hover);
+}
+
+@media (max-width: 600px) {
+    .mov-dialog {
+        align-items: end;
+        padding: 0;
+    }
+
+    .mov-dialog__panel {
+        max-height: min(94dvh, calc(100dvh - env(safe-area-inset-top)));
+        border-radius: 22px 22px 0 0;
+    }
+
+    .mov-dialog__header,
+    .mov-dialog__body {
+        padding-inline: 16px;
+    }
+
+    .mov-dialog__header {
+        gap: 10px;
+    }
+
+    .mov-dialog__footer {
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .mov-dialog__submit {
+        flex: 1;
+    }
+}
+
+@media (max-width: 360px) {
+    .mov-dialog__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mov-dialog__days {
+        gap: 3px;
+    }
+}
