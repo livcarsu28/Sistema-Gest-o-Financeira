@@ -66,10 +66,12 @@ h2 { font-size: 1rem; font-weight: 600; letter-spacing: -.025em; }
 .indicador dt { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: .75rem; font-weight: 500; }
 .indicador dt .icone { box-sizing: content-box; padding: 10px; border-radius: 10px; width: 20px; height: 20px; color: var(--vinho); background: var(--vinho-suave); }
 .indicador-entrada dt .icone, .acao-entrada .acao-icone { color: var(--entrada); background: var(--entrada-suave); }
+.indicador-atalho { display: inline-block; font-size: .6875rem; color: var(--vinho); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.indicador-atalho:hover { color: var(--vinho-hover); }
 .indicador-valor { font-size: 1.75rem; font-weight: 600; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
-.indicador-movimentacoes { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
-.indicador-movimentacoes dt { flex-direction: row; align-items: center; }
-.indicador-movimentacoes .indicador-valor { margin: 0; align-self: center; }
+.indicador-pendentes { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
+.indicador-pendentes dt { flex-direction: row; align-items: center; }
+.indicador-pendentes .indicador-valor { margin: 0; align-self: center; }
 .secoes-inferiores { display: grid; gap: 20px; margin-top: 24px; }
 .painel { padding: 22px; border: 1px solid var(--borda-suave); border-radius: var(--raio-card); background: var(--cartao); box-shadow: var(--sombra-card); min-width: 0; }
 .painel-descricao { margin-top: 6px; font-size: .75rem; color: var(--secundario); }
@@ -97,12 +99,12 @@ h2 { font-size: 1rem; font-weight: 600; letter-spacing: -.025em; }
 .acao-etiqueta { font-size: .625rem; color: var(--secundario); padding: 3px 6px; background: var(--borda-suave); border-radius: 5px; white-space: nowrap; }
 .acao-indisponivel { background: var(--fundo); border-style: dashed; }
 a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
-.anotacoes { margin-top: 24px; }
+
 .secao-sobretitulo { color: var(--vinho); font-size: .6875rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
-.anotacoes-vazio { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; border: 1px dashed var(--borda); border-radius: 12px; padding: 26px 18px; margin-top: 18px; }
-.anotacoes-icone { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--vinho-suave); color: var(--vinho); flex-shrink: 0; }
-.anotacoes-vazio h3 { font-size: .8125rem; font-weight: 500; }
-.anotacoes-vazio p { color: var(--secundario); font-size: .6875rem; margin-top: 4px; max-width: 440px; }
+
+
+
+
 
 @media (min-width: 600px) {
     .conteudo { padding-right: 32px; padding-left: 32px; }
@@ -112,11 +114,11 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .navegacao-link { font-size: .75rem; }
     .indicadores { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .indicador { padding: 22px; }
-    .indicador-movimentacoes { grid-column: auto; display: block; }
-    .indicador-movimentacoes dt { flex-direction: column; align-items: flex-start; }
-    .indicador-movimentacoes .indicador-valor { margin-top: 8px; }
+    .indicador-pendentes { grid-column: auto; display: block; }
+    .indicador-pendentes dt { flex-direction: column; align-items: flex-start; }
+    .indicador-pendentes .indicador-valor { margin-top: 8px; }
     .acoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .anotacoes-vazio { flex-direction: row; text-align: left; justify-content: center; }
+
 }
 
 @media (max-width: 999px) {
@@ -142,7 +144,7 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .indicador dt .icone { box-sizing: border-box; grid-column: 1; grid-row: 1 / 3; align-self: center; width: 2rem; height: 2rem; padding: .45rem; }
     .indicador dt > span { grid-column: 2; grid-row: 1; color: var(--secundario); }
     .indicador .indicador-valor { grid-column: 2; grid-row: 2; margin: 0; font-size: .875rem; }
-    .indicador-movimentacoes { grid-column: 1 / -1; }
+    .indicador-pendentes { grid-column: 1 / -1; }
     .secoes-inferiores { gap: 24px; margin-top: 24px; }
     .painel-acoes { order: -1; padding: 0; border: 0; background: transparent; box-shadow: none; }
     .acoes { gap: .72rem; margin-top: .75rem; }
@@ -154,9 +156,9 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .acao-texto > span { font-size: .625rem; }
     .acao-etiqueta { grid-column: 2; justify-self: start; }
     .acao-indisponivel { background: var(--fundo); }
-    .anotacoes { padding: 0; border: 0; background: transparent; box-shadow: none; }
-    .anotacoes-vazio { flex-direction: row; gap: .65rem; margin-top: .75rem; padding: 1rem; text-align: left; border: 1px solid var(--borda-suave); border-radius: var(--raio-card); background: var(--cartao); box-shadow: var(--sombra-card); }
-    .anotacoes-icone { width: 34px; height: 34px; border-radius: 10px; }
+
+
+
     .navegacao { padding: .7rem .55rem calc(.7rem + env(safe-area-inset-bottom)); }
     .navegacao-link { gap: .24rem; min-height: 48px; padding: 4px 0; font-size: .625rem; }
     .navegacao-link[aria-current="page"] { background: transparent; }
@@ -189,7 +191,7 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .indicador { padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; gap: 8px; }
     .indicador dt { flex-direction: row; align-items: center; }
     .indicador .indicador-valor { margin: 0; font-size: clamp(1rem, 1.6vw, 1.75rem); white-space: nowrap; overflow-wrap: normal; }
-    .indicador-movimentacoes dt { flex-direction: row; align-items: center; }
+    .indicador-pendentes dt { flex-direction: row; align-items: center; }
     .indicador dt { font-size: .6875rem; }
     .saldo { padding: 24px; background: var(--vinho); border-color: rgb(255 255 255 / 18%); }
     .saldo-valor { font-size: 2.5rem; margin: 8px 0; }
