@@ -136,12 +136,14 @@ class FinanceiroControllerTests {
         org.mockito.Mockito.when(dashboardService.consultarDashboard()).thenReturn(
                 new DadosDashboard(YearMonth.of(2026, 11), new BigDecimal("1234.56"),
                         new BigDecimal("2000.10"), new BigDecimal("-765.54"), 12));
+        org.mockito.Mockito.when(dashboardService.consultarQuantidadePendentes()).thenReturn(12L);
 
         mockMvc.perform(get("/dashboard").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("R$\u00a01.234,56")))
                 .andExpect(content().string(containsString("R$\u00a02.000,10")))
                 .andExpect(content().string(containsString("-R$\u00a0765,54")))
+                .andExpect(content().string(containsString("Contas pendentes")))
                 .andExpect(content().string(containsString(">12</dd>")));
     }
 
