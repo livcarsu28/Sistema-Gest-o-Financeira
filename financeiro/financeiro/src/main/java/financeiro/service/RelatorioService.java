@@ -50,7 +50,8 @@ public class RelatorioService {
         var movimentacoes = relatorioRepository.listarMovimentacoesPeriodo(inicio, fim);
 
         BigDecimal saldo = totais.entradas().subtract(totais.saidas());
-        String periodoFormatado = dataBase.format(FORMATADOR_PERIODO);
+        String rawPeriodo = dataBase.format(FORMATADOR_PERIODO);
+        String periodoFormatado = rawPeriodo.substring(0, 1).toUpperCase(LOCALE_BRASIL) + rawPeriodo.substring(1);
 
         return new RelatorioMensalDTO(
                 mes,
@@ -159,7 +160,8 @@ public class RelatorioService {
         return relatorioRepository.consultarUltimaPublicacao()
                 .map(pub -> {
                     LocalDate ref = LocalDate.of(pub.anoReferencia(), pub.mesReferencia(), 1);
-                    String periodoFormatado = ref.format(FORMATADOR_PERIODO);
+                    String rawRef = ref.format(FORMATADOR_PERIODO);
+                    String periodoFormatado = rawRef.substring(0, 1).toUpperCase(LOCALE_BRASIL) + rawRef.substring(1);
                     return new PublicacaoFinanceiraDTO(
                             pub.idPublicacao(),
                             pub.mesReferencia(),
