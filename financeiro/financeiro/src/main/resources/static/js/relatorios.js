@@ -9,11 +9,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const $ = (id) => document.getElementById(id);
 
     // =========================================================================
-    // 1. GERENCIAMENTO DE ABAS
+    // 1. GERENCIAMENTO DE ABAS E FILTROS DE PERÍODO
     // =========================================================================
     const botoesAbas = document.querySelectorAll(".aba-btn");
     const paineisAbas = document.querySelectorAll(".aba-painel");
     const inputAba = $("input-aba");
+    const selectMes = $("select-mes");
+    const selectAno = $("select-ano");
+    const formFiltros = $("form-filtros");
+
+    // Submissão automática do filtro ao selecionar novo mês ou ano
+    if (formFiltros) {
+        if (selectMes) {
+            selectMes.addEventListener("change", () => {
+                formFiltros.submit();
+            });
+        }
+        if (selectAno) {
+            selectAno.addEventListener("change", () => {
+                formFiltros.submit();
+            });
+        }
+    }
 
     botoesAbas.forEach(btn => {
         btn.addEventListener("click", () => {

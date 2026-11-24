@@ -3,6 +3,27 @@
    Estilos da página de Relatórios Financeiros
    ========================================================= */
 
+/* Link de acessibilidade (oculto fora da tela, visível apenas no foco via Tab) */
+.pular-conteudo {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    transform: translateY(-200%);
+    z-index: 1000;
+    padding: 10px 18px;
+    background: #c5a059;
+    color: #500404;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.pular-conteudo:focus {
+    transform: translateY(0);
+}
+
 .relatorios-pagina {
     background: #f7f5f2;
     color: #352323;
