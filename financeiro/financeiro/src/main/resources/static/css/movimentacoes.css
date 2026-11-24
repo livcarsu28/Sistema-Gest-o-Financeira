@@ -1110,3 +1110,10 @@ select:disabled {
         z-index: 101;
     }
 }
+
+/* Link de histórico no cabeçalho, no lugar do ícone de filtro */
+.history-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.history-complete-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; flex-shrink: 0; padding: 10px 13px; border: 1px solid #e8c9ce; border-radius: 10px; background: #fff; color: #a71930; font-size: 12px; font-weight: 600; line-height: 1.3; text-decoration: none; }
+.history-complete-link:hover { background: #fff0f2; }
+.history-complete-link [data-lucide], .history-complete-link svg { width: 16px; height: 16px; }
+@media (max-width: 540px) { .history-head { align-items: flex-start; flex-wrap: wrap; } .history-complete-link { margin-left: auto; } }

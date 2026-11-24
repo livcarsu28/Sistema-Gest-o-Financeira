@@ -73,9 +73,26 @@
             h('div', { class: 's-pagar' }, h('dt', null, 'A pagar'), h('dd', null, S.moeda(r.aPagar))),
             h('div', { class: 's-receber' }, h('dt', null, 'A receber'), h('dd', null, S.moeda(r.aReceber))),
             h('div', { class: 's-atraso' + (atrasadas.length ? ' tem' : '') }, h('dt', null, 'Em atraso'), h('dd', null, atrasadas.length ? `${atrasadas.length} · ${S.moeda(tot)}` : 'Nenhuma')));
-        $('filtroCats').replaceChildren(...S.CATEGORIAS.map(c => h('button', { class: 'chip', type: 'button', 'aria-pressed': String(cats.has(c.id)), style: '--c:' + c.cor,
+        const faixaCats = $('filtroCats');
+        const posicaoAnterior = faixaCats.scrollLeft;
+        faixaCats.replaceChildren(...S.CATEGORIAS.map(c => h('button', { class: 'chip', type: 'button', 'aria-pressed': String(cats.has(c.id)), style: '--c:' + c.cor,
             onclick: () => { cats.has(c.id) ? cats.delete(c.id) : cats.add(c.id); render(); } }, h('i'), c.nome)));
+        faixaCats.scrollLeft = posicaoAnterior;
+        atualizarSetasCategorias();
     }
+
+    const faixaCategorias = $('filtroCats');
+    const setaEsquerda = $('catsEsquerda');
+    const setaDireita = $('catsDireita');
+    function atualizarSetasCategorias() {
+        const limite = Math.max(0, faixaCategorias.scrollWidth - faixaCategorias.clientWidth);
+        setaEsquerda.disabled = faixaCategorias.scrollLeft <= 2;
+        setaDireita.disabled = faixaCategorias.scrollLeft >= limite - 2;
+    }
+    setaEsquerda.addEventListener('click', () => faixaCategorias.scrollBy({ left: -Math.max(180, faixaCategorias.clientWidth * .7), behavior: 'smooth' }));
+    setaDireita.addEventListener('click', () => faixaCategorias.scrollBy({ left: Math.max(180, faixaCategorias.clientWidth * .7), behavior: 'smooth' }));
+    faixaCategorias.addEventListener('scroll', atualizarSetasCategorias, { passive: true });
+    window.addEventListener('resize', atualizarSetasCategorias);
 
     function irParaMes(delta) {
         ym = S.somarMeses(ym + '-01', delta).slice(0, 7);
