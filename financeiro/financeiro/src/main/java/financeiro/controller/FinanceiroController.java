@@ -82,6 +82,10 @@ public class FinanceiroController {
                                 dados.quantidadeMovimentacoes());
 
                 model.addAttribute(
+                                "quantidadePendentes",
+                                dashboardService.consultarQuantidadePendentes());
+
+                model.addAttribute(
                                 "pix",
                                 pixService.consultar());
 
