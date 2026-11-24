@@ -122,4 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     atualizarRecorrencia();
 
+    const tipoInicial = new URLSearchParams(window.location.search).get("nova");
+    if (tipoInicial === "entrada" || tipoInicial === "saida") {
+        abrirModal?.click();
+        const campoTipo = formulario?.querySelector('input[name="tipo"][value="' + tipoInicial.toUpperCase() + '"]');
+        if (campoTipo) campoTipo.checked = true;
+    }
+
 });
