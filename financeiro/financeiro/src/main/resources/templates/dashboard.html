@@ -34,6 +34,29 @@
 </li>
 <li><a class="navegacao-link" th:href="@{/relatorios}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6"/></svg><span>Relatórios</span></a></li>
 <li><a class="navegacao-link" th:href="@{/configuracoes}"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1"/></svg><span>Dados da ONG</span></a></li>
+<li>
+    <form th:action="@{/logout}" method="post" class="logout-form">
+        <button type="submit" class="navegacao-link navegacao-sair">
+
+            <svg class="icone" viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.6"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+
+                <path d="M10 17l5-5-5-5"/>
+                <path d="M15 12H3"/>
+                <path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"/>
+
+            </svg>
+
+            <span>Sair</span>
+
+        </button>
+    </form>
+</li>
 </ul>
         </nav>
     </aside>

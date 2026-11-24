@@ -208,3 +208,27 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .acao { flex-wrap: nowrap; padding: 16px; }
     .acao-etiqueta { margin-left: 0; }
 }
+/* Botão de sair da conta */
+
+.logout-form {
+    margin: 0;
+    width: 100%;
+}
+
+.navegacao-sair {
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+@media (max-width: 999px) {
+    .navegacao-lista {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .navegacao-link {
+        font-size: 9px;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+}
