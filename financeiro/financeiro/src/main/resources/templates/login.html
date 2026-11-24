@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
@@ -18,11 +17,7 @@
 
         <header class="login-header">
 
-            <img
-                th:src="@{/img/logo-resgate-de-vidas.png}"
-                alt="Logo Resgate de Vidas"
-                class="login-logo"
-            >
+            <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="Logo Resgate de Vidas" class="login-logo">
 
             <h1>Resgate de Vidas</h1>
 
@@ -30,15 +25,6 @@
 
         </header>
 
-<<<<<<< HEAD
-        <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 12px; color: #6b7280;">
-            <a th:href="@{/termos}" style="color: #4b5563; text-decoration: underline; margin-right: 12px;">Termos de Uso</a>
-            <span>·</span>
-            <a th:href="@{/privacidade}" style="color: #4b5563; text-decoration: underline; margin-left: 12px;">Política de Privacidade</a>
-        </div>
-
-    </div>
-=======
         <section class="login-content">
 
             <h2>Entrar</h2>
@@ -47,22 +33,18 @@
                 Acesse o painel administrativo da ONG.
             </p>
 
-            <div th:if="${param.error}" 
-                 class="login-alert login-alert-error"
-                 role="alert">
+            <div th:if="${param.error}" class="login-alert login-alert-error" role="alert">
 
                 <strong>Não foi possível entrar.</strong>
 
                 <span>
-                    E-mail ou senha incorretos. 
+                    E-mail ou senha incorretos.
                     Confira seus dados e tente novamente.
                 </span>
 
             </div>
 
-            <div th:if="${param.logout}" 
-                 class="login-alert login-alert-success"
-                 role="status">
+            <div th:if="${param.logout}" class="login-alert login-alert-success" role="status">
 
                 Você saiu do sistema com segurança.
 
@@ -74,14 +56,8 @@
 
                     <label for="username">E-mail</label>
 
-                    <input
-                        type="email"
-                        id="username"
-                        name="username"
-                        placeholder="nome@ong.org.br"
-                        autocomplete="username"
-                        required
-                    >
+                    <input type="email" id="username" name="username" placeholder="nome@ong.org.br"
+                        autocomplete="username" required>
 
                 </div>
 
@@ -91,38 +67,19 @@
 
                     <div class="password-wrapper">
 
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Digite sua senha"
-                            autocomplete="current-password"
-                            required
-                        >
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha"
+                            autocomplete="current-password" required>
 
-                        <button
-                            type="button"
-                            id="togglePassword"
-                            class="toggle-password"
-                            aria-label="Mostrar senha"
-                            aria-pressed="false"
-                        >
+                        <button type="button" id="togglePassword" class="toggle-password" aria-label="Mostrar senha"
+                            aria-pressed="false">
 
-                            <svg id="eyeIcon"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 width="22"
-                                 height="22"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="1.7"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 
-                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                                <path id="eyeSlash" d="M3 3l18 18" style="display:none"/>
+                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                                <circle cx="12" cy="12" r="3" />
+                                <path id="eyeSlash" d="M3 3l18 18" style="display:none" />
 
                             </svg>
 
@@ -140,19 +97,12 @@
 
             <footer class="login-footer">
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     width="16"
-                     height="16"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.7"
-                     stroke-linecap="round"
-                     stroke-linejoin="round"
-                     aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
 
-                    <rect x="5" y="11" width="14" height="10" rx="2"/>
-                    <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+                    <rect x="5" y="11" width="14" height="10" rx="2" />
+                    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
 
                 </svg>
 
@@ -188,7 +138,7 @@
         });
 
     </script>
->>>>>>> origin/feat/login-autenticacao
 
 </body>
+
 </html>
