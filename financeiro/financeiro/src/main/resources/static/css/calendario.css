@@ -396,3 +396,40 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
 .categorias-seta { flex: 0 0 32px; width: 32px; height: 34px; display: grid; place-items: center; background: white; border: 1px solid var(--borda); border-radius: 9px; color: var(--vinho); font-size: 25px; line-height: 1; }
 .categorias-seta:hover:not(:disabled) { background: var(--vinho-suave); }
 .categorias-seta:disabled { opacity: .35; cursor: default; }
+/* ========================================
+   MARGENS CORRIGIDAS DO CHECKLIST
+   ======================================== */
+
+.calendario-main ul.itens-dia {
+    padding: 8px 20px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Alinhamento das movimentações */
+.calendario-main ul.itens-dia > .mov {
+    width: 100%;
+    min-width: 0;
+    gap: 10px;
+}
+
+/* Alinhamento das anotações */
+.calendario-main ul.itens-dia > .nota-item {
+    width: 100%;
+    min-width: 0;
+    gap: 10px;
+}
+
+/* Impedir que textos ultrapassem o espaço */
+.calendario-main ul.itens-dia .nota-texto {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+/* Ajustar apenas o símbolo de check */
+.calendario-main ul.itens-dia .mov-check .icone {
+    transform: translateX(-2px);
+}
+
+.calendario-main ul.itens-dia .nota-marca .icone {
+    transform: translateX(-0.2px);
+}
