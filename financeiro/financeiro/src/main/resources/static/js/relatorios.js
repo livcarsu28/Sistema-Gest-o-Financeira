@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!abaAlvo) return;
 
             // Atualiza botões
-            botoesAbas.forEach(b => b.classList.remove("ativo"));
-            btn.classList.add("ativo");
+            botoesAbas.forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
 
             // Atualiza painéis
             paineisAbas.forEach(p => p.classList.remove("ativo"));
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 inputAba.value = abaAlvo;
             }
 
-            // Atualiza URL sem recarregar
+            // Atualiza URL sem recarregar a tela
             const url = new URL(window.location.href);
             url.searchParams.set("aba", abaAlvo);
             window.history.replaceState({}, "", url.toString());
@@ -65,9 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
         clearTimeout(timerToast);
         toastMsg.textContent = mensagem;
         toast.hidden = false;
+        toast.style.display = "block";
 
         timerToast = setTimeout(() => {
             toast.hidden = true;
+            toast.style.display = "none";
         }, duracaoMs);
     }
 
@@ -85,12 +87,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!modalPublicacao) return;
         modalPublicacao.hidden = false;
         modalPublicacao.setAttribute("aria-hidden", "false");
+        modalPublicacao.style.display = "flex";
     }
 
     function fecharModal() {
         if (!modalPublicacao) return;
         modalPublicacao.hidden = true;
         modalPublicacao.setAttribute("aria-hidden", "true");
+        modalPublicacao.style.display = "none";
     }
 
     if (btnAbrirPublicacao) btnAbrirPublicacao.addEventListener("click", abrirModal);
@@ -98,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnFecharModal) btnFecharModal.addEventListener("click", fecharModal);
     if (btnCancelarModal) btnCancelarModal.addEventListener("click", fecharModal);
 
-    // Fechar ao clicar fora ou pressionar Esc
+    // Fechar ao clicar fora do conteúdo (no backdrop cinza escuro)
     if (modalPublicacao) {
         modalPublicacao.addEventListener("click", (e) => {
             if (e.target === modalPublicacao) {
@@ -106,8 +110,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        // Fechar ao pressionar a tecla Escape
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && !modalPublicacao.hidden) {
+            if (e.key === "Escape" && modalPublicacao.style.display !== "none" && !modalPublicacao.hidden) {
                 fecharModal();
             }
         });

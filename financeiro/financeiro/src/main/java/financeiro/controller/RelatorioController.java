@@ -56,6 +56,7 @@ public class RelatorioController {
 
         NumberFormat moeda = NumberFormat.getCurrencyInstance(LOCALE_BRASIL);
 
+        model.addAttribute("paginaAtiva", "relatorios");
         model.addAttribute("abaAtiva", aba);
         model.addAttribute("mesSelecionado", mesSelecionado);
         model.addAttribute("anoSelecionado", anoSelecionado);
