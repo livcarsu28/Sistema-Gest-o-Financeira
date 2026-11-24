@@ -6,12 +6,14 @@ import financeiro.model.Movimentacao;
 import financeiro.repository.CategoriaRepository;
 import financeiro.repository.FormaPagamentoRepository;
 import financeiro.repository.MovimentacaoRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.web.server.ResponseStatusException;
+import financeiro.security.UsuarioAutenticado;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -27,16 +29,14 @@ public class MovimentacaoService {
     private final MovimentacaoRepository repo;
     private final CategoriaRepository categorias;
     private final FormaPagamentoRepository formas;
-    private final int devUserId;
 
-    public MovimentacaoService(MovimentacaoRepository repo, CategoriaRepository categorias,
-                              FormaPagamentoRepository formas,
-                              @Value("${app.dev-user-id:${DEV_USER_ID:0}}") int devUserId) {
-        this.repo = repo;
-        this.categorias = categorias;
-        this.formas = formas;
-        this.devUserId = devUserId;
-    }
+    public MovimentacaoService(MovimentacaoRepository repo,
+                          CategoriaRepository categorias,
+                          FormaPagamentoRepository formas) {
+    this.repo = repo;
+    this.categorias = categorias;
+    this.formas = formas;
+}
 
     public List<Movimentacao> mes(YearMonth mes) {
         return repo.findByExcluidaFalseAndDataGreaterThanEqualAndDataLessThanOrderByDataDesc(
@@ -48,9 +48,22 @@ public class MovimentacaoService {
     }
 
     public int usuarioDeCadastro() {
-        if (devUserId <= 0) throw invalido("Configure DEV_USER_ID com um id_usuario existente antes de cadastrar.");
-        return devUserId;
+
+    Authentication authentication =
+            SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication == null
+            || !authentication.isAuthenticated()
+            || !(authentication.getPrincipal() instanceof UsuarioAutenticado usuario)) {
+
+        throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "É necessário estar autenticado para cadastrar uma movimentação."
+        );
     }
+
+    return usuario.getIdUsuario();
+}
 
     @Transactional
     public void salvar(MovimentacaoForm form) {
