@@ -93,15 +93,6 @@
                         <h1 class="configuracoes-titulo">Ajustes</h1>
                         <p class="configuracoes-subtitulo">Personalize as configurações</p>
                     </div>
-                    <button type="button" class="configuracoes-btn-sino" id="btn-sino-header"
-                        aria-label="Notificações e avisos">
-                        <svg class="configuracoes-icone-sino" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                            focusable="false">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                        </svg>
-                    </button>
                 </header>
 
                 <!-- Feedback de Sucesso do Spring Boot -->
@@ -129,37 +120,54 @@
                                 <p class="configuracoes-perfil-descricao">Acesso completo</p>
                             </div>
                         </div>
-                        <div class="configuracoes-perfil-seletor-box" title="Perfil ativo do usuário">
-                            <select class="configuracoes-perfil-select" id="perfil-select"
-                                aria-label="Perfil de acesso">
-                                <option value="Administrador" selected>Administrador</option>
-                            </select>
-                            <svg class="configuracoes-perfil-chevron" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                aria-hidden="true" focusable="false">
-                                <polyline points="6 9 12 15 18 9" />
-                            </svg>
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <div class="configuracoes-perfil-seletor-box" title="Perfil ativo do usuário">
+                                <select class="configuracoes-perfil-select" id="perfil-select"
+                                    aria-label="Perfil de acesso">
+                                    <option value="Administrador" selected>Administrador</option>
+                                    <option value="Usuário comum">Usuário comum</option>
+                                </select>
+                                <svg class="configuracoes-perfil-chevron" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true" focusable="false">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </div>
+                            <button type="button" id="btn-abrir-modal-usuario" class="configuracoes-btn-editar" style="padding: 6px 12px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;">
+                                + Cadastrar Usuário Comum
+                            </button>
                         </div>
                     </section>
 
                     <!-- Gerenciamento de imagens -->
                     <section class="configuracoes-card configuracoes-card-destaque" aria-labelledby="titulo-imagens">
-                        <div class="configuracoes-card-cabecalho">
-                            <div class="configuracoes-badge-icone" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <polyline points="21 15 16 10 5 21" />
-                                </svg>
+                        <div class="configuracoes-card-cabecalho" style="justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="configuracoes-badge-icone" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                        <polyline points="21 15 16 10 5 21" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 id="titulo-imagens" class="configuracoes-card-titulo">Imagens</h2>
+                                    <p class="configuracoes-card-subtitulo">Organize os registros da instituição</p>
+                                </div>
                             </div>
-                            <div>
-                                <h2 id="titulo-imagens" class="configuracoes-card-titulo">Imagens</h2>
-                                <p class="configuracoes-card-subtitulo">Organize os registros da instituição</p>
+                            <!-- Contador de imagens -->
+                            <div class="configuracoes-contador-box">
+                                <span id="contador-imagens-texto" style="font-size: 13px; font-weight: 600; padding: 4px 10px; background: #e0f2fe; color: #0369a1; border-radius: 9999px;">0 de 10 imagens adicionadas</span>
                             </div>
                         </div>
 
                         <div class="configuracoes-card-conteudo">
+                            <!-- Aviso de Limite Atingido -->
+                            <div id="aviso-limite-atingido" hidden style="background-color: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px;">
+                                <strong>Limite de imagens atingido:</strong> O limite máximo de 10 imagens foi alcançado. Para adicionar novas fotos, remova ao menos uma imagem abaixo.
+                            </div>
+
                             <!-- Campo Categoria -->
                             <div class="configuracoes-campo-grupo">
                                 <label for="select-categoria" class="configuracoes-label">Categoria</label>
@@ -195,8 +203,8 @@
                                             <line x1="12" x2="12" y1="3" y2="15" />
                                         </svg>
                                     </div>
-                                    <strong class="configuracoes-upload-rotulo">Fazer upload</strong>
-                                    <span class="configuracoes-upload-ajuda">PNG ou JPG de até 10 MB</span>
+                                    <strong class="configuracoes-upload-rotulo" id="rotulo-upload-texto">Fazer upload</strong>
+                                    <span class="configuracoes-upload-ajuda" id="ajuda-upload-texto">PNG ou JPG de até 10 MB</span>
                                 </div>
 
                                 <!-- Estado com arquivo selecionado -->
@@ -220,15 +228,29 @@
                                         <span id="upload-tamanho-arquivo" class="configuracoes-upload-tamanho">0
                                             KB</span>
                                     </div>
-                                    <button type="button" class="configuracoes-upload-btn-remover"
-                                        id="btn-remover-imagem" aria-label="Remover imagem selecionada">
-                                        Remover
-                                    </button>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button type="button" class="configuracoes-upload-btn-salvar"
+                                            id="btn-confirmar-upload" style="padding: 6px 12px; background: #16a34a; color: white; border: none; border-radius: 4px; font-size: 13px; cursor: pointer;">
+                                            Salvar Imagem
+                                        </button>
+                                        <button type="button" class="configuracoes-upload-btn-remover"
+                                            id="btn-remover-imagem" aria-label="Cancelar seleção">
+                                            Cancelar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="configuracoes-mensagem-feedback" id="feedback-upload" role="alert"
                                 aria-live="polite"></div>
+
+                            <!-- Galeria de Imagens Cadastradas -->
+                            <div style="margin-top: 20px;">
+                                <h3 style="font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 10px;">Imagens cadastradas no sistema:</h3>
+                                <div id="galeria-imagens-lista" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;">
+                                    <!-- Renderizado dinamicamente via JS -->
+                                </div>
+                            </div>
                         </div>
                     </section>
 
@@ -312,65 +334,6 @@
                                     </svg>
                                     <span>Editar</span>
                                 </button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Notificações -->
-                    <section class="configuracoes-card configuracoes-card-destaque"
-                        aria-labelledby="titulo-notificacoes">
-                        <div class="configuracoes-card-cabecalho">
-                            <div class="configuracoes-badge-icone" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h2 id="titulo-notificacoes" class="configuracoes-card-titulo">Notificações</h2>
-                                <p class="configuracoes-card-subtitulo">Escolha os avisos que deseja receber</p>
-                            </div>
-                        </div>
-
-                        <div class="configuracoes-card-conteudo configuracoes-notificacoes-container">
-                            <div class="configuracoes-notificacao-linha">
-                                <div class="configuracoes-notificacao-texto">
-                                    <strong class="configuracoes-notificacao-nome">Lançamentos</strong>
-                                    <p class="configuracoes-notificacao-descricao">Novas entradas e saídas</p>
-                                </div>
-                                <label class="configuracoes-switch" for="switch-notif-lancamentos">
-                                    <input type="checkbox" id="switch-notif-lancamentos" role="switch"
-                                        aria-checked="true" checked>
-                                    <span class="configuracoes-switch-trilho" aria-hidden="true"></span>
-                                    <span class="sr-only">Ativar notificações de lançamentos</span>
-                                </label>
-                            </div>
-
-                            <div class="configuracoes-notificacao-linha">
-                                <div class="configuracoes-notificacao-texto">
-                                    <strong class="configuracoes-notificacao-nome">Lembretes</strong>
-                                    <p class="configuracoes-notificacao-descricao">Anotações e pendências</p>
-                                </div>
-                                <label class="configuracoes-switch" for="switch-notif-lembretes">
-                                    <input type="checkbox" id="switch-notif-lembretes" role="switch" aria-checked="true"
-                                        checked>
-                                    <span class="configuracoes-switch-trilho" aria-hidden="true"></span>
-                                    <span class="sr-only">Ativar notificações de lembretes</span>
-                                </label>
-                            </div>
-
-                            <div class="configuracoes-notificacao-linha">
-                                <div class="configuracoes-notificacao-texto">
-                                    <strong class="configuracoes-notificacao-nome">Relatórios</strong>
-                                    <p class="configuracoes-notificacao-descricao">Relatórios disponíveis</p>
-                                </div>
-                                <label class="configuracoes-switch" for="switch-notif-relatorios">
-                                    <input type="checkbox" id="switch-notif-relatorios" role="switch"
-                                        aria-checked="false">
-                                    <span class="configuracoes-switch-trilho" aria-hidden="true"></span>
-                                    <span class="sr-only">Ativar notificações de relatórios</span>
-                                </label>
                             </div>
                         </div>
                     </section>
@@ -509,6 +472,41 @@
                     <button type="button" class="configuracoes-btn-cancelar"
                         id="btn-cancelar-modal-endereco">Cancelar</button>
                     <button type="submit" class="configuracoes-btn-salvar">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Cadastrar Usuário Comum -->
+    <div class="configuracoes-modal-backdrop" id="modal-usuario" hidden role="dialog" aria-modal="true"
+        aria-labelledby="modal-usuario-titulo">
+        <div class="configuracoes-modal">
+            <div class="configuracoes-modal-cabecalho">
+                <h2 id="modal-usuario-titulo" class="configuracoes-modal-titulo">Cadastrar Usuário Comum</h2>
+                <button type="button" class="configuracoes-modal-btn-fechar" id="btn-fechar-modal-usuario"
+                    aria-label="Fechar janela">×</button>
+            </div>
+            <form id="form-cadastrar-usuario" class="configuracoes-modal-form" th:action="@{/usuarios}" method="post" novalidate>
+                <div class="configuracoes-form-campo">
+                    <label for="input-usuario-nome" class="configuracoes-label">Nome Completo</label>
+                    <input type="text" id="input-usuario-nome" name="nome" class="configuracoes-input" required
+                        placeholder="Ex.: Maria Souza" autocomplete="name">
+                </div>
+                <div class="configuracoes-form-campo">
+                    <label for="input-usuario-email" class="configuracoes-label">E-mail de Acesso</label>
+                    <input type="email" id="input-usuario-email" name="email" class="configuracoes-input" required
+                        placeholder="usuario@resgatedevidas.org" autocomplete="email">
+                </div>
+                <div class="configuracoes-form-campo">
+                    <label for="input-usuario-senha" class="configuracoes-label">Senha Inicial (mínimo 6 caracteres)</label>
+                    <input type="password" id="input-usuario-senha" name="senha" class="configuracoes-input" required
+                        minlength="6" placeholder="******" autocomplete="new-password">
+                    <span class="configuracoes-campo-erro" id="erro-usuario" aria-live="polite"></span>
+                </div>
+                <div class="configuracoes-modal-acoes">
+                    <button type="button" class="configuracoes-btn-cancelar"
+                        id="btn-cancelar-modal-usuario">Cancelar</button>
+                    <button type="submit" class="configuracoes-btn-salvar">Cadastrar Usuário</button>
                 </div>
             </form>
         </div>

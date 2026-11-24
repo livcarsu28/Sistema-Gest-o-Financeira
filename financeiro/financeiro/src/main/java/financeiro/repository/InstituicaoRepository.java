@@ -33,6 +33,15 @@ public class InstituicaoRepository {
         return jdbcTemplate.update("UPDATE instituicao SET chave_pix = ? WHERE id_instituicao = ?", chave, id);
     }
 
+    public int inserirOuAtualizarChavePix(String chave) {
+        List<Instituicao> lista = consultar(false);
+        if (lista.isEmpty()) {
+            return jdbcTemplate.update("INSERT INTO instituicao (id_instituicao, chave_pix) VALUES (1, ?)", chave);
+        } else {
+            return atualizarChavePix(lista.get(0).id(), chave);
+        }
+    }
+
     // Novo método para salvar o endereço mantendo o padrão da equipe
     public int atualizarEndereco(int id, String logradouro, String numero, String bairro, String cidade, String uf,
             String cep) {

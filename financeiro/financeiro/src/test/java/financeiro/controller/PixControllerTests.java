@@ -45,7 +45,7 @@ class PixControllerTests {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void salvaComAutenticacaoECsrf() throws Exception {
         when(service.salvar("contato@example.org")).thenReturn(
                 new PixService.DadosPix("contato@example.org", "Chave Pix atualizada com sucesso!"));
@@ -55,7 +55,15 @@ class PixControllerTests {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
+    void usuarioComumNaoPodeAlterarChavePix() throws Exception {
+        mockMvc.perform(post("/configuracoes/pix").with(csrf()).param("chavePix", "contato@example.org"))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(service);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void retornaErroDeValidacao() throws Exception {
         when(service.salvar("invalida")).thenThrow(new IllegalArgumentException("Informe uma chave Pix válida."));
         mockMvc.perform(post("/configuracoes/pix").with(csrf()).param("chavePix", "invalida"))
@@ -64,7 +72,7 @@ class PixControllerTests {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void retornaConflitoSemInstituicao() throws Exception {
         when(service.salvar("contato@example.org")).thenThrow(new IllegalStateException("Cadastre a instituição."));
         mockMvc.perform(post("/configuracoes/pix").with(csrf()).param("chavePix", "contato@example.org"))
@@ -72,7 +80,7 @@ class PixControllerTests {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void falhaDeBancoNaoExibeDetalhesInternos() throws Exception {
         when(service.salvar("contato@example.org"))
                 .thenThrow(new DataAccessResourceFailureException("detalhe interno"));

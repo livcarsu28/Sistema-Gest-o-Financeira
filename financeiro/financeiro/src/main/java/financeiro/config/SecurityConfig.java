@@ -4,12 +4,16 @@ package financeiro.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     // Acesso livre somente no ambiente de desenvolvimento
@@ -38,6 +42,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/login",
+                    "/termos",
+                    "/privacidade",
+                    "/termos-e-politicas",
                     "/css/**",
                     "/js/**",
                     "/fonts/**",
@@ -45,13 +52,17 @@ public class SecurityConfig {
                     "/error",
                     "/api/publicacao-transparencia"
                 ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/configuracoes/pix").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/configuracoes/endereco").hasRole("ADMIN")
+                .requestMatchers("/usuarios/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
                 .defaultSuccessUrl("/dashboard", true)
                 .permitAll()
-            );
+            )
+            .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

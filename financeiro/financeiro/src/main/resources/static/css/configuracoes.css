@@ -255,36 +255,6 @@
     color: var(--secundario);
 }
 
-.configuracoes-btn-sino {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: white;
-    border: 1px solid var(--borda-suave);
-    border-radius: 12px;
-    color: var(--vinho);
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(53, 35, 35, 0.03);
-    transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.configuracoes-btn-sino:hover {
-    background: var(--vinho-suave);
-    transform: translateY(-1px);
-}
-
-.configuracoes-btn-sino:focus-visible {
-    outline: 3px solid var(--dourado);
-    outline-offset: 2px;
-}
-
-.configuracoes-icone-sino {
-    width: 20px;
-    height: 20px;
-}
-
 /* ==========================================================================
    5.2. PERFIL DE ACESSO (Cartão Vinho Escuro)
    ========================================================================== */

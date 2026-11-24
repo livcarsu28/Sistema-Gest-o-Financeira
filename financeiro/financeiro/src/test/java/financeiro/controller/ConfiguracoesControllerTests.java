@@ -74,7 +74,6 @@ class ConfiguracoesControllerTests {
                 .andExpect(content().string(containsString("Imagens")))
                 .andExpect(content().string(containsString("Chave PIX")))
                 .andExpect(content().string(containsString("Endereço da instituição")))
-                .andExpect(content().string(containsString("Notificações")))
                 .andExpect(content().string(containsString("/css/configuracoes.css")))
                 .andExpect(content().string(containsString("/js/configuracoes.js")));
     }
@@ -105,7 +104,20 @@ class ConfiguracoesControllerTests {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
+    void atualizarEnderecoPorUsuarioComumERecusado() throws Exception {
+        mockMvc.perform(post("/configuracoes/endereco").with(csrf())
+                        .param("logradouro", "Rua Nova")
+                        .param("numero", "10")
+                        .param("bairro", "Centro")
+                        .param("cidade", "São Paulo")
+                        .param("uf", "SP")
+                        .param("cep", "01001-000"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void atualizarEnderecoComSucesso() throws Exception {
         mockMvc.perform(post("/configuracoes/endereco").with(csrf())
                         .param("logradouro", "Rua da Esperança")

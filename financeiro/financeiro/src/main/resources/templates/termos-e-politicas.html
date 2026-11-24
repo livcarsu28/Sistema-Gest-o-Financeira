@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Termos de Uso e Política de Privacidade | Resgate de Vidas</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .termos-container {
+            max-width: 860px;
+            margin: 40px auto;
+            padding: 32px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .termos-header {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .termos-marca {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .termos-marca img {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+        }
+        .termos-marca h1 {
+            font-size: 20px;
+            margin: 0;
+            color: #0f172a;
+        }
+        .termos-marca span {
+            font-size: 13px;
+            color: #64748b;
+            display: block;
+        }
+        .termos-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #f1f5f9;
+            color: #334155;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .termos-voltar:hover {
+            background: #e2e8f0;
+        }
+        .termos-aviso-homologacao {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #92400e;
+        }
+        .termos-secao {
+            margin-bottom: 40px;
+        }
+        .termos-secao h2 {
+            font-size: 22px;
+            color: #0f172a;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 8px;
+            margin-top: 24px;
+        }
+        .termos-secao h3 {
+            font-size: 16px;
+            color: #334155;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+        .termos-secao p, .termos-secao ul {
+            font-size: 15px;
+            color: #475569;
+        }
+        .termos-secao ul {
+            padding-left: 20px;
+        }
+        .termos-secao li {
+            margin-bottom: 6px;
+        }
+        .termos-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="termos-container">
+    <header class="termos-header">
+        <a th:href="@{/login}" class="termos-marca">
+            <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="Logo Resgate de Vidas">
+            <div>
+                <h1>Resgate de Vidas</h1>
+                <span>Criança Feliz · Gestão Financeira</span>
+            </div>
+        </a>
+        <a th:href="@{/login}" class="termos-voltar">
+            ← Voltar para o Sistema
+        </a>
+    </header>
+
+    <div class="termos-aviso-homologacao">
+        <strong>Aviso Institucional:</strong> Os presentes Termos de Uso e Política de Privacidade refletem as regras operacionais e de proteção de dados do Sistema de Gestão Financeira da ONG Resgate de Vidas – Criança Feliz. <em>[Conteúdo técnico-operacional em processo de homologação jurídica formal pela diretoria da instituição]</em>.
+    </div>
+
+    <section class="termos-secao" id="termos-uso">
+        <h2>1. Termos de Uso do Sistema</h2>
+        
+        <h3>1.1. Finalidade do Sistema</h3>
+        <p>O Sistema de Gestão Financeira destina-se única e exclusivamente à administração, controle de receitas e despesas, fluxo de caixa, prestação de contas e transparência das atividades promovidas pela instituição sem fins lucrativos <strong>Resgate de Vidas – Criança Feliz</strong>.</p>
+
+        <h3>1.2. Perfis de Acesso e Responsabilidades</h3>
+        <p>O acesso ao sistema é restrito e operado sob dois níveis de privilégio:</p>
+        <ul>
+            <li><strong>Administrador:</strong> responsável pela configuração institucional, atualização da chave PIX, gestão de dados bancários oficiais, cadastro do usuário operacional e auditoria geral.</li>
+            <li><strong>Usuário Comum:</strong> autorizado a consultar informações financeiras, registrar entradas e despesas diárias, emitir relatórios e gerenciar registros de fotos de eventos e projetos, não possuindo permissão para alterar chaves PIX ou dados bancários institucionais.</li>
+        </ul>
+
+        <h3>1.3. Segurança das Credenciais</h3>
+        <p>As contas de acesso são pessoais e intransferíveis. O usuário compromete-se a zelar pelo sigilo de sua senha, a qual é armazenada no banco de dados com criptografia de via única (BCrypt). É terminantemente proibido compartilhar credenciais de acesso ou permitir a utilização por terceiros não autorizados.</p>
+
+        <h3>1.4. Integridade das Informações</h3>
+        <p>Todos os lançamentos financeiros, anexos e comprovantes inseridos no sistema devem corresponder a operações legítimas e devidamente documentadas da instituição.</p>
+    </section>
+
+    <section class="termos-secao" id="politica-privacidade">
+        <h2>2. Política de Privacidade e Proteção de Dados (LGPD)</h2>
+
+        <h3>2.1. Coleta e Tratamento de Dados</h3>
+        <p>Em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei Federal nº 13.709/2018 - LGPD), o sistema coleta e processa apenas os dados estritamente necessários para o seu funcionamento:</p>
+        <ul>
+            <li><strong>Identificação do operador:</strong> nome completo, e-mail institucional e registro de cargo/perfil de acesso.</li>
+            <li><strong>Registros de auditoria:</strong> data de cadastro e identificação do usuário autor de lançamentos e uploads.</li>
+            <li><strong>Comprovantes e imagens:</strong> fotos institucionais de projetos e eventos com limite operacional de até 10 imagens ativas.</li>
+        </ul>
+
+        <h3>2.2. Não Compartilhamento com Terceiros</h3>
+        <p>Os dados processados no sistema de gestão financeira não são comercializados, cedidos ou compartilhados com terceiros para fins publicitários ou mercadológicos. Publicações de transparência financeira no site oficial da instituição contêm apenas dados agregados e consolidados, resguardando o sigilo de dados pessoais sensíveis.</p>
+
+        <h3>2.3. Retenção e Descarte</h3>
+        <p>Os dados financeiros são mantidos pelo período exigido pela legislação tributária e regulatória do terceiro setor. O encerramento de acessos de operadores é realizado por meio de inativação lógica do registro no banco de dados.</p>
+    </section>
+
+    <footer class="termos-footer">
+        <p>&copy; 2026 Associação Resgate de Vidas – Criança Feliz. Todos os direitos reservados.</p>
+    </footer>
+</div>
+
+</body>
+</html>

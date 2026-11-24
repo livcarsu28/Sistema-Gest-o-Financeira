@@ -28,29 +28,105 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // =========================================================================
-    // 5.1. CABEÇALHO - BOTÃO DE SINO DE NOTIFICAÇÕES
-    // =========================================================================
-    const btnSinoHeader = $("btn-sino-header");
-    if (btnSinoHeader) {
-        btnSinoHeader.addEventListener("click", () => {
-            exibirToast("Nenhuma notificação pendente no momento.");
-        });
-    }
-
-    // =========================================================================
-    // 5.2. PERFIL DE ACESSO
+    // 5.2. PERFIL DE ACESSO E GESTÃO DE USUÁRIOS
     // =========================================================================
     const perfilSelect = $("perfil-select");
+    const btnAbrirModalUsuario = $("btn-abrir-modal-usuario");
+    const modalUsuario = $("modal-usuario");
+    const btnFecharModalUsuario = $("btn-fechar-modal-usuario");
+    const btnCancelarModalUsuario = $("btn-cancelar-modal-usuario");
+    const formCadastrarUsuario = $("form-cadastrar-usuario");
+    const erroUsuario = $("erro-usuario");
+
     if (perfilSelect) {
         perfilSelect.addEventListener("change", () => {
-            // Conforme regra de arquitetura: permissões são gerenciadas pelo administrador
-            perfilSelect.value = "Administrador";
-            exibirToast("O perfil de acesso é definido pela administração do sistema.");
+            exibirToast("O perfil ativo é determinado pelas credenciais de login.");
+        });
+    }
+
+    function abrirModalUsuario() {
+        if (!modalUsuario) return;
+        if (erroUsuario) erroUsuario.textContent = "";
+        formCadastrarUsuario?.reset();
+        modalUsuario.hidden = false;
+        setTimeout(() => $("input-usuario-nome")?.focus(), 50);
+    }
+
+    function fecharModalUsuario() {
+        if (!modalUsuario) return;
+        modalUsuario.hidden = true;
+        if (erroUsuario) erroUsuario.textContent = "";
+        btnAbrirModalUsuario?.focus();
+    }
+
+    if (btnAbrirModalUsuario) {
+        btnAbrirModalUsuario.addEventListener("click", abrirModalUsuario);
+    }
+    if (btnFecharModalUsuario) {
+        btnFecharModalUsuario.addEventListener("click", fecharModalUsuario);
+    }
+    if (btnCancelarModalUsuario) {
+        btnCancelarModalUsuario.addEventListener("click", fecharModalUsuario);
+    }
+    if (modalUsuario) {
+        modalUsuario.addEventListener("click", (e) => {
+            if (e.target === modalUsuario) fecharModalUsuario();
+        });
+    }
+
+    if (formCadastrarUsuario) {
+        formCadastrarUsuario.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nome = $("input-usuario-nome")?.value.trim() || "";
+            const email = $("input-usuario-email")?.value.trim() || "";
+            const senha = $("input-usuario-senha")?.value.trim() || "";
+
+            if (!nome || !email || !senha) {
+                if (erroUsuario) erroUsuario.textContent = "Preencha todos os campos obrigatórios.";
+                return;
+            }
+            if (senha.length < 6) {
+                if (erroUsuario) erroUsuario.textContent = "A senha deve ter no mínimo 6 caracteres.";
+                return;
+            }
+
+            const btnSubmit = formCadastrarUsuario.querySelector('button[type="submit"]');
+            if (btnSubmit) btnSubmit.disabled = true;
+            if (erroUsuario) erroUsuario.textContent = "";
+
+            try {
+                const params = new URLSearchParams();
+                params.append("nome", nome);
+                params.append("email", email);
+                params.append("senha", senha);
+
+                const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+                const headers = { "Content-Type": "application/x-www-form-urlencoded" };
+                if (csrfToken) headers["X-CSRF-TOKEN"] = csrfToken;
+
+                const resposta = await fetch(formCadastrarUsuario.action, {
+                    method: "POST",
+                    headers: headers,
+                    body: params
+                });
+
+                const dados = await resposta.json();
+                if (!resposta.ok) {
+                    throw new Error(dados.mensagem || "Não foi possível cadastrar o usuário.");
+                }
+
+                fecharModalUsuario();
+                exibirToast(`Usuário "${dados.nomeCompleto || nome}" cadastrado com sucesso!`);
+            } catch (err) {
+                if (erroUsuario) erroUsuario.textContent = err.message || "Erro ao cadastrar usuário.";
+            } finally {
+                if (btnSubmit) btnSubmit.disabled = false;
+            }
         });
     }
 
     // =========================================================================
-    // 5.3. GERENCIAMENTO DE IMAGENS E UPLOAD
+    // 5.3. GERENCIAMENTO DE IMAGENS E UPLOAD (LIMITE DE 10 IMAGENS)
     // =========================================================================
     const selectCategoria = $("select-categoria");
     const areaUpload = $("area-upload");
@@ -61,10 +137,111 @@ document.addEventListener("DOMContentLoaded", () => {
     const uploadNomeArquivo = $("upload-nome-arquivo");
     const uploadTamanhoArquivo = $("upload-tamanho-arquivo");
     const btnRemoverImagem = $("btn-remover-imagem");
+    const btnConfirmarUpload = $("btn-confirmar-upload");
     const feedbackUpload = $("feedback-upload");
+    const contadorImagensTexto = $("contador-imagens-texto");
+    const avisoLimiteAtingido = $("aviso-limite-atingido");
+    const galeriaImagensLista = $("galeria-imagens-lista");
 
+    const LIMITE_MAXIMO_IMAGENS = 10;
     const TAMANHO_MAXIMO_BYTES = 10 * 1024 * 1024; // 10 MB
     const TIPOS_PERMITIDOS = ["image/png", "image/jpeg", "image/jpg"];
+
+    let totalImagensAtuais = 0;
+    let arquivoSelecionado = null;
+
+    function atualizarEstadoContador(total) {
+        totalImagensAtuais = total;
+        if (contadorImagensTexto) {
+            contadorImagensTexto.textContent = `${total} de ${LIMITE_MAXIMO_IMAGENS} imagens adicionadas`;
+        }
+        const atingiuLimite = total >= LIMITE_MAXIMO_IMAGENS;
+        if (avisoLimiteAtingido) {
+            avisoLimiteAtingido.hidden = !atingiuLimite;
+        }
+        if (areaUpload) {
+            if (atingiuLimite) {
+                areaUpload.classList.add("upload-bloqueado");
+                areaUpload.style.pointerEvents = "none";
+                areaUpload.style.opacity = "0.5";
+                const rotulo = $("rotulo-upload-texto");
+                if (rotulo) rotulo.textContent = "Limite de 10 fotos atingido";
+                const ajuda = $("ajuda-upload-texto");
+                if (ajuda) ajuda.textContent = "Remova uma foto abaixo para adicionar outra";
+            } else {
+                areaUpload.classList.remove("upload-bloqueado");
+                areaUpload.style.pointerEvents = "auto";
+                areaUpload.style.opacity = "1";
+                const rotulo = $("rotulo-upload-texto");
+                if (rotulo) rotulo.textContent = "Fazer upload";
+                const ajuda = $("ajuda-upload-texto");
+                if (ajuda) ajuda.textContent = "PNG ou JPG de até 10 MB";
+            }
+        }
+    }
+
+    async function carregarGaleriaImagens() {
+        try {
+            const resp = await fetch("/configuracoes/imagens");
+            if (!resp.ok) return;
+            const dados = await resp.json();
+            atualizarEstadoContador(dados.total || 0);
+
+            if (galeriaImagensLista && dados.imagens) {
+                galeriaImagensLista.innerHTML = "";
+                if (dados.imagens.length === 0) {
+                    galeriaImagensLista.innerHTML = '<p style="color: #94a3b8; font-size: 13px; grid-column: 1 / -1;">Nenhuma imagem cadastrada no momento.</p>';
+                } else {
+                    dados.imagens.forEach((img) => {
+                        const item = document.createElement("div");
+                        item.style.cssText = "background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; text-align: center; position: relative;";
+                        item.innerHTML = `
+                            <div style="height: 70px; background: #e2e8f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 6px;">
+                                <img src="${img.urlImagem}" alt="Foto ${img.categoria}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='/img/logo-resgate-de-vidas.png';">
+                            </div>
+                            <span style="font-size: 11px; font-weight: 600; color: #475569; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${img.categoria}</span>
+                            <button type="button" class="btn-remover-foto-galeria" data-id="${img.id}" style="margin-top: 6px; width: 100%; font-size: 11px; padding: 4px; background: #fee2e2; color: #dc2626; border: none; border-radius: 4px; cursor: pointer;">
+                                Remover
+                            </button>
+                        `;
+                        galeriaImagensLista.appendChild(item);
+                    });
+
+                    // Evento de remover imagem da galeria
+                    galeriaImagensLista.querySelectorAll(".btn-remover-foto-galeria").forEach((btn) => {
+                        btn.addEventListener("click", async (e) => {
+                            const idFoto = e.target.getAttribute("data-id");
+                            await excluirImagem(idFoto);
+                        });
+                    });
+                }
+            }
+        } catch {
+            // Em slice tests ou offline, mantém o padrão
+        }
+    }
+
+    async function excluirImagem(idFoto) {
+        try {
+            const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+            const headers = {};
+            if (csrfToken) headers["X-CSRF-TOKEN"] = csrfToken;
+
+            const resp = await fetch(`/configuracoes/imagens/${idFoto}`, {
+                method: "DELETE",
+                headers: headers
+            });
+            const dados = await resp.json();
+            if (resp.ok) {
+                exibirToast(dados.mensagem || "Imagem removida com sucesso!");
+                await carregarGaleriaImagens();
+            } else {
+                exibirToast(dados.mensagem || "Não foi possível remover a imagem.");
+            }
+        } catch {
+            exibirToast("Erro de comunicação ao remover imagem.");
+        }
+    }
 
     function formatarTamanhoBytes(bytes) {
         if (bytes < 1024) return bytes + " B";
@@ -105,6 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function processarArquivoImagem(arquivo) {
         if (!arquivo) return;
+        arquivoSelecionado = arquivo;
 
         limparMensagemUpload();
 
@@ -205,9 +383,55 @@ document.addEventListener("DOMContentLoaded", () => {
         btnRemoverImagem.addEventListener("click", (e) => {
             e.stopPropagation();
             resetarUpload();
-            exibirToast("Imagem removida.");
+            exibirToast("Seleção cancelada.");
         });
     }
+
+    if (btnConfirmarUpload) {
+        btnConfirmarUpload.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            if (!arquivoSelecionado) {
+                exibirMensagemUpload("Selecione um arquivo de imagem para enviar.", "erro");
+                return;
+            }
+            if (totalImagensAtuais >= LIMITE_MAXIMO_IMAGENS) {
+                exibirMensagemUpload("Limite de 10 imagens atingido. Remova uma foto antes.", "erro");
+                return;
+            }
+
+            btnConfirmarUpload.disabled = true;
+            try {
+                const formData = new FormData();
+                formData.append("arquivo", arquivoSelecionado);
+                formData.append("categoria", selectCategoria ? selectCategoria.value : "Projetos");
+
+                const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+                const headers = {};
+                if (csrfToken) headers["X-CSRF-TOKEN"] = csrfToken;
+
+                const resp = await fetch("/configuracoes/imagens", {
+                    method: "POST",
+                    headers: headers,
+                    body: formData
+                });
+
+                const dados = await resp.json();
+                if (!resp.ok) {
+                    throw new Error(dados.mensagem || "Erro ao salvar imagem.");
+                }
+
+                resetarUpload();
+                exibirToast(dados.mensagem || "Imagem adicionada com sucesso!");
+                await carregarGaleriaImagens();
+            } catch (err) {
+                exibirMensagemUpload(err.message || "Erro no envio da imagem.", "erro");
+            } finally {
+                btnConfirmarUpload.disabled = false;
+            }
+        });
+    }
+
+    carregarGaleriaImagens();
 
     if (selectCategoria) {
         selectCategoria.addEventListener("change", () => {
@@ -454,37 +678,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (modalPix && !modalPix.hidden) fecharModalPix();
             if (modalEndereco && !modalEndereco.hidden) fecharModalEndereco();
         }
-    });
-
-    // =========================================================================
-    // 5.6. NOTIFICAÇÕES (Switches)
-    // =========================================================================
-    const switchesNotificacao = [
-        { id: "switch-notif-lancamentos", chaveStorage: "notif_lancamentos", nome: "Lançamentos", padrao: true },
-        { id: "switch-notif-lembretes", chaveStorage: "notif_lembretes", nome: "Lembretes", padrao: true },
-        { id: "switch-notif-relatorios", chaveStorage: "notif_relatorios", nome: "Relatórios", padrao: false }
-    ];
-
-    switchesNotificacao.forEach(({ id, chaveStorage, nome, padrao }) => {
-        const elementoSwitch = $(id);
-        if (!elementoSwitch) return;
-
-        // Recuperar preferência salva se houver
-        const estadoSalvo = localStorage.getItem(chaveStorage);
-        if (estadoSalvo !== null) {
-            elementoSwitch.checked = estadoSalvo === "true";
-        } else {
-            elementoSwitch.checked = padrao;
-        }
-        elementoSwitch.setAttribute("aria-checked", String(elementoSwitch.checked));
-
-        // Evento de alteração
-        elementoSwitch.addEventListener("change", () => {
-            const ativo = elementoSwitch.checked;
-            elementoSwitch.setAttribute("aria-checked", String(ativo));
-            localStorage.setItem(chaveStorage, String(ativo));
-            exibirToast(`Notificações de ${nome} ${ativo ? "ativadas" : "desativadas"}.`);
-        });
     });
 });
 

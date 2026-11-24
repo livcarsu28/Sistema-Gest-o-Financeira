@@ -29,9 +29,18 @@ public class UsuarioAutenticado implements UserDetails {
         this.status = status;
         this.dataExclusao = dataExclusao;
         this.nivelPermissao = nivelPermissao;
-        this.authorities = (nivelPermissao == null || nivelPermissao.isBlank())
-                ? Collections.emptyList()
-                : List.of(new SimpleGrantedAuthority("ROLE_" + nivelPermissao.trim().toUpperCase()));
+        if (nivelPermissao == null || nivelPermissao.isBlank()) {
+            this.authorities = Collections.emptyList();
+        } else {
+            String nivel = nivelPermissao.trim().toUpperCase();
+            if ("USUARIO".equals(nivel) || "USER".equals(nivel)) {
+                this.authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_USUARIO"));
+            } else if ("ADMIN".equals(nivel) || "ADMINISTRADOR".equals(nivel)) {
+                this.authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_ADMINISTRADOR"));
+            } else {
+                this.authorities = List.of(new SimpleGrantedAuthority("ROLE_" + nivel));
+            }
+        }
     }
 
     public Integer getId() {
