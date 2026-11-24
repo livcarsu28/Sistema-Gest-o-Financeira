@@ -1,25 +1,125 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>ONG | Gestão Financeira</title>
-        <link rel="stylesheet" href="/css/app.css">
-        <script defer src="/js/app.js"></script>
-    </head>
-    <body>
-        <div class="layout">
-            <main class="main">
-                <header class="page-head">
-                    <div>
-                        <h1>Login</h1>
-                        <p>Página reservada para autenticação. Ainda não há controle de acesso implementado.</p>
-                    </div>
-                </header>
-                <section class="history">
-                    <a href="/movimentacoes">Ir para movimentações →</a>
-                </section>
-            </main>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Login | Gestão Financeira</title>
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f6f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 380px;
+            padding: 35px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .login-container p {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .login-container label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .login-container input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 13px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .login-container button:hover {
+            background: #1d4ed8;
+        }
+
+        .erro {
+            color: #b91c1c;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <h1>Gestão Financeira</h1>
+        <p>Entre para acessar o sistema</p>
+
+        <div th:if="${param.error}" class="erro">
+            E-mail ou senha incorretos.
         </div>
-    </body>
+
+        <div th:if="${param.logout}">
+            Você saiu do sistema.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+
+            <label for="username">E-mail</label>
+            <input
+                type="email"
+                id="username"
+                name="username"
+                placeholder="Digite seu e-mail"
+                required
+            >
+
+            <label for="password">Senha</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Digite sua senha"
+                required
+            >
+
+            <button type="submit">
+                Entrar
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
 </html>

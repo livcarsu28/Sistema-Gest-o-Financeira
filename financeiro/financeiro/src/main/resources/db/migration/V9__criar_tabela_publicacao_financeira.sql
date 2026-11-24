@@ -1,8 +1,5 @@
--- =========================================================
--- SISTEMA FINANCEIRO ONG
--- V4 - Criação da tabela de publicação financeira para o site institucional
--- MySQL 8
--- =========================================================
+
+-- V9 - Criação da tabela de publicação financeira
 
 CREATE TABLE IF NOT EXISTS publicacao_financeira (
     id_publicacao INT NOT NULL AUTO_INCREMENT,
@@ -15,7 +12,9 @@ CREATE TABLE IF NOT EXISTS publicacao_financeira (
     observacao VARCHAR(255),
     id_usuario INT,
 
-    CONSTRAINT pk_publicacao_financeira PRIMARY KEY (id_publicacao),
+    CONSTRAINT pk_publicacao_financeira
+        PRIMARY KEY (id_publicacao),
+
     CONSTRAINT fk_publicacao_usuario
         FOREIGN KEY (id_usuario)
         REFERENCES usuario (id_usuario)
