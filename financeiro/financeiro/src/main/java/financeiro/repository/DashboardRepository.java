@@ -38,6 +38,16 @@ public class DashboardRepository {
                 inicio, fim, inicio, fim, inicio, fim, inicio, fim, inicio, fim);
     }
 
+    public long contarPendentes() {
+        Long total = jdbcTemplate.queryForObject("""
+                SELECT COUNT(*)
+                FROM movimentacao
+                WHERE excluida = FALSE
+                  AND status_pagamento IN ('PENDENTE', 'VENCIDO')
+                """, Long.class);
+        return total == null ? 0L : total;
+    }
+
     public record ResumoMensal(BigDecimal entradas, BigDecimal saidas, long quantidadeMovimentacoes) {
     }
 }

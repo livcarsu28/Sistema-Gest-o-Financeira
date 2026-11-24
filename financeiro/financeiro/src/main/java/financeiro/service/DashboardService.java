@@ -38,6 +38,11 @@ public class DashboardService {
                 resumo.entradas().subtract(resumo.saidas()), resumo.quantidadeMovimentacoes());
     }
 
+    @Transactional(readOnly = true)
+    public long consultarQuantidadePendentes() {
+        return dashboardRepository.contarPendentes();
+    }
+
     public record DadosDashboard(YearMonth periodo, BigDecimal entradas, BigDecimal saidas,
             BigDecimal saldo, long quantidadeMovimentacoes) {
     }
