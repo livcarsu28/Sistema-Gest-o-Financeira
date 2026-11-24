@@ -15,7 +15,7 @@
     <a class="configuracoes-pular" href="#conteudo-principal">Ir para o conteúdo</a>
 
     <div class="configuracoes-layout">
-        <!-- Barra lateral para Desktop (consistente com as demais telas do sistema) -->
+        <!-- Barra lateral para Desktop -->
         <aside class="configuracoes-sidebar">
             <a class="configuracoes-sidebar-marca" th:href="@{/dashboard}"
                 aria-label="Resgate de Vidas – Criança Feliz, início">
@@ -116,7 +116,7 @@
                                     <path d="m9 12 2 2 4-4" />
                                 </svg>
                             </div>
-                            <div>
+                            <div class="configuracoes-perfil-info">
                                 <h2 id="titulo-perfil" class="configuracoes-perfil-titulo">Perfil de acesso</h2>
                                 <p class="configuracoes-perfil-descricao"
                                     th:text="${ehAdmin != null and ehAdmin ? 'Acesso completo' : 'Acesso padrão'}">
