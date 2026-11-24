@@ -277,6 +277,35 @@
     min-width: 0;
 }
 
+.configuracoes-perfil-info {
+    min-width: 0;
+}
+
+.configuracoes-perfil-acoes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.configuracoes-btn-novo-usuario {
+    padding: 7px 14px;
+    background: #0284c7;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+}
+
+.configuracoes-btn-novo-usuario:hover {
+    background: #0369a1;
+}
+
 .configuracoes-perfil-icone-wrapper {
     width: 40px;
     height: 40px;
@@ -372,6 +401,30 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
+}
+
+.configuracoes-card-cabecalho-imagens {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.configuracoes-card-cabecalho-titulo-grupo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.configuracoes-contador-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 9999px;
+    white-space: nowrap;
 }
 
 .configuracoes-badge-icone {
@@ -542,6 +595,24 @@
 
 .configuracoes-upload-estado-selecionado[hidden] {
     display: none !important;
+}
+
+.configuracoes-upload-acoes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.configuracoes-upload-btn-salvar {
+    padding: 6px 12px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .configuracoes-upload-preview-container {
