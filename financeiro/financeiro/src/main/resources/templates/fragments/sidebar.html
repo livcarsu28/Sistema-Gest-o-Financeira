@@ -83,6 +83,37 @@
                     <span>Dados da ONG</span>
                 </a>
             </li>
+
+            <!-- Sair da conta -->
+            <li>
+                <form th:action="@{/logout}" method="post"
+                      class="logout-form">
+
+                    <button type="submit"
+                            class="navegacao-link navegacao-sair"
+                            aria-label="Sair da conta">
+
+                        <svg class="icone" viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.6"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true"
+                             focusable="false">
+
+                            <path d="M10 17l5-5-5-5"/>
+                            <path d="M15 12H3"/>
+                            <path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"/>
+
+                        </svg>
+
+                        <span>Sair</span>
+
+                    </button>
+                </form>
+            </li>
+
         </ul>
     </nav>
 </aside>

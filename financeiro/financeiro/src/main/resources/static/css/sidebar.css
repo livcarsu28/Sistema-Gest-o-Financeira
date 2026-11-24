@@ -57,3 +57,43 @@
     .barra-lateral { flex: 0 0 248px; width: 248px; }
     .barra-lateral ~ .main { min-width: 0; }
 }
+
+/* Botão de sair da conta */
+
+.logout-form {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.navegacao-sair {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    color: #900606;
+    cursor: pointer;
+    text-align: left;
+}
+
+.navegacao-sair:hover {
+    background-color: rgba(144, 6, 6, 0.08);
+    color: #700404;
+}
+
+.navegacao-sair:focus-visible {
+    outline: 2px solid #900606;
+    outline-offset: 2px;
+}
+@media (max-width: 999px) {
+    .barra-lateral .navegacao-lista {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .barra-lateral .navegacao-link {
+        font-size: 9px;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+}

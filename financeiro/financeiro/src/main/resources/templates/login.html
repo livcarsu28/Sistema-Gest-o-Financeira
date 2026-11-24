@@ -1,125 +1,184 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Login | Gestão Financeira</title>
+    <title>Login | Resgate de Vidas</title>
 
     <link rel="stylesheet" th:href="@{/css/app.css}">
-
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f4f6f9;
-            font-family: Arial, sans-serif;
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 380px;
-            padding: 35px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-        }
-
-        .login-container h1 {
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .login-container p {
-            text-align: center;
-            color: #777;
-            margin-bottom: 25px;
-        }
-
-        .login-container label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: bold;
-        }
-
-        .login-container input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 12px;
-            margin-bottom: 18px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        .login-container button {
-            width: 100%;
-            padding: 13px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .login-container button:hover {
-            background: #1d4ed8;
-        }
-
-        .erro {
-            color: #b91c1c;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 
-<body>
+<body class="login-page">
 
-    <div class="login-container">
+    <main class="login-container">
 
-        <h1>Gestão Financeira</h1>
-        <p>Entre para acessar o sistema</p>
+        <header class="login-header">
 
-        <div th:if="${param.error}" class="erro">
-            E-mail ou senha incorretos.
-        </div>
-
-        <div th:if="${param.logout}">
-            Você saiu do sistema.
-        </div>
-
-        <form th:action="@{/login}" method="post">
-
-            <label for="username">E-mail</label>
-            <input
-                type="email"
-                id="username"
-                name="username"
-                placeholder="Digite seu e-mail"
-                required
+            <img
+                th:src="@{/img/logo-resgate-de-vidas.png}"
+                alt="Logo Resgate de Vidas"
+                class="login-logo"
             >
 
-            <label for="password">Senha</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Digite sua senha"
-                required
-            >
+            <h1>Resgate de Vidas</h1>
 
-            <button type="submit">
-                Entrar
-            </button>
+            <p>Criança Feliz · Gestão financeira</p>
 
-        </form>
+        </header>
 
-    </div>
+        <section class="login-content">
+
+            <h2>Entrar</h2>
+
+            <p class="login-description">
+                Acesse o painel administrativo da ONG.
+            </p>
+
+            <div th:if="${param.error}" 
+                 class="login-alert login-alert-error"
+                 role="alert">
+
+                <strong>Não foi possível entrar.</strong>
+
+                <span>
+                    E-mail ou senha incorretos. 
+                    Confira seus dados e tente novamente.
+                </span>
+
+            </div>
+
+            <div th:if="${param.logout}" 
+                 class="login-alert login-alert-success"
+                 role="status">
+
+                Você saiu do sistema com segurança.
+
+            </div>
+
+            <form th:action="@{/login}" method="post">
+
+                <div class="login-field">
+
+                    <label for="username">E-mail</label>
+
+                    <input
+                        type="email"
+                        id="username"
+                        name="username"
+                        placeholder="nome@ong.org.br"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+                <div class="login-field">
+
+                    <label for="password">Senha</label>
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="toggle-password"
+                            aria-label="Mostrar senha"
+                            aria-pressed="false"
+                        >
+
+                            <svg id="eyeIcon"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 width="22"
+                                 height="22"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.7"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+
+                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path id="eyeSlash" d="M3 3l18 18" style="display:none"/>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button type="submit" class="login-submit">
+                    Entrar no sistema
+                </button>
+
+            </form>
+
+            <footer class="login-footer">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="16"
+                     height="16"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.7"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+
+                    <rect x="5" y="11" width="14" height="10" rx="2"/>
+                    <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+
+                </svg>
+
+                <span>Acesso seguro para pessoas autorizadas</span>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        const password = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+        const eyeSlash = document.getElementById("eyeSlash");
+
+        togglePassword.addEventListener("click", function () {
+
+            const mostrar = password.type === "password";
+
+            password.type = mostrar ? "text" : "password";
+
+            eyeSlash.style.display = mostrar ? "block" : "none";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                mostrar ? "Ocultar senha" : "Mostrar senha"
+            );
+
+            togglePassword.setAttribute("aria-pressed", mostrar);
+
+        });
+
+    </script>
 
 </body>
 </html>
