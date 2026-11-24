@@ -76,7 +76,7 @@
 
                 <dl class="indicadores"><div class="indicador indicador-entrada"><dt><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>Entradas recebidas</span></dt><dd class="indicador-valor" th:text="${entradasFormatadas}">R$ 0,00</dd></div>
 <div class="indicador indicador-saida"><dt><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3m-5 5 5-5 5 5M4 16v5h16v-5"/></svg><span>Despesas pagas</span></dt><dd class="indicador-valor" th:text="${saidasFormatadas}">R$ 0,00</dd></div>
-<div class="indicador indicador-movimentacoes"><dt><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg><span>Movimentações</span></dt><dd class="indicador-valor" th:text="${quantidadeMovimentacoes}">0</dd></div>
+<div class="indicador indicador-pendentes"><dt><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Contas pendentes</span></dt><dd class="indicador-valor" th:text="${quantidadePendentes}">0</dd><a class="indicador-atalho" th:href="@{/movimentacoes}">Ver movimentações</a></div>
 </dl>
             </div>
         </section>
@@ -93,22 +93,14 @@
                 <p class="secao-sobretitulo">Acesso fácil</p>
                 <div class="secao-cabecalho"><h2 id="titulo-acoes">Ações rápidas</h2></div>
                 <p class="painel-descricao">Atalhos para a rotina financeira.</p>
-                <ul class="acoes"><li><div class="acao acao-entrada acao-indisponivel" aria-disabled="true"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="acao-texto"><strong>Nova entrada</strong><span>Ainda não disponível</span></span><span class="acao-etiqueta" style="color: #b45309; background: #fef3c7; border: 1px solid #fde68a; font-weight: 500;">Temporariamente fora de ar</span></div></li>
-<li><div class="acao acao-indisponivel" aria-disabled="true"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/></svg></span><span class="acao-texto"><strong>Nova saída</strong><span>Ainda não disponível</span></span><span class="acao-etiqueta" style="color: #b45309; background: #fef3c7; border: 1px solid #fde68a; font-weight: 500;">Temporariamente fora de ar</span></div></li>
+                <ul class="acoes"><li><a class="acao acao-entrada" th:href="@{/movimentacoes(nova='entrada')}"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="acao-texto"><strong>Nova entrada</strong><span>Registrar recebimento</span></span></a></li>
+<li><a class="acao" th:href="@{/movimentacoes(nova='saida')}"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/></svg></span><span class="acao-texto"><strong>Nova saída</strong><span>Registrar despesa</span></span></a></li>
 <li><a class="acao" th:href="@{/movimentacoes}"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg></span><span class="acao-texto"><strong>Movimentações</strong><span>Acessar movimentações</span></span><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a></li>
 <li><a class="acao" th:href="@{/relatorios}"><span class="acao-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6"/></svg></span><span class="acao-texto"><strong>Relatórios</strong><span>Acessar relatórios</span></span><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a></li>
 </ul>
             </section>
         </div>
-        <section class="painel anotacoes" aria-labelledby="titulo-anotacoes">
-            <p class="secao-sobretitulo">Lembretes</p>
-            <div class="secao-cabecalho"><h2 id="titulo-anotacoes">Anotações</h2><span class="etiqueta" style="color: #b45309; background: #fef3c7; border: 1px solid #fde68a; font-weight: 500;">Temporariamente fora de ar</span></div>
-            <div class="anotacoes-vazio">
-                <span class="anotacoes-icone"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8m-8 4h5"/></svg></span>
-                <div><h3>Um espaço para seus lembretes</h3><p>Em breve, você poderá organizar aqui as anotações da rotina financeira.</p></div>
-            </div>
-        </section>
-    </main>
+        </main>
 </div>
 </body>
 </html>
