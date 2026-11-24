@@ -254,25 +254,120 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
 .rapido select { min-height: 42px; padding: 0 10px; border: 1px solid var(--borda-suave); border-radius: 12px; background: var(--fundo); font-size: .75rem; min-width: 0; }
 .rapido .btn { min-height: 42px; padding: 0 20px; border-radius: 12px; }
 
-.itens-dia { background: #fff; border: 1px solid var(--borda-suave); border-radius: var(--raio-card); padding: 2px 14px; box-shadow: var(--sombra); }
+/* ---------- Checklist lateral: margem consistente e sem regras duplicadas ---------- */
+.itens-dia {
+    background: #fff;
+    border: 1px solid var(--borda-suave);
+    border-radius: var(--raio-card);
+    padding: 4px 16px;
+    box-shadow: var(--sombra);
+    min-width: 0;
+    overflow: hidden;
+}
 .itens-dia:empty { display: none; }
-.mov-check { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #C9C2BA; background: #fff; color: transparent; }
-.mov-check[aria-pressed="true"] { background: var(--entrada); border-color: var(--entrada); color: #fff; }
-.mov-check .icone { width: 16px; height: 16px; }
-.mov-btn { padding-left: 8px; }
-.nota-item { display: flex; align-items: center; gap: 8px; padding: 10px 0; }
-.nota-item + .nota-item, .mov + .nota-item, .nota-item + .mov { border-top: 1px solid var(--borda); }
-.nota-marca { position: relative; flex: none; }
+
+/* Movimentações: bolinha, tipo, descrição e valor */
+.itens-dia .mov {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.itens-dia .mov-check {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1.4px solid #C9C2BA;
+    background: #fff;
+    color: transparent;
+}
+.itens-dia .mov-check[aria-pressed="true"] {
+    background: var(--entrada);
+    border-color: var(--entrada);
+    color: #fff;
+}
+.itens-dia .mov-check .icone { width: 13px; height: 13px; }
+.itens-dia .mov-btn {
+    display: grid;
+    flex: 1 1 0;
+    min-width: 0;
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 0;
+    text-align: left;
+}
+.itens-dia .mov-icone { width: 32px; height: 32px; border-radius: 9px; }
+.itens-dia .mov-icone .icone { width: 16px; height: 16px; }
+.itens-dia .mov-texto { min-width: 0; overflow: hidden; }
+.itens-dia .mov-nome,
+.itens-dia .mov-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.itens-dia .mov-valor { min-width: 0; max-width: 100%; flex-shrink: 0; }
+.itens-dia .mov-valor .valor { font-size: .75rem; white-space: nowrap; }
+
+/* Anotações: mesma margem, texto longo contido e ações afastadas da borda */
+.itens-dia .nota-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    padding: 12px 0;
+}
+.nota-item + .nota-item,
+.mov + .nota-item,
+.nota-item + .mov { border-top: 1px solid var(--borda); }
+.nota-marca { position: relative; flex: 0 0 22px; }
 .nota-marca input { position: absolute; opacity: 0; inset: 0; margin: 0; }
-.nota-marca span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; border: 1.5px solid var(--c); color: transparent; background: #fff; }
+.nota-marca span {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 1.4px solid var(--c);
+    color: transparent;
+    background: #fff;
+}
 .nota-marca input:checked + span { background: var(--c); color: #fff; }
 .nota-marca input:focus-visible + span { outline: 3px solid var(--dourado); outline-offset: 2px; }
-.nota-marca .icone { width: 16px; height: 16px; }
-.nota-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; padding-left: 4px; }
-.nota-texto .t { font-size: .8125rem; font-weight: 500; overflow-wrap: anywhere; }
-.nota-texto .c { font-size: .6875rem; font-weight: 500; }
+.nota-marca .icone { width: 13px; height: 13px; }
+.itens-dia .nota-texto {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+}
+.itens-dia .nota-texto .t {
+    font-size: .8125rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.45;
+}
+.itens-dia .nota-texto .c { font-size: .6875rem; font-weight: 500; overflow-wrap: anywhere; }
 .nota-item.feita .t { text-decoration: line-through; color: var(--secundario); }
-.nota-item .icone-btn { border: 0; background: none; width: 38px; height: 38px; color: var(--secundario); flex: none; }
+.itens-dia .nota-item .icone-btn {
+    flex: 0 0 30px;
+    width: 30px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--secundario);
+}
+.itens-dia .nota-item .icone-btn .icone { width: 17px; height: 17px; }
+
+@media (max-width: 540px) {
+    .itens-dia { padding-inline: 12px; }
+    .itens-dia .mov { gap: 7px; }
+    .itens-dia .mov-btn { gap: 6px; }
+    .itens-dia .nota-item { gap: 6px; }
+}
 
 /* desktop: calendário grande ao lado do painel do dia */
 @media (min-width: 1200px) {
@@ -292,3 +387,12 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
     .dia-rep { top: 10px; left: auto; right: 10px; }
     .dia-cel.atraso::after { right: 32px; top: 12px; }
 }
+
+/* Navegação horizontal de todas as categorias */
+.categorias-navegacao { display: flex; align-items: center; gap: 6px; min-width: 0; margin-bottom: 12px; }
+.categorias-navegacao .chips { flex: 1; min-width: 0; margin: 0; padding: 4px 2px 7px; overflow-x: auto; overscroll-behavior-x: contain; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #c9b5b8 transparent; }
+.categorias-navegacao .chips::-webkit-scrollbar { display: block; height: 5px; }
+.categorias-navegacao .chips::-webkit-scrollbar-thumb { background: #c9b5b8; border-radius: 10px; }
+.categorias-seta { flex: 0 0 32px; width: 32px; height: 34px; display: grid; place-items: center; background: white; border: 1px solid var(--borda); border-radius: 9px; color: var(--vinho); font-size: 25px; line-height: 1; }
+.categorias-seta:hover:not(:disabled) { background: var(--vinho-suave); }
+.categorias-seta:disabled { opacity: .35; cursor: default; }
