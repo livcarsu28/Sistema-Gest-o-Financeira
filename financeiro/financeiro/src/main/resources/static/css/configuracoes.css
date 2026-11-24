@@ -105,7 +105,6 @@
     min-height: 100vh;
 }
 
-/* Sidebar para Desktop (oculta em mobile) */
 .configuracoes-sidebar {
     display: none;
 }
@@ -208,7 +207,7 @@
    ========================================================================== */
 
 .configuracoes-main {
-    padding: 24px 16px calc(90px + env(safe-area-inset-bottom));
+    padding: 24px 16px calc(94px + env(safe-area-inset-bottom));
     width: 100%;
 }
 
@@ -354,7 +353,6 @@
    CARTÕES BRANCOS PADRÃO
    ========================================================================== */
 
-/* Grid de Cards - Vertical no mobile, Grid no desktop */
 .configuracoes-grid-cards {
     display: flex;
     flex-direction: column;
@@ -466,7 +464,6 @@
     pointer-events: none;
 }
 
-/* Área de Upload */
 .configuracoes-upload {
     background-color: #FFF9F9;
     border: 1.5px dashed var(--vinho-borda-suave);
@@ -535,12 +532,12 @@
     margin-top: 3px;
 }
 
-/* Estado de Arquivo Selecionado */
 .configuracoes-upload-estado-selecionado {
     display: flex;
     align-items: center;
     gap: 12px;
     text-align: left;
+    flex-wrap: wrap;
 }
 
 .configuracoes-upload-estado-selecionado[hidden] {
@@ -581,7 +578,7 @@
 
 .configuracoes-upload-info-arquivo {
     flex: 1;
-    min-width: 0;
+    min-width: 140px;
     display: flex;
     flex-direction: column;
 }
@@ -658,6 +655,7 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+    flex: 1;
 }
 
 .configuracoes-rotulo-dado {
@@ -671,7 +669,7 @@
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--texto);
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .configuracoes-valor-secundario {
@@ -715,105 +713,7 @@
 }
 
 /* ==========================================================================
-   5.6. NOTIFICAÇÕES (Switches)
-   ========================================================================== */
-
-.configuracoes-notificacoes-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.configuracoes-notificacao-linha {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 0;
-    border-top: 1px solid var(--borda-suave);
-}
-
-.configuracoes-notificacao-linha:first-child {
-    border-top: none;
-    padding-top: 0;
-}
-
-.configuracoes-notificacao-linha:last-child {
-    padding-bottom: 0;
-}
-
-.configuracoes-notificacao-texto {
-    display: flex;
-    flex-direction: column;
-}
-
-.configuracoes-notificacao-nome {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--texto);
-}
-
-.configuracoes-notificacao-descricao {
-    margin: 2px 0 0;
-    font-size: 0.75rem;
-    color: var(--secundario);
-}
-
-/* Switch Customizado */
-.configuracoes-switch {
-    position: relative;
-    display: inline-block;
-    width: 48px;
-    height: 28px;
-    flex-shrink: 0;
-    cursor: pointer;
-}
-
-.configuracoes-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-    position: absolute;
-}
-
-.configuracoes-switch-trilho {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #D3CDC8;
-    border-radius: 28px;
-    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.configuracoes-switch-trilho::before {
-    position: absolute;
-    content: "";
-    height: 22px;
-    width: 22px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.configuracoes-switch input:checked+.configuracoes-switch-trilho {
-    background-color: var(--vinho);
-}
-
-.configuracoes-switch input:checked+.configuracoes-switch-trilho::before {
-    transform: translateX(20px);
-}
-
-.configuracoes-switch input:focus-visible+.configuracoes-switch-trilho {
-    outline: 3px solid var(--dourado);
-    outline-offset: 2px;
-}
-
-/* ==========================================================================
-   6. NAVEGAÇÃO INFERIOR FIXA (MOBILE)
+   6. NAVEGAÇÃO INFERIOR FIXA (MOBILE - 5 ITENS INCLUINDO CALENDÁRIO)
    ========================================================================== */
 
 .configuracoes-nav-inferior {
@@ -824,15 +724,15 @@
     z-index: 100;
     background: white;
     border-top: 1px solid var(--borda);
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
 }
 
 .configuracoes-nav-inferior-lista {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     margin: 0;
     padding: 0;
-    gap: 4px;
+    gap: 2px;
     list-style: none;
 }
 
@@ -841,14 +741,24 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4px;
-    min-height: 56px;
+    gap: 3px;
+    min-height: 54px;
     padding: 6px 2px;
     border-radius: 10px;
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
+    text-align: center;
     text-decoration: none;
     color: var(--secundario);
     transition: background 0.15s ease, color 0.15s ease;
+    min-width: 0;
+}
+
+.configuracoes-nav-inferior-link span {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .configuracoes-nav-inferior-link:hover {
@@ -861,9 +771,56 @@
 }
 
 .configuracoes-nav-inferior-icone {
-    width: 22px;
-    height: 22px;
+    width: 21px;
+    height: 21px;
     flex-shrink: 0;
+}
+
+/* ==========================================================================
+   AJUSTES RESPONSIVOS PARA MOBILE (< 640px)
+   ========================================================================== */
+
+@media (max-width: 640px) {
+    .configuracoes-card-perfil {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .configuracoes-perfil-acoes {
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .configuracoes-perfil-seletor-box {
+        flex: 1;
+        justify-content: space-between;
+    }
+
+    .configuracoes-perfil-select {
+        width: 100%;
+    }
+
+    .configuracoes-card-cabecalho-imagens {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .configuracoes-card {
+        padding: 16px;
+    }
+
+    .configuracoes-linha-dados {
+        align-items: flex-start;
+    }
+
+    .configuracoes-toast {
+        left: 16px;
+        right: 16px;
+        top: 14px;
+    }
 }
 
 /* ==========================================================================
@@ -1138,14 +1095,12 @@
         margin-bottom: 28px;
     }
 
-    /* Grid de Cards Desktop */
     .configuracoes-grid-cards {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
 
-    /* Cards que ocupam a linha inteira */
     .configuracoes-card-destaque {
         grid-column: 1 / -1;
     }

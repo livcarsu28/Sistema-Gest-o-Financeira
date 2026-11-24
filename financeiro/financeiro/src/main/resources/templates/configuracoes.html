@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <title>Ajustes | Resgate de Vidas</title>
     <link rel="stylesheet" th:href="@{/css/configuracoes.css}">
     <script th:src="@{/js/configuracoes.js}" defer></script>
@@ -49,12 +51,11 @@
                     </li>
                     <li>
                         <a class="configuracoes-sidebar-nav-link" th:href="@{/calendario}">
-                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="1.6"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                aria-hidden="true" focusable="false">
-                                <rect x="3" y="5" width="18" height="16" rx="2"/>
-                                <path d="M8 3v4m8-4v4M3 10h18"/>
+                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                                focusable="false">
+                                <rect x="3" y="5" width="18" height="16" rx="2" />
+                                <path d="M8 3v4m8-4v4M3 10h18" />
                             </svg>
                             <span>Calendário</span>
                         </a>
@@ -117,23 +118,30 @@
                             </div>
                             <div>
                                 <h2 id="titulo-perfil" class="configuracoes-perfil-titulo">Perfil de acesso</h2>
-                                <p class="configuracoes-perfil-descricao">Acesso completo</p>
+                                <p class="configuracoes-perfil-descricao"
+                                    th:text="${ehAdmin != null and ehAdmin ? 'Acesso completo' : 'Acesso padrão'}">
+                                    Acesso completo</p>
                             </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div class="configuracoes-perfil-acoes"
+                            style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                             <div class="configuracoes-perfil-seletor-box" title="Perfil ativo do usuário">
                                 <select class="configuracoes-perfil-select" id="perfil-select"
                                     aria-label="Perfil de acesso">
-                                    <option value="Administrador" selected>Administrador</option>
-                                    <option value="Usuário comum">Usuário comum</option>
+                                    <option value="Administrador" th:selected="${ehAdmin == null or ehAdmin}">
+                                        Administrador</option>
+                                    <option value="Usuário comum" th:selected="${ehAdmin != null and !ehAdmin}">Usuário
+                                        comum</option>
                                 </select>
                                 <svg class="configuracoes-perfil-chevron" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    aria-hidden="true" focusable="false">
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true" focusable="false">
                                     <polyline points="6 9 12 15 18 9" />
                                 </svg>
                             </div>
-                            <button type="button" id="btn-abrir-modal-usuario" class="configuracoes-btn-editar" style="padding: 6px 12px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;">
+                            <button th:if="${ehAdmin == null or ehAdmin}" type="button" id="btn-abrir-modal-usuario"
+                                class="configuracoes-btn-editar configuracoes-btn-novo-usuario"
+                                style="padding: 6px 12px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;">
                                 + Cadastrar Usuário Comum
                             </button>
                         </div>
@@ -141,7 +149,8 @@
 
                     <!-- Gerenciamento de imagens -->
                     <section class="configuracoes-card configuracoes-card-destaque" aria-labelledby="titulo-imagens">
-                        <div class="configuracoes-card-cabecalho" style="justify-content: space-between; align-items: center;">
+                        <div class="configuracoes-card-cabecalho configuracoes-card-cabecalho-imagens"
+                            style="justify-content: space-between; align-items: center;">
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <div class="configuracoes-badge-icone" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -158,14 +167,18 @@
                             </div>
                             <!-- Contador de imagens -->
                             <div class="configuracoes-contador-box">
-                                <span id="contador-imagens-texto" style="font-size: 13px; font-weight: 600; padding: 4px 10px; background: #e0f2fe; color: #0369a1; border-radius: 9999px;">0 de 10 imagens adicionadas</span>
+                                <span id="contador-imagens-texto"
+                                    style="font-size: 13px; font-weight: 600; padding: 4px 10px; background: #e0f2fe; color: #0369a1; border-radius: 9999px; display: inline-block; white-space: nowrap;">0
+                                    de 10 imagens adicionadas</span>
                             </div>
                         </div>
 
                         <div class="configuracoes-card-conteudo">
                             <!-- Aviso de Limite Atingido -->
-                            <div id="aviso-limite-atingido" hidden style="background-color: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px;">
-                                <strong>Limite de imagens atingido:</strong> O limite máximo de 10 imagens foi alcançado. Para adicionar novas fotos, remova ao menos uma imagem abaixo.
+                            <div id="aviso-limite-atingido" hidden
+                                style="background-color: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px;">
+                                <strong>Limite de imagens atingido:</strong> O limite máximo de 10 imagens foi
+                                alcançado. Para adicionar novas fotos, remova ao menos uma imagem abaixo.
                             </div>
 
                             <!-- Campo Categoria -->
@@ -203,8 +216,10 @@
                                             <line x1="12" x2="12" y1="3" y2="15" />
                                         </svg>
                                     </div>
-                                    <strong class="configuracoes-upload-rotulo" id="rotulo-upload-texto">Fazer upload</strong>
-                                    <span class="configuracoes-upload-ajuda" id="ajuda-upload-texto">PNG ou JPG de até 10 MB</span>
+                                    <strong class="configuracoes-upload-rotulo" id="rotulo-upload-texto">Fazer
+                                        upload</strong>
+                                    <span class="configuracoes-upload-ajuda" id="ajuda-upload-texto">PNG ou JPG de até
+                                        10 MB</span>
                                 </div>
 
                                 <!-- Estado com arquivo selecionado -->
@@ -228,9 +243,10 @@
                                         <span id="upload-tamanho-arquivo" class="configuracoes-upload-tamanho">0
                                             KB</span>
                                     </div>
-                                    <div style="display: flex; gap: 8px;">
+                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                                         <button type="button" class="configuracoes-upload-btn-salvar"
-                                            id="btn-confirmar-upload" style="padding: 6px 12px; background: #16a34a; color: white; border: none; border-radius: 4px; font-size: 13px; cursor: pointer;">
+                                            id="btn-confirmar-upload"
+                                            style="padding: 6px 12px; background: #16a34a; color: white; border: none; border-radius: 4px; font-size: 13px; cursor: pointer;">
                                             Salvar Imagem
                                         </button>
                                         <button type="button" class="configuracoes-upload-btn-remover"
@@ -246,8 +262,10 @@
 
                             <!-- Galeria de Imagens Cadastradas -->
                             <div style="margin-top: 20px;">
-                                <h3 style="font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 10px;">Imagens cadastradas no sistema:</h3>
-                                <div id="galeria-imagens-lista" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;">
+                                <h3 style="font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 10px;">
+                                    Imagens cadastradas no sistema:</h3>
+                                <div id="galeria-imagens-lista"
+                                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;">
                                     <!-- Renderizado dinamicamente via JS -->
                                 </div>
                             </div>
@@ -277,10 +295,11 @@
                                     <p class="configuracoes-valor-destaque" id="texto-chave-pix"
                                         th:attr="data-chave=${pix.chave}"
                                         th:text="${pix.disponivel() ? pix.chave : 'Não cadastrada'}">Não cadastrada</p>
-                                    <p class="configuracoes-card-subtitulo" id="mensagem-pix"
-                                        th:text="${pix.mensagem}" role="status"></p>
+                                    <p class="configuracoes-card-subtitulo" id="mensagem-pix" th:text="${pix.mensagem}"
+                                        role="status"></p>
                                 </div>
-                                <button type="button" class="configuracoes-btn-editar" id="btn-abrir-modal-pix"
+                                <button th:if="${ehAdmin == null or ehAdmin}" type="button"
+                                    class="configuracoes-btn-editar" id="btn-abrir-modal-pix"
                                     aria-label="Editar chave PIX">
                                     <svg class="configuracoes-btn-editar-icone" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -324,7 +343,8 @@
                                         th:text="${instituicao.cidade + ' - ' + instituicao.uf + ' · CEP ' + instituicao.cep}">
                                     </p>
                                 </div>
-                                <button type="button" class="configuracoes-btn-editar" id="btn-abrir-modal-endereco"
+                                <button th:if="${ehAdmin == null or ehAdmin}" type="button"
+                                    class="configuracoes-btn-editar" id="btn-abrir-modal-endereco"
                                     aria-label="Editar endereço da instituição">
                                     <svg class="configuracoes-btn-editar-icone" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -368,6 +388,17 @@
                 </a>
             </li>
             <li>
+                <a class="configuracoes-nav-inferior-link" th:href="@{/calendario}">
+                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                        focusable="false">
+                        <rect x="3" y="5" width="18" height="16" rx="2" />
+                        <path d="M8 3v4m8-4v4M3 10h18" />
+                    </svg>
+                    <span>Calendário</span>
+                </a>
+            </li>
+            <li>
                 <a class="configuracoes-nav-inferior-link" th:href="@{/relatorios}">
                     <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
@@ -395,8 +426,8 @@
     </nav>
 
     <!-- Modal: Editar Chave PIX -->
-    <div class="configuracoes-modal-backdrop" id="modal-pix" hidden role="dialog" aria-modal="true"
-        aria-labelledby="modal-pix-titulo">
+    <div th:if="${ehAdmin == null or ehAdmin}" class="configuracoes-modal-backdrop" id="modal-pix" hidden role="dialog"
+        aria-modal="true" aria-labelledby="modal-pix-titulo">
         <div class="configuracoes-modal">
             <div class="configuracoes-modal-cabecalho">
                 <h2 id="modal-pix-titulo" class="configuracoes-modal-titulo">Editar chave PIX</h2>
@@ -405,6 +436,8 @@
             </div>
             <form id="form-editar-pix" class="configuracoes-modal-form" th:action="@{/configuracoes/pix}" method="post"
                 novalidate>
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}"
+                    th:value="${_csrf.token}">
                 <div class="configuracoes-form-campo">
                     <label for="input-editar-chave-pix" class="configuracoes-label">Chave PIX da instituição</label>
                     <input type="text" id="input-editar-chave-pix" name="chavePix" class="configuracoes-input" required
@@ -422,8 +455,8 @@
     </div>
 
     <!-- Modal: Editar Endereço -->
-    <div class="configuracoes-modal-backdrop" id="modal-endereco" hidden role="dialog" aria-modal="true"
-        aria-labelledby="modal-endereco-titulo">
+    <div th:if="${ehAdmin == null or ehAdmin}" class="configuracoes-modal-backdrop" id="modal-endereco" hidden
+        role="dialog" aria-modal="true" aria-labelledby="modal-endereco-titulo">
         <div class="configuracoes-modal">
             <div class="configuracoes-modal-cabecalho">
                 <h2 id="modal-endereco-titulo" class="configuracoes-modal-titulo">Editar endereço oficial</h2>
@@ -432,6 +465,8 @@
             </div>
             <form id="form-editar-endereco" class="configuracoes-modal-form" th:action="@{/configuracoes/endereco}"
                 method="post" novalidate>
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}"
+                    th:value="${_csrf.token}">
                 <div class="configuracoes-form-campo">
                     <label for="input-logradouro" class="configuracoes-label">Logradouro (Rua, Avenida, etc.)</label>
                     <input type="text" id="input-logradouro" name="logradouro" class="configuracoes-input" required
@@ -478,15 +513,18 @@
     </div>
 
     <!-- Modal: Cadastrar Usuário Comum -->
-    <div class="configuracoes-modal-backdrop" id="modal-usuario" hidden role="dialog" aria-modal="true"
-        aria-labelledby="modal-usuario-titulo">
+    <div th:if="${ehAdmin == null or ehAdmin}" class="configuracoes-modal-backdrop" id="modal-usuario" hidden
+        role="dialog" aria-modal="true" aria-labelledby="modal-usuario-titulo">
         <div class="configuracoes-modal">
             <div class="configuracoes-modal-cabecalho">
                 <h2 id="modal-usuario-titulo" class="configuracoes-modal-titulo">Cadastrar Usuário Comum</h2>
                 <button type="button" class="configuracoes-modal-btn-fechar" id="btn-fechar-modal-usuario"
                     aria-label="Fechar janela">×</button>
             </div>
-            <form id="form-cadastrar-usuario" class="configuracoes-modal-form" th:action="@{/usuarios}" method="post" novalidate>
+            <form id="form-cadastrar-usuario" class="configuracoes-modal-form" th:action="@{/usuarios}" method="post"
+                novalidate>
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}"
+                    th:value="${_csrf.token}">
                 <div class="configuracoes-form-campo">
                     <label for="input-usuario-nome" class="configuracoes-label">Nome Completo</label>
                     <input type="text" id="input-usuario-nome" name="nome" class="configuracoes-input" required
@@ -498,7 +536,8 @@
                         placeholder="usuario@resgatedevidas.org" autocomplete="email">
                 </div>
                 <div class="configuracoes-form-campo">
-                    <label for="input-usuario-senha" class="configuracoes-label">Senha Inicial (mínimo 6 caracteres)</label>
+                    <label for="input-usuario-senha" class="configuracoes-label">Senha Inicial (mínimo 6
+                        caracteres)</label>
                     <input type="password" id="input-usuario-senha" name="senha" class="configuracoes-input" required
                         minlength="6" placeholder="******" autocomplete="new-password">
                     <span class="configuracoes-campo-erro" id="erro-usuario" aria-live="polite"></span>
