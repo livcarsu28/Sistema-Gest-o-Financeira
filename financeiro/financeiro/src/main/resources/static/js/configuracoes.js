@@ -9,6 +9,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Utilitários de seleção
     const $ = (id) => document.getElementById(id);
 
+    function obterCsrf() {
+        const metaToken = document.querySelector('meta[name="_csrf"]')?.getAttribute("content");
+        const metaHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute("content");
+        const inputToken = document.querySelector('input[name="_csrf"]')?.value;
+        return {
+            token: metaToken || inputToken || "",
+            headerName: metaHeader || "X-CSRF-TOKEN"
+        };
+    }
+
+    function montarHeadersComCsrf(headersBase = {}) {
+        const csrf = obterCsrf();
+        const headers = { ...headersBase };
+        if (csrf.token) {
+            headers[csrf.headerName] = csrf.token;
+        }
+        return headers;
+    }
+
     // =========================================================================
     // TOAST FEEDBACK
     // =========================================================================
@@ -100,18 +119,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 params.append("email", email);
                 params.append("senha", senha);
 
-                const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-                const headers = { "Content-Type": "application/x-www-form-urlencoded" };
-                if (csrfToken) headers["X-CSRF-TOKEN"] = csrfToken;
+                const headers = montarHeadersComCsrf({
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
+                });
 
                 const resposta = await fetch(formCadastrarUsuario.action, {
                     method: "POST",
+                    credentials: "same-origin",
                     headers: headers,
                     body: params
                 });
 
-                const dados = await resposta.json();
+                const dados = await resposta.json().catch(() => ({}));
                 if (!resposta.ok) {
+                    if (resposta.status === 403 && !dados.mensagem) {
+                        throw new Error("Acesso negado: apenas administradores podem cadastrar usuários.");
+                    }
                     throw new Error(dados.mensagem || "Não foi possível cadastrar o usuário.");
                 }
 
@@ -182,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function carregarGaleriaImagens() {
         try {
-            const resp = await fetch("/configuracoes/imagens");
+            const resp = await fetch("/configuracoes/imagens", { credentials: "same-origin" });
             if (!resp.ok) return;
             const dados = await resp.json();
             atualizarEstadoContador(dados.total || 0);
@@ -207,7 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         galeriaImagensLista.appendChild(item);
                     });
 
-                    // Evento de remover imagem da galeria
                     galeriaImagensLista.querySelectorAll(".btn-remover-foto-galeria").forEach((btn) => {
                         btn.addEventListener("click", async (e) => {
                             const idFoto = e.target.getAttribute("data-id");
@@ -223,15 +246,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function excluirImagem(idFoto) {
         try {
-            const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-            const headers = {};
-            if (csrfToken) headers["X-CSRF-TOKEN"] = csrfToken;
-
+            const headers = montarHeadersComCsrf();
             const resp = await fetch(`/configuracoes/imagens/${idFoto}`, {
                 method: "DELETE",
+                credentials: "same-origin",
                 headers: headers
             });
-            const dados = await resp.json();
+            const dados = await resp.json().catch(() => ({}));
             if (resp.ok) {
                 exibirToast(dados.mensagem || "Imagem removida com sucesso!");
                 await carregarGaleriaImagens();
@@ -262,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function resetarUpload() {
+        arquivoSelecionado = null;
         if (inputArquivoImagem) inputArquivoImagem.value = "";
         if (uploadPreviewImg) {
             uploadPreviewImg.removeAttribute("src");
@@ -332,15 +354,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (areaUpload && inputArquivoImagem) {
-        // Clique na área inteira abre o seletor de arquivos
         areaUpload.addEventListener("click", (e) => {
-            if (e.target === btnRemoverImagem || btnRemoverImagem?.contains(e.target)) {
+            if (e.target === btnRemoverImagem || btnRemoverImagem?.contains(e.target) ||
+                e.target === btnConfirmarUpload || btnConfirmarUpload?.contains(e.target)) {
                 return;
             }
             inputArquivoImagem.click();
         });
 
-        // Acessibilidade por teclado (Enter ou Espaço na área)
         areaUpload.addEventListener("keydown", (e) => {
             if ((e.key === "Enter" || e.key === " ") && e.target === areaUpload) {
                 e.preventDefault();
@@ -348,13 +369,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Mudança no input file
         inputArquivoImagem.addEventListener("change", (e) => {
             const arquivo = e.target.files && e.target.files[0];
             processarArquivoImagem(arquivo);
         });
 
-        // Suporte a Arrastar e Soltar (Drag & Drop)
         ["dragenter", "dragover"].forEach((evento) => {
             areaUpload.addEventListener(evento, (e) => {
                 e.preventDefault();
@@ -405,17 +424,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 formData.append("arquivo", arquivoSelecionado);
                 formData.append("categoria", selectCategoria ? selectCategoria.value : "Projetos");
 
-                const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-                const headers = {};
-                if (csrfToken) headers["X-CSRF-TOKEN"] = csrfToken;
+                const headers = montarHeadersComCsrf();
 
                 const resp = await fetch("/configuracoes/imagens", {
                     method: "POST",
+                    credentials: "same-origin",
                     headers: headers,
                     body: formData
                 });
 
-                const dados = await resp.json();
+                const dados = await resp.json().catch(() => ({}));
                 if (!resp.ok) {
                     throw new Error(dados.mensagem || "Erro ao salvar imagem.");
                 }
@@ -516,17 +534,35 @@ document.addEventListener("DOMContentLoaded", () => {
             formEditarPix.setAttribute("aria-busy", "true");
             if (erroPix) erroPix.textContent = "";
             inputEditarChavePix.setAttribute("aria-invalid", "false");
+
             try {
+                const params = new URLSearchParams();
+                params.append("chavePix", novoValor);
+
+                const headers = montarHeadersComCsrf({
+                    "Accept": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                });
+
                 const resposta = await fetch(formEditarPix.action, {
                     method: "POST",
-                    headers: { "Accept": "application/json" },
-                    body: new URLSearchParams(new FormData(formEditarPix))
+                    credentials: "same-origin",
+                    headers: headers,
+                    body: params
                 });
+
                 if (resposta.redirected || !resposta.headers.get("content-type")?.includes("application/json")) {
                     throw new Error("Sua sessão expirou ou a solicitação foi recusada. Recarregue a página e tente novamente.");
                 }
-                const dados = await resposta.json();
-                if (!resposta.ok) throw new Error(dados.mensagem || "Não foi possível salvar a chave Pix.");
+
+                const dados = await resposta.json().catch(() => ({}));
+                if (!resposta.ok) {
+                    if (resposta.status === 403 && !dados.mensagem) {
+                        throw new Error("Acesso negado (403). Verifique se sua conta é Administrador ou recarregue a página.");
+                    }
+                    throw new Error(dados.mensagem || "Não foi possível salvar a chave Pix.");
+                }
+
                 if (textoChavePix) {
                     textoChavePix.textContent = dados.chave;
                     textoChavePix.dataset.chave = dados.chave;
@@ -534,7 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const mensagemPix = $("mensagem-pix");
                 if (mensagemPix) mensagemPix.textContent = "Chave Pix cadastrada para a instituição.";
                 fecharModalPix();
-                exibirToast(dados.mensagem);
+                exibirToast(dados.mensagem || "Chave Pix salva com sucesso!");
             } catch (erroSalvar) {
                 if (erroPix) erroPix.textContent = erroSalvar.message || "Não foi possível salvar a chave Pix. Tente novamente.";
                 inputEditarChavePix.setAttribute("aria-invalid", "true");
@@ -564,7 +600,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputCep = $("input-cep");
     const erroEndereco = $("erro-endereco");
 
-    // Estado padrão do endereço
     let dadosEndereco = {
         logradouro: "Rua da Esperança",
         numero: "128",
@@ -574,7 +609,6 @@ document.addEventListener("DOMContentLoaded", () => {
         cep: "01010-001"
     };
 
-    // Restaurar endereço do localStorage se existir
     const enderecoSalvo = localStorage.getItem("config_endereco");
     if (enderecoSalvo) {
         try {
@@ -630,7 +664,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Máscara simples de CEP ao digitar
     if (inputCep) {
         inputCep.addEventListener("input", (e) => {
             let v = e.target.value.replace(/\D/g, "");
@@ -677,7 +710,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Escape") {
             if (modalPix && !modalPix.hidden) fecharModalPix();
             if (modalEndereco && !modalEndereco.hidden) fecharModalEndereco();
+            if (modalUsuario && !modalUsuario.hidden) fecharModalUsuario();
         }
     });
 });
-
