@@ -167,13 +167,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 const formData = new FormData(formConfirmarPublicacao);
+                const headers = { "Accept": "application/json", "Content-Type": "application/json" };
+                const csrf = document.querySelector('meta[name="_csrf"]')?.content;
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+                if (csrf && csrfHeader) headers[csrfHeader] = csrf;
+
                 const resposta = await fetch(formConfirmarPublicacao.action, {
                     method: "POST",
-                    headers: {
-                        "Accept": "application/json"
-                    },
-                    body: new URLSearchParams(formData)
+                    credentials: "same-origin",
+                    headers,
+                    body: JSON.stringify({
+                        mes: Number(formData.get("mes")),
+                        ano: Number(formData.get("ano")),
+                        observacao: String(formData.get("observacao") || "")
+                    })
                 });
+
+                if (resposta.redirected || resposta.status === 401) {
+                    throw new Error("Sua sessão expirou. Entre novamente para publicar.");
+                }
+                if (resposta.status === 403) {
+                    throw new Error("Publicação recusada (403). Recarregue a página e tente novamente.");
+                }
+                if (resposta.status === 400) {
+                    throw new Error("Dados inválidos (400). Confira o mês e o ano da publicação.");
+                }
 
                 if (resposta.ok) {
                     const dados = await resposta.json();
@@ -198,11 +216,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     fecharModal();
                     exibirToast("Informações financeiras publicadas com sucesso no site institucional!");
                 } else {
-                    throw new Error("Erro ao registrar publicação no servidor.");
+                    throw new Error(`O servidor respondeu com HTTP ${resposta.status} ao publicar. Confira os logs do Render.`);
                 }
             } catch (err) {
                 console.error("Falha ao publicar dados:", err);
-                exibirToast("Não foi possível publicar os dados no momento. Tente novamente.");
+                exibirToast(err instanceof TypeError ? "Falha de conexão ao publicar. Tente novamente." : err.message);
             } finally {
                 if (btnConfirmar) {
                     btnConfirmar.disabled = false;

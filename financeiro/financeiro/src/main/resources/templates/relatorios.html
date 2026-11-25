@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <title>Relatórios Financeiros | Gestão Financeira ONG</title>
 
     <!-- Fonte Poppins -->
@@ -465,7 +467,7 @@
 
                     <div class="campo-obs">
                         <label for="modal-input-obs">Nota de confirmação (opcional):</label>
-                        <textarea id="modal-input-obs" name="observacao" rows="2" placeholder="Ex: Prestação de contas conferida pela administração."></textarea>
+                        <textarea id="modal-input-obs" name="observacao" rows="2" maxlength="255" placeholder="Ex: Prestação de contas conferida pela administração."></textarea>
                     </div>
                 </div>
 
