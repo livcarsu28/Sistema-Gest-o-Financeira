@@ -357,6 +357,25 @@
                             </div>
                         </div>
                     </section>
+
+                    <!-- Documentos jurídicos e proteção de dados -->
+                    <section class="configuracoes-card" aria-labelledby="titulo-documentos-legais">
+                        <div class="configuracoes-card-cabecalho">
+                            <div class="configuracoes-badge-icone" aria-hidden="true">⚖</div>
+                            <div>
+                                <h2 id="titulo-documentos-legais" class="configuracoes-card-titulo">Privacidade e documentos</h2>
+                                <p class="configuracoes-card-subtitulo">Consulte as regras de uso e proteção dos dados da ONG</p>
+                            </div>
+                        </div>
+                        <div class="configuracoes-card-conteudo">
+                            <p class="legal-card-description">Documentos disponíveis para leitura de todos os usuários.</p>
+                            <div class="legal-card-actions">
+                                <button type="button" class="configuracoes-btn-editar legal-open" data-legal-url="/termos#termos-uso">Termos de Uso</button>
+                                <button type="button" class="configuracoes-btn-editar legal-open" data-legal-url="/privacidade#politica-privacidade">Privacidade</button>
+                                <button type="button" class="configuracoes-btn-editar legal-open" data-legal-url="/termos-e-politicas#politica-cookies">Cookies</button>
+                            </div>
+                        </div>
+                    </section>
                 </div> <!-- .configuracoes-grid-cards -->
             </div> <!-- .configuracoes-container -->
         </main>
@@ -548,6 +567,27 @@
                     <button type="submit" class="configuracoes-btn-salvar">Cadastrar Usuário</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+
+    <!-- Modal de documentos legais: conteúdo público reutilizado sem duplicação -->
+    <div id="modal-documentos-legais" class="configuracoes-modal-backdrop" role="dialog"
+         aria-modal="true" aria-labelledby="titulo-modal-documentos-legais" hidden>
+        <div class="configuracoes-modal legal-modal">
+            <div class="configuracoes-modal-cabecalho">
+                <h2 id="titulo-modal-documentos-legais" class="configuracoes-modal-titulo">Documentos da ONG</h2>
+                <button type="button" class="configuracoes-modal-btn-fechar" id="fechar-modal-documentos-legais" aria-label="Fechar documentos">×</button>
+            </div>
+            <nav class="legal-modal-tabs" aria-label="Selecionar documento">
+                <button type="button" class="legal-tab" data-legal-url="/termos#termos-uso">Termos</button>
+                <button type="button" class="legal-tab" data-legal-url="/privacidade#politica-privacidade">Privacidade</button>
+                <button type="button" class="legal-tab" data-legal-url="/termos-e-politicas#politica-cookies">Cookies</button>
+            </nav>
+            <iframe id="legal-document-frame" class="legal-document-frame" title="Conteúdo do documento legal" loading="lazy"></iframe>
+            <div class="legal-modal-footer">
+                <a id="legal-open-new-tab" href="/termos-e-politicas" target="_blank" rel="noopener noreferrer">Abrir página completa</a>
+            </div>
         </div>
     </div>
 

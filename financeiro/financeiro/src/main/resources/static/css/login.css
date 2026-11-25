@@ -431,3 +431,9 @@
 .login-page {
     font-family: Poppins, "Segoe UI", sans-serif;
 }
+
+/* Rodapé jurídico da página de login */
+.login-legal-links { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; padding-top: 20px; margin-top: 18px; border-top: 1px solid #eee5e5; font-size: 12px; }
+.login-legal-links a { color: #800909; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.login-legal-links a:focus-visible { outline: 2px solid #800909; outline-offset: 3px; }
+.login-legal-note { text-align: center; font-size: 11px; line-height: 1.5; color: #827070; margin: 10px 0 0; }

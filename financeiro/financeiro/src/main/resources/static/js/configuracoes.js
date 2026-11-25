@@ -705,9 +705,66 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Documentos legais: mesmo conteúdo usado nas páginas públicas
+    const legalModal = $("modal-documentos-legais");
+    const legalFrame = $("legal-document-frame");
+    const legalTitle = $("titulo-modal-documentos-legais");
+    const legalOpenExternal = $("legal-open-new-tab");
+    const legalClose = $("fechar-modal-documentos-legais");
+    const legalUrls = {
+        "/termos#termos-uso": "Termos de Uso",
+        "/privacidade#politica-privacidade": "Política de Privacidade",
+        "/termos-e-politicas#politica-cookies": "Política de Cookies"
+    };
+    let legalTrigger = null;
+    function legalSelect(url) {
+        if (!Object.hasOwn(legalUrls, url)) return;
+        legalTitle.textContent = legalUrls[url];
+        legalFrame.src = url;
+        legalOpenExternal.href = url;
+        document.querySelectorAll(".legal-tab").forEach(btn => {
+            if (btn.dataset.legalUrl === url) btn.setAttribute("aria-current", "page");
+            else btn.removeAttribute("aria-current");
+        });
+    }
+    function fecharDocumentosLegais() {
+        if (!legalModal || legalModal.hidden) return;
+        legalModal.hidden = true;
+        legalFrame.removeAttribute("src");
+        document.body.style.overflow = "";
+        legalTrigger?.focus();
+    }
+    document.querySelectorAll(".legal-open").forEach(button => {
+        button.addEventListener("click", () => {
+            legalTrigger = button;
+            legalModal.hidden = false;
+            document.body.style.overflow = "hidden";
+            legalSelect(button.dataset.legalUrl);
+            legalClose.focus();
+        });
+    });
+    document.querySelectorAll(".legal-tab").forEach(button => {
+        button.addEventListener("click", () => legalSelect(button.dataset.legalUrl));
+    });
+    legalClose?.addEventListener("click", fecharDocumentosLegais);
+    legalModal?.addEventListener("click", (e) => {
+        if (e.target === legalModal) fecharDocumentosLegais();
+    });
+    legalModal?.addEventListener("keydown", (e) => {
+        if (e.key !== "Tab") return;
+        const focusables = [...legalModal.querySelectorAll('button:not([disabled]), a[href]')];
+        if (!focusables.length) return;
+        if (e.shiftKey && document.activeElement === focusables[0]) {
+            e.preventDefault(); focusables[focusables.length - 1].focus();
+        } else if (!e.shiftKey && document.activeElement === focusables[focusables.length - 1]) {
+            e.preventDefault(); focusables[0].focus();
+        }
+    });
+
     // Fechar modais ao pressionar tecla Escape
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+            fecharDocumentosLegais();
             if (modalPix && !modalPix.hidden) fecharModalPix();
             if (modalEndereco && !modalEndereco.hidden) fecharModalEndereco();
             if (modalUsuario && !modalUsuario.hidden) fecharModalUsuario();

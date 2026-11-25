@@ -1194,3 +1194,17 @@
         gap: 24px;
     }
 }
+
+/* Documentos legais: card e modal */
+.legal-card-description { margin: 0 0 14px; color: #64748b; font-size: 14px; }
+.legal-card-actions { display:flex; flex-wrap: wrap; gap: 10px; }
+.legal-card-actions .configuracoes-btn-editar { cursor: pointer; }
+.configuracoes-modal.legal-modal { max-width: min(900px, 96vw); width: 100%; height: min(85vh, 820px); display: flex; flex-direction: column; }
+.legal-modal-tabs { display: flex; gap: 8px; padding: 12px 18px; flex-wrap: wrap; border-bottom: 1px solid #e2e8f0; }
+.legal-tab { border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; padding: 8px 14px; color: #334155; cursor: pointer; font: inherit; font-size: 14px; }
+.legal-tab[aria-current="page"] { color: #fff; background: #8d1015; border-color: #8d1015; }
+.legal-tab:focus-visible, .legal-open:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+.legal-document-frame { width: 100%; flex: 1; min-height: 0; border: 0; background: #f8fafc; }
+.legal-modal-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; font-size: 13px; }
+.legal-modal-footer a { color: #8d1015; font-weight: 600; }
+@media (max-width: 600px) { .configuracoes-modal.legal-modal { height: 92vh; } .legal-modal-tabs { gap: 5px; } }
