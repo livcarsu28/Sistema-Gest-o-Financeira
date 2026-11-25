@@ -371,7 +371,7 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
 
 /* desktop: calendário grande ao lado do painel do dia */
 @media (min-width: 1200px) {
-    .calendario-main { padding: 24px 40px 28px; }
+    .calendario-main { padding: 44px 40px 32px; }
     .calendario-main .topo { margin-bottom: 16px; }
     .cal-layout { grid-template-columns: minmax(0, 1.45fr) minmax(340px, 420px); align-items: start; gap: 28px; }
     .dia-painel { position: sticky; top: 24px; }
