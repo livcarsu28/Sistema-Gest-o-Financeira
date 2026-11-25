@@ -42,10 +42,10 @@ public class RelatorioRepository {
                     COUNT(CASE WHEN data_movimentacao >= ? AND data_movimentacao < ?
                                THEN 1 END) AS quantidade
                 FROM movimentacao
-                WHERE (data_movimentacao >= ? AND data_movimentacao < ?)
+                WHERE excluida = FALSE AND ((data_movimentacao >= ? AND data_movimentacao < ?)
                    OR (status_pagamento = 'PAGO'
                        AND COALESCE(data_pagamento, data_movimentacao) >= ?
-                       AND COALESCE(data_pagamento, data_movimentacao) < ?)
+                       AND COALESCE(data_pagamento, data_movimentacao) < ?))
                 """,
                 (rs, rowNum) -> new ResumoPeriodoRaw(
                         rs.getBigDecimal("entradas"),
@@ -137,6 +137,60 @@ public class RelatorioRepository {
                         rs.getLong("quantidade")),
                 inicio, fim, inicio, fim);
     }
+
+    public List<GastoCategoria> gastosPagosPorCategoria(LocalDateTime inicio, LocalDateTime fim) {
+        return jdbcTemplate.query("""
+                SELECT c.id_categoria, c.nome,
+                       COALESCE(c.descricao_publica, CONCAT('Despesas classificadas como ', c.nome, '.')) AS descricao,
+                       SUM(m.valor) AS total
+                FROM movimentacao m
+                JOIN categoria_movimentacao c ON c.id_categoria = m.id_categoria
+                WHERE m.excluida = FALSE AND m.tipo = 'SAIDA' AND m.status_pagamento = 'PAGO'
+                  AND COALESCE(m.data_pagamento, m.data_movimentacao) >= ?
+                  AND COALESCE(m.data_pagamento, m.data_movimentacao) < ?
+                GROUP BY c.id_categoria, c.nome, c.descricao_publica
+                """, (rs, linha) -> new GastoCategoria(rs.getInt("id_categoria"),
+                rs.getString("nome"), rs.getString("descricao"), rs.getBigDecimal("total")), inicio, fim);
+    }
+
+    public void salvarCategoriasPublicadas(List<GastoCategoria> categorias) {
+        if (categorias.isEmpty()) return;
+        long id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+        jdbcTemplate.batchUpdate("""
+                INSERT INTO publicacao_gasto_categoria (id_publicacao, id_categoria, categoria, descricao, total)
+                VALUES (?, ?, ?, ?, ?)
+                """, categorias.stream().map(c -> new Object[] {id, c.id(), c.nome(), c.descricao(), c.total()}).toList());
+    }
+
+    public List<CategoriaImpressao> categoriasImpressao() {
+        return jdbcTemplate.query("SELECT id_categoria, nome FROM categoria_movimentacao ORDER BY nome",
+                (rs, linha) -> new CategoriaImpressao(rs.getInt("id_categoria"), rs.getString("nome")));
+    }
+
+    public List<LinhaImpressao> linhasImpressao(LocalDateTime inicio, LocalDateTime fim, String tipo, int categoria) {
+        return jdbcTemplate.query("""
+                SELECT m.data_movimentacao, m.tipo, c.nome, m.valor, m.descricao, m.observacao,
+                       m.status_pagamento, fp.nome AS forma, m.data_vencimento, m.data_pagamento
+                FROM movimentacao m
+                JOIN categoria_movimentacao c ON c.id_categoria = m.id_categoria
+                LEFT JOIN forma_pagamento fp ON fp.id_forma_pagamento = m.id_forma_pagamento
+                WHERE m.excluida = FALSE AND m.data_movimentacao >= ? AND m.data_movimentacao < ?
+                  AND (? = 'TODOS' OR m.tipo = ?)
+                  AND (? = 0 OR m.id_categoria = ?)
+                ORDER BY m.data_movimentacao, m.id_movimentacao
+                """, (rs, linha) -> new LinhaImpressao(
+                rs.getObject("data_movimentacao", LocalDateTime.class).toLocalDate(),
+                rs.getString("tipo"), rs.getString("nome"), rs.getBigDecimal("valor"),
+                rs.getString("descricao"), rs.getString("observacao"), rs.getString("status_pagamento"),
+                rs.getString("forma"), rs.getObject("data_vencimento", java.time.LocalDate.class),
+                rs.getObject("data_pagamento", LocalDateTime.class)), inicio, fim, tipo, tipo, categoria, categoria);
+    }
+
+    public record GastoCategoria(int id, String nome, String descricao, BigDecimal total) {}
+    public record CategoriaImpressao(int id, String nome) {}
+    public record LinhaImpressao(java.time.LocalDate data, String tipo, String categoria,
+                                 BigDecimal valor, String descricao, String observacao, String status,
+                                 String forma, java.time.LocalDate vencimento, LocalDateTime pagamento) {}
 
     public int salvarPublicacao(int mes, int ano, BigDecimal totalGastos, BigDecimal totalEntradas,
                                 String status, String observacao, Integer idUsuario) {

@@ -47,12 +47,12 @@ public class SitePublicoController {
 
         List<GastoPublicado> gastos = ultima.disponivel()
                 ? jdbc.query("""
-                        SELECT categoria, total
+                        SELECT categoria, descricao, total
                         FROM publicacao_gasto_categoria
                         WHERE id_publicacao = ?
                         ORDER BY total DESC, categoria ASC
                         """,
-                        (rs, row) -> new GastoPublicado(rs.getString("categoria"), rs.getBigDecimal("total")),
+                        (rs, row) -> new GastoPublicado(rs.getString("categoria"), rs.getString("descricao"), rs.getBigDecimal("total")),
                         ultima.idPublicacao())
                 : List.of();
 
@@ -81,7 +81,7 @@ public class SitePublicoController {
     public record DadosPublicos(ResumoPublicado publicacao, String chavePix, String imagemUrl,
                                List<GastoPublicado> gastosPorCategoria, boolean pixTemporariamenteIndisponivel) {}
 
-    public record GastoPublicado(String categoria, BigDecimal total) {}
+    public record GastoPublicado(String categoria, String descricao, BigDecimal total) {}
 
     public record ResumoPublicado(boolean disponivel, String periodoFormatado,
                                   BigDecimal totalGastos, String statusAtualizacao) {}

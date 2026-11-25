@@ -398,6 +398,35 @@
     <!-- ========================================================= -->
     <!-- MODAL DE CONFIRMAÇÃO DE PUBLICAÇÃO (Com correção de fechamento) -->
     <!-- ========================================================= -->
+    <dialog class="modal-box impressao-dialog" id="modal-impressao" aria-labelledby="titulo-impressao">
+        <header class="modal-box-header">
+            <h3 id="titulo-impressao">Configurar impressão</h3>
+            <form method="dialog"><button class="btn-fechar" aria-label="Fechar">&times;</button></form>
+        </header>
+        <form th:action="@{/relatorios/imprimir}" method="get" target="_blank">
+            <div class="modal-box-body impressao-filtros">
+                <label>Data inicial <input name="inicio" type="date" th:value="${inicioImpressao}" required></label>
+                <label>Data final <input name="fim" type="date" th:value="${fimImpressao}" required></label>
+                <label>Tipo
+                    <select name="tipo"><option value="TODOS">Entradas e saídas</option>
+                        <option value="ENTRADA">Só entradas</option><option value="SAIDA">Só saídas</option></select>
+                </label>
+                <label>Categoria
+                    <select name="categoria"><option value="0">Todas as categorias</option>
+                        <option th:each="categoria : ${categoriasImpressao}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
+                    </select>
+                </label>
+                <label>Formato
+                    <select name="formato"><option value="detalhado">Detalhado por lançamento</option>
+                        <option value="categoria">Agrupado por categoria</option><option value="resumo">Somente totais</option></select>
+                </label>
+            </div>
+            <footer class="modal-box-footer">
+                <button class="btn-confirmar" type="submit">Abrir para impressão</button>
+            </footer>
+        </form>
+    </dialog>
+
     <div class="modal-overlay" id="modal-publicacao" hidden aria-hidden="true" style="display: none;" role="dialog" aria-labelledby="modal-titulo">
         <div class="modal-box">
             <header class="modal-box-header">
@@ -411,7 +440,7 @@
 
                 <div class="modal-box-body">
                     <p class="modal-aviso">
-                        Você está prestes a atualizar os dados de transparência na página <strong>Faça uma Doação</strong> do site:
+                        Você vai publicar os gastos pagos do mês. O resumo aparece na página de doações e o detalhamento por categoria aparece no Portal da Transparência.
                     </p>
 
                     <div class="modal-resumo-dados">

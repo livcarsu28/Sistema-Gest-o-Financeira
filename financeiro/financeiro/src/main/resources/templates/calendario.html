@@ -102,6 +102,10 @@
                     <button class="btn btn-pequeno" type="button" id="lancarConta"><svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg> Lançar conta</button>
                 </div>
 
+                <p id="lembretePublicacao" class="nota-item" hidden>
+                    <a th:href="@{/relatorios}" id="linkRelatorioMensal">Publicar relatório no Portal da Transparência</a>
+                </p>
+
                 <form class="rapido" id="rapido">
                     <label class="sr-only" for="notaTexto">Nova anotação para este dia</label>
                     <input type="text" id="notaTexto" maxlength="255" placeholder="Anotar algo neste dia" autocomplete="off" enterkeyhint="done">

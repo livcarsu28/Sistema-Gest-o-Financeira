@@ -433,3 +433,14 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
 .calendario-main ul.itens-dia .nota-marca .icone {
     transform: translateX(-0.2px);
 }
+#lembretePublicacao {
+    margin: 0 .8rem .75rem;
+    padding: .65rem .85rem;
+    border-radius: .5rem;
+    background: #fff1f1;
+}
+#lembretePublicacao a {
+    color: #8d141c;
+    font-weight: 650;
+    text-decoration: underline;
+}

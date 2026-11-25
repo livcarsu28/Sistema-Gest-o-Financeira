@@ -724,3 +724,21 @@
         border: 1px solid #cccccc !important;
     }
 }
+
+.impressao-dialog {
+    margin: auto;
+    border: 0;
+    width: min(34rem, calc(100% - 2rem));
+    max-height: calc(100% - 2rem);
+    overflow: auto;
+}
+.impressao-dialog::backdrop { background: rgb(0 0 0 / 58%); }
+.impressao-filtros { display: grid; gap: .8rem; }
+.impressao-filtros label { display: grid; gap: .25rem; }
+.impressao-filtros input, .impressao-filtros select {
+    padding: .55rem;
+    border: 1px solid #ded7d7;
+    border-radius: .4rem;
+    font: inherit;
+    min-width: 0;
+}

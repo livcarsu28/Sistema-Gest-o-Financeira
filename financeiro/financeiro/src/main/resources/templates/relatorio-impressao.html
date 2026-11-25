@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Relatório financeiro para impressão</title>
+    <style>
+        body { font: 14px system-ui, sans-serif; color: #201a1a; margin: 1.5rem auto; max-width: 1150px; padding: 0 1rem; }
+        h1, h2 { color: #7b151b; }
+        dl { display: flex; flex-wrap: wrap; gap: 1rem; }
+        dt { font-weight: bold; }
+        dd { margin: 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: .4rem; border-bottom: 1px solid #d9cbcb; vertical-align: top; overflow-wrap: anywhere; }
+        th { background: #f5eded; }
+        .dados { overflow-x: auto; }
+        .data { white-space: nowrap; }
+        @media print {
+            @page { size: A4 landscape; margin: 12mm; }
+            body { margin: 0; padding: 0; font-size: 10pt; }
+            .acoes { display: none; }
+            .dados { overflow: visible; }
+            tr { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="acoes"><button type="button" onclick="window.print()">Imprimir ou salvar PDF</button></div>
+    <h1>Relatório financeiro</h1>
+    <p><strong>Período dos lançamentos</strong>
+        <span th:text="${#temporals.format(inicio, 'dd/MM/yyyy')}"></span> a
+        <span th:text="${#temporals.format(fim, 'dd/MM/yyyy')}"></span>
+    </p>
+    <p><strong>Categoria</strong> <span th:text="${categoriaNome}"></span> ·
+        <strong>Tipo</strong> <span th:text="${tipo == 'ENTRADA' ? 'Entradas' : (tipo == 'SAIDA' ? 'Saídas' : 'Entradas e saídas')}"></span></p>
+    <p th:if="${quantidade == 0}">Nenhum lançamento encontrado para os filtros escolhidos.</p>
+    <p>Os totais incluem os lançamentos selecionados, independentemente da situação de pagamento.</p>
+    <dl>
+        <div th:if="${tipo != 'SAIDA'}"><dt>Total de entradas</dt><dd th:text="|R$ ${#numbers.formatDecimal(totais.entradas, 1, 'POINT', 2, 'COMMA')}|"></dd></div>
+        <div th:if="${tipo != 'ENTRADA'}"><dt>Total de saídas</dt><dd th:text="|R$ ${#numbers.formatDecimal(totais.saidas, 1, 'POINT', 2, 'COMMA')}|"></dd></div>
+        <div><dt>Lançamentos</dt><dd th:text="${quantidade}"></dd></div>
+    </dl>
+    <section th:if="${formato == 'categoria' and quantidade > 0}">
+        <h2>Totais por categoria</h2>
+        <table>
+            <thead><tr><th>Categoria</th><th th:if="${tipo != 'SAIDA'}">Entradas</th><th th:if="${tipo != 'ENTRADA'}">Saídas</th></tr></thead>
+            <tbody><tr th:each="grupo : ${grupos}">
+                <td th:text="${grupo.key}"></td>
+                <td th:if="${tipo != 'SAIDA'}" th:text="|R$ ${#numbers.formatDecimal(grupo.value.entradas, 1, 'POINT', 2, 'COMMA')}|"></td>
+                <td th:if="${tipo != 'ENTRADA'}" th:text="|R$ ${#numbers.formatDecimal(grupo.value.saidas, 1, 'POINT', 2, 'COMMA')}|"></td>
+            </tr></tbody>
+        </table>
+    </section>
+    <section class="dados" th:if="${formato == 'detalhado' and quantidade > 0}">
+        <h2>Lançamentos</h2>
+        <table>
+            <thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th>Situação</th><th>Forma</th><th>Vencimento</th><th>Pagamento</th><th>Observação</th></tr></thead>
+            <tbody><tr th:each="linha : ${linhas}">
+                <td class="data" th:text="${#temporals.format(linha.data, 'dd/MM/yyyy')}"></td>
+                <td th:text="${linha.tipo == 'ENTRADA' ? 'Entrada' : 'Saída'}"></td>
+                <td th:text="${linha.categoria}"></td><td th:text="${linha.descricao ?: '—'}"></td>
+                <td th:text="|R$ ${#numbers.formatDecimal(linha.valor, 1, 'POINT', 2, 'COMMA')}|"></td>
+                <td th:text="${linha.status}"></td><td th:text="${linha.forma ?: '—'}"></td>
+                <td class="data" th:text="${linha.vencimento == null ? '—' : #temporals.format(linha.vencimento, 'dd/MM/yyyy')}"></td>
+                <td class="data" th:text="${linha.pagamento == null ? '—' : #temporals.format(linha.pagamento, 'dd/MM/yyyy')}"></td>
+                <td th:text="${linha.observacao ?: '—'}"></td>
+            </tr></tbody>
+        </table>
+    </section>
+</body>
+</html>

@@ -11,6 +11,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +60,10 @@ public class RelatorioController {
 
         model.addAttribute("paginaAtiva", "relatorios");
         model.addAttribute("abaAtiva", aba);
+        LocalDate primeiroDia = LocalDate.of(anoSelecionado, mesSelecionado, 1);
+        model.addAttribute("inicioImpressao", primeiroDia);
+        model.addAttribute("fimImpressao", primeiroDia.withDayOfMonth(primeiroDia.lengthOfMonth()));
+        model.addAttribute("categoriasImpressao", relatorioService.categoriasImpressao());
         model.addAttribute("mesSelecionado", mesSelecionado);
         model.addAttribute("anoSelecionado", anoSelecionado);
         model.addAttribute("relatorioMensal", relatorioMensal);
@@ -133,6 +139,10 @@ public class RelatorioController {
         int mesFinal = (requestBody != null && requestBody.mes() > 0) ? requestBody.mes() : (mes != null ? mes : LocalDate.now().getMonthValue());
         int anoFinal = (requestBody != null && requestBody.ano() > 0) ? requestBody.ano() : (ano != null ? ano : LocalDate.now().getYear());
         String obsFinal = (requestBody != null && requestBody.observacao() != null) ? requestBody.observacao() : (observacao != null ? observacao : "");
+
+        if (mesFinal < 1 || mesFinal > 12 || anoFinal < 2000 || anoFinal > 2100) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Período de referência inválido.");
+        }
 
         Integer idUsuario = (usuarioAutenticado != null) ? usuarioAutenticado.getId() : null;
         PublicacaoFinanceiraDTO publicada = relatorioService.publicarDadosNoSite(

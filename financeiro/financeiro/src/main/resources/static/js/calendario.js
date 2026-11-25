@@ -6,6 +6,10 @@
 
     const passa = x => !cats.size || cats.has(x.categoriaId);
     const pad = n => String(n).padStart(2, '0');
+    const ultimoDia = periodo => {
+        const [ano, mes] = periodo.split('-').map(Number);
+        return `${periodo}-${pad(new Date(ano, mes, 0).getDate())}`;
+    };
 
     function celulasDoMes() {
         const [y, m] = ym.split('-').map(Number), dias = new Date(y, m, 0).getDate(), c = [];
@@ -29,8 +33,13 @@
                 ...e.notas.map(n => h('i', { class: 'ponto nota', style: '--c:' + S.categoria(n.categoriaId).cor }))];
             const etiquetas = [...e.movs.map(m => h('span', { class: 'etq ' + (m.status === 'pago' ? 'feito' : 'pend'), style: '--c:' + S.categoria(m.categoriaId).cor }, m.descricao)),
                 ...e.notas.map(n => h('span', { class: 'etq' + (n.concluida ? ' feito' : ''), style: '--c:' + S.categoria(n.categoriaId).cor }, n.descricao))];
+            if (d === ultimoDia(ym)) {
+                etiquetas.unshift(h('span', { class: 'etq pend' }, 'Publicar relatório no Portal da Transparência'));
+                pontos.unshift(h('i', { class: 'ponto pend', style: '--c:#9c151b' }));
+            }
             const dia = Number(d.slice(8));
-            const rotulo = `${dia} de ${S.mesRotulo(ym).split(' ')[0].toLowerCase()}${d === hoje ? ', hoje' : ''}: ${total ? total + (total === 1 ? ' item' : ' itens') : 'sem itens'}${atraso ? ', com conta em atraso' : ''}`;
+            const lembrete = d === ultimoDia(ym) ? ', publicar relatório no Portal da Transparência' : '';
+            const rotulo = `${dia} de ${S.mesRotulo(ym).split(' ')[0].toLowerCase()}${d === hoje ? ', hoje' : ''}: ${total ? total + (total === 1 ? ' item' : ' itens') : 'sem itens'}${atraso ? ', com conta em atraso' : ''}${lembrete}`;
             return h('button', { type: 'button', class: 'dia-cel' + (d === hoje ? ' hoje' : '') + (atraso ? ' atraso' : ''), 'data-data': d, 'aria-pressed': String(d === sel), 'aria-label': rotulo, 'aria-current': d === hoje ? 'date' : null,
                     onclick: () => { sel = d; renderGrade(); renderDia(); } },
                 h('span', { class: 'dia-num' }, dia),
@@ -43,6 +52,16 @@
     function renderDia() {
         const { movs, notas } = doDia(sel);
         $('diaTitulo').textContent = S.dataExtenso(sel);
+        const periodo = sel.slice(0, 7);
+        const lembrete = $('lembretePublicacao');
+        lembrete.hidden = sel !== ultimoDia(periodo);
+        if (!lembrete.hidden) {
+            const [ano, mes] = periodo.split('-');
+            const link = $('linkRelatorioMensal');
+            const url = new URL(link.href);
+            url.search = new URLSearchParams({ ano, mes, aba: 'publicacao' }).toString();
+            link.href = url;
+        }
         const n = movs.length + notas.length;
         $('diaSub').textContent = (sel === S.hoje() ? 'Hoje · ' : '') + (n ? `${n} ${n === 1 ? 'item' : 'itens'}` : 'Sem itens');
         $('itensDia').replaceChildren(

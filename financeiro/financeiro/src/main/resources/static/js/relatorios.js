@@ -63,11 +63,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================================
     // 2. IMPRESSÃO / EXPORTAÇÃO PDF
     // =========================================================================
-    const btnImprimir = $("btn-imprimir");
-    if (btnImprimir) {
-        btnImprimir.addEventListener("click", () => {
-            window.print();
+    const modalImpressao = $("modal-impressao");
+    const formImpressao = modalImpressao?.querySelector("form[method='get']");
+    if (formImpressao) {
+        const inicio = formImpressao.elements.inicio;
+        const fim = formImpressao.elements.fim;
+        const ajustarPeriodo = () => {
+            fim.min = inicio.value;
+            fim.setCustomValidity(fim.value && fim.value < inicio.value ? "A data final deve ser igual ou posterior à inicial." : "");
+        };
+        $("btn-imprimir")?.addEventListener("click", () => {
+            ajustarPeriodo();
+            modalImpressao.showModal();
         });
+        inicio.addEventListener("change", ajustarPeriodo);
+        fim.addEventListener("change", ajustarPeriodo);
     }
 
     // =========================================================================

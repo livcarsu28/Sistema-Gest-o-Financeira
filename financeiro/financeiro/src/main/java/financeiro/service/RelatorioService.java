@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import financeiro.dto.ItemMesRelatorioDTO;
 import financeiro.dto.PublicacaoFinanceiraDTO;
@@ -142,17 +143,27 @@ public class RelatorioService {
         }).toList();
     }
 
+    public List<RelatorioRepository.CategoriaImpressao> categoriasImpressao() {
+        return relatorioRepository.categoriasImpressao();
+    }
+
+    @Transactional
     public PublicacaoFinanceiraDTO publicarDadosNoSite(int mes, int ano, String observacao, Integer idUsuario) {
+        LocalDateTime inicio = LocalDate.of(ano, mes, 1).atStartOfDay();
+        var categorias = relatorioRepository.gastosPagosPorCategoria(inicio, inicio.plusMonths(1));
+        BigDecimal gastos = categorias.stream().map(RelatorioRepository.GastoCategoria::total)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         RelatorioMensalDTO relatorio = gerarRelatorioMensal(mes, ano);
         relatorioRepository.salvarPublicacao(
                 mes,
                 ano,
-                relatorio.totalSaidas(),
+                gastos,
                 relatorio.totalEntradas(),
                 "Atualizado",
                 observacao,
                 idUsuario
         );
+        relatorioRepository.salvarCategoriasPublicadas(categorias);
         return consultarUltimaPublicacao();
     }
 
