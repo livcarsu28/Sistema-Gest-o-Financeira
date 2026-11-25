@@ -16,7 +16,7 @@ public class InstituicaoRepository {
 
     public List<Instituicao> consultar(boolean bloquear) {
         return jdbcTemplate.query(
-                "SELECT id_instituicao, chave_pix, logradouro, numero, bairro, cidade, uf, cep FROM instituicao ORDER BY id_instituicao LIMIT 2"
+                "SELECT id_instituicao, chave_pix, pix_ativo, logradouro, numero, bairro, cidade, uf, cep FROM instituicao ORDER BY id_instituicao LIMIT 2"
                         + (bloquear ? " FOR UPDATE" : ""),
                 (rs, rowNum) -> new Instituicao(
                         rs.getInt("id_instituicao"),
@@ -26,11 +26,16 @@ public class InstituicaoRepository {
                         rs.getString("bairro"),
                         rs.getString("cidade"),
                         rs.getString("uf"),
-                        rs.getString("cep")));
+                        rs.getString("cep"),
+                        rs.getBoolean("pix_ativo")));
     }
 
     public int atualizarChavePix(int id, String chave) {
         return jdbcTemplate.update("UPDATE instituicao SET chave_pix = ? WHERE id_instituicao = ?", chave, id);
+    }
+
+    public int atualizarStatusPix(int id, boolean ativo) {
+        return jdbcTemplate.update("UPDATE instituicao SET pix_ativo = ? WHERE id_instituicao = ?", ativo, id);
     }
 
     public int inserirOuAtualizarChavePix(String chave) {
@@ -52,7 +57,12 @@ public class InstituicaoRepository {
 
     // Record atualizado com as colunas novas e construtor de compatibilidade
     public record Instituicao(int id, String chavePix, String logradouro, String numero, String bairro, String cidade,
-            String uf, String cep) {
+            String uf, String cep, boolean pixAtivo) {
+
+        public Instituicao(int id, String chavePix, String logradouro, String numero, String bairro,
+                           String cidade, String uf, String cep) {
+            this(id, chavePix, logradouro, numero, bairro, cidade, uf, cep, true);
+        }
 
         // Este construtor extra impede que os testes antigos da equipe quebrem
         public Instituicao(int id, String chavePix) {

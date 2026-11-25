@@ -42,7 +42,8 @@ public class SitePublicoController {
         var publicacao = new ResumoPublicado(ultima.disponivel(), ultima.periodoFormatado(),
                 ultima.totalGastos(), ultima.statusAtualizacao());
 
-        String chave = pixService.consultar().chave();
+        var pix = pixService.consultar();
+        String chave = pix.disponivel() ? pix.chave() : null;
         // Uma chave de e-mail, telefone ou aleatória evita expor CPF ou CNPJ no site.
         if (chave != null && chave.matches("[0-9]{11}|[0-9]{14}")) {
             chave = null;
@@ -68,7 +69,7 @@ public class SitePublicoController {
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore())
-                .body(new DadosPublicos(publicacao, chave, imagemUrl, gastos));
+                .body(new DadosPublicos(publicacao, chave, imagemUrl, gastos, pix.temporariamenteIndisponivel()));
     }
 
     private static String urlHttpsPublica(String valor) {
@@ -82,7 +83,7 @@ public class SitePublicoController {
     }
 
     public record DadosPublicos(ResumoPublicado publicacao, String chavePix, String imagemUrl,
-                               List<GastoPublicado> gastosPorCategoria) {}
+                               List<GastoPublicado> gastosPorCategoria, boolean pixTemporariamenteIndisponivel) {}
 
     public record GastoPublicado(String categoria, BigDecimal total) {}
 

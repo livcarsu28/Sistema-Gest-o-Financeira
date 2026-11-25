@@ -23,14 +23,15 @@ public class PixService {
         if (instituicoes.size() != 1) {
             return new DadosPix(null, "Há mais de uma instituição cadastrada. Solicite a conferência do cadastro.");
         }
-        String chave = instituicoes.get(0).chavePix();
+        var instituicao = instituicoes.get(0);
+        String chave = instituicao.chavePix();
         if (chave == null || chave.isBlank()) {
-            return new DadosPix(null, "Nenhuma chave Pix cadastrada. Cadastre em Dados da ONG.");
+            return new DadosPix(null, "Nenhuma chave Pix cadastrada. Cadastre em Dados da ONG.", instituicao.pixAtivo());
         }
         if (!chaveValida(chave.trim())) {
-            return new DadosPix(null, "Confira e atualize a chave Pix em Dados da ONG.");
+            return new DadosPix(null, "Confira e atualize a chave Pix em Dados da ONG.", instituicao.pixAtivo());
         }
-        return new DadosPix(chave.trim(), "Chave Pix cadastrada para a instituição.");
+        return new DadosPix(chave.trim(), "Chave Pix cadastrada para a instituição.", instituicao.pixAtivo());
     }
 
     @Transactional
@@ -48,7 +49,19 @@ public class PixService {
         if (repository.atualizarChavePix(instituicoes.get(0).id(), chave) != 1) {
             throw new IllegalStateException("O cadastro da instituição foi alterado. Recarregue a página.");
         }
-        return new DadosPix(chave, "Chave Pix atualizada com sucesso!");
+        return new DadosPix(chave, "Chave Pix atualizada com sucesso!", instituicoes.get(0).pixAtivo());
+    }
+
+    @Transactional
+    public void alterarStatus(boolean ativo) {
+        var instituicoes = repository.consultar(true);
+        if (instituicoes.size() != 1) {
+            throw new IllegalStateException("Confira o cadastro da instituição antes de alterar o Pix.");
+        }
+        var instituicao = instituicoes.get(0);
+        if (instituicao.pixAtivo() != ativo && repository.atualizarStatusPix(instituicao.id(), ativo) != 1) {
+            throw new IllegalStateException("Não foi possível alterar o status do Pix.");
+        }
     }
 
     private boolean chaveValida(String chave) {
@@ -79,9 +92,21 @@ public class PixService {
         return chave.charAt(posicao) - '0' == (resto < 2 ? 0 : 11 - resto);
     }
 
-    public record DadosPix(String chave, String mensagem) {
-        public boolean disponivel() {
+    public record DadosPix(String chave, String mensagem, boolean ativo) {
+        public DadosPix(String chave, String mensagem) {
+            this(chave, mensagem, true);
+        }
+
+        public boolean temporariamenteIndisponivel() {
+            return !ativo;
+        }
+
+        public boolean cadastrada() {
             return chave != null;
+        }
+
+        public boolean disponivel() {
+            return ativo && cadastrada();
         }
     }
 }

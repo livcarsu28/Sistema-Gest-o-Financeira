@@ -33,7 +33,7 @@ public class SecurityConfig {
                                 "/error",
                                 "/api/publicacao-transparencia")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/configuracoes/pix").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/configuracoes/pix", "/configuracoes/pix/status").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/configuracoes/endereco").hasRole("ADMIN")
                         .requestMatchers("/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/site-publico").permitAll()

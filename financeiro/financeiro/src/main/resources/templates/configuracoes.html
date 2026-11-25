@@ -294,7 +294,7 @@
                                     <span class="configuracoes-rotulo-dado">Chave cadastrada</span>
                                     <p class="configuracoes-valor-destaque" id="texto-chave-pix"
                                         th:attr="data-chave=${pix.chave}"
-                                        th:text="${pix.disponivel() ? pix.chave : 'Não cadastrada'}">Não cadastrada</p>
+                                        th:text="${pix.cadastrada() ? pix.chave : 'Não cadastrada'}">Não cadastrada</p>
                                     <p class="configuracoes-card-subtitulo" id="mensagem-pix" th:text="${pix.mensagem}"
                                         role="status"></p>
                                 </div>
@@ -310,6 +310,14 @@
                                     <span>Editar</span>
                                 </button>
                             </div>
+                            <p class="configuracoes-card-subtitulo"
+                               th:text="${pix.temporariamenteIndisponivel() ? 'Temporariamente indisponível' : 'Pix habilitado'}"></p>
+                            <form th:if="${ehAdmin}" th:action="@{/configuracoes/pix/status}" method="post">
+                                <input type="hidden" name="ativo" th:value="${!pix.ativo()}">
+                                <button type="submit" class="configuracoes-btn-editar"
+                                        th:text="${pix.ativo() ? 'Desativar Pix' : 'Reativar Pix'}">Desativar Pix</button>
+                            </form>
+                            <p th:if="${erroStatusPix}" th:text="${erroStatusPix}" role="alert"></p>
                         </div>
                     </section>
 
