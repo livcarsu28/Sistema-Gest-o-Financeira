@@ -44,10 +44,6 @@ public class SitePublicoController {
 
         var pix = pixService.consultar();
         String chave = pix.disponivel() ? pix.chave() : null;
-        // Uma chave de e-mail, telefone ou aleatória evita expor CPF ou CNPJ no site.
-        if (chave != null && chave.matches("[0-9]{11}|[0-9]{14}")) {
-            chave = null;
-        }
 
         List<GastoPublicado> gastos = ultima.disponivel()
                 ? jdbc.query("""
