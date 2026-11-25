@@ -36,7 +36,7 @@
 .calendario-main :is(h1, h2, h3, p, dl, dd, ul),
 .folha :is(h2, p, dl, dd, ul) { margin: 0; }
 .calendario-main ul, .folha ul { padding: 0; list-style: none; }
-.calendario-main { flex: 1; min-width: 0; max-width: 1480px; padding: 24px 16px calc(126px + env(safe-area-inset-bottom)); }
+.calendario-main { flex: 1; width: 100%; min-width: 0; max-width: 1600px; padding: 24px 16px calc(126px + env(safe-area-inset-bottom)); }
 .calendario-main .fab { border: 0; z-index: 101; }
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -180,7 +180,7 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
 .extrato.solto { padding: 0 12px; box-shadow: none; border-radius: 16px; }
 
 @media (min-width: 769px) {
-    .calendario-main { padding: 40px 36px 48px; }
+    .calendario-main { padding: 28px 36px 32px; }
     .calendario-main .fab { display: none; }
     .aviso { top: 20px; right: 20px; bottom: auto; left: auto; translate: 0 -12px; }
     .aviso.visivel { translate: 0 0; }
@@ -371,10 +371,14 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
 
 /* desktop: calendário grande ao lado do painel do dia */
 @media (min-width: 1200px) {
-    .cal-layout { grid-template-columns: minmax(0, 1fr) 380px; align-items: start; gap: 28px; }
-    .dia-painel { position: sticky; top: 32px; }
-    .grade-cx { padding: 14px 12px; }
-    .dia-cel { align-items: stretch; min-height: 104px; padding: 8px 6px; text-align: left; border-radius: 12px; border: 1px solid transparent; }
+    .calendario-main { padding: 44px 40px 32px; }
+    .calendario-main .topo { margin-bottom: 16px; }
+    .cal-layout { grid-template-columns: minmax(0, 1.45fr) minmax(340px, 420px); align-items: start; gap: 28px; }
+    .dia-painel { position: sticky; top: 24px; }
+    .stats { gap: 12px; margin-bottom: 10px; }
+    .categorias-navegacao { margin-bottom: 10px; }
+    .grade-cx { padding: 10px 12px; }
+    .dia-cel { align-items: stretch; min-height: 76px; padding: 6px 8px; text-align: left; border-radius: 12px; border: 1px solid transparent; }
     .dia-cel:hover { background: #FAF7F3; }
     .dia-cel[aria-pressed="true"] { border-color: #EBC4C4; }
     .dia-num { width: 26px; height: 26px; }

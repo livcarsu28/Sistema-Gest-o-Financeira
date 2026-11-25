@@ -49,19 +49,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================================
     // 5.2. PERFIL DE ACESSO E GESTÃO DE USUÁRIOS
     // =========================================================================
-    const perfilSelect = $("perfil-select");
     const btnAbrirModalUsuario = $("btn-abrir-modal-usuario");
     const modalUsuario = $("modal-usuario");
     const btnFecharModalUsuario = $("btn-fechar-modal-usuario");
     const btnCancelarModalUsuario = $("btn-cancelar-modal-usuario");
     const formCadastrarUsuario = $("form-cadastrar-usuario");
     const erroUsuario = $("erro-usuario");
-
-    if (perfilSelect) {
-        perfilSelect.addEventListener("change", () => {
-            exibirToast("O perfil ativo é determinado pelas credenciais de login.");
-        });
-    }
 
     function abrirModalUsuario() {
         if (!modalUsuario) return;
@@ -233,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     galeriaImagensLista.querySelectorAll(".btn-remover-foto-galeria").forEach((btn) => {
                         btn.addEventListener("click", async (e) => {
-                            const idFoto = e.target.getAttribute("data-id");
+                            const idFoto = e.currentTarget.getAttribute("data-id");
                             await excluirImagem(idFoto);
                         });
                     });
@@ -355,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (areaUpload && inputArquivoImagem) {
         areaUpload.addEventListener("click", (e) => {
+            if (totalImagensAtuais >= LIMITE_MAXIMO_IMAGENS) return;
             if (e.target === btnRemoverImagem || btnRemoverImagem?.contains(e.target) ||
                 e.target === btnConfirmarUpload || btnConfirmarUpload?.contains(e.target)) {
                 return;
@@ -363,6 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         areaUpload.addEventListener("keydown", (e) => {
+            if (totalImagensAtuais >= LIMITE_MAXIMO_IMAGENS) return;
             if ((e.key === "Enter" || e.key === " ") && e.target === areaUpload) {
                 e.preventDefault();
                 inputArquivoImagem.click();
@@ -378,7 +373,9 @@ document.addEventListener("DOMContentLoaded", () => {
             areaUpload.addEventListener(evento, (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                areaUpload.classList.add("dragover");
+                if (totalImagensAtuais < LIMITE_MAXIMO_IMAGENS) {
+                    areaUpload.classList.add("dragover");
+                }
             });
         });
 
@@ -391,6 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         areaUpload.addEventListener("drop", (e) => {
+            if (totalImagensAtuais >= LIMITE_MAXIMO_IMAGENS) return;
             const arquivos = e.dataTransfer && e.dataTransfer.files;
             if (arquivos && arquivos.length > 0) {
                 processarArquivoImagem(arquivos[0]);
