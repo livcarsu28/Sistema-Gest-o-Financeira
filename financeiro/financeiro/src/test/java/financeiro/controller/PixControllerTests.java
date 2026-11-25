@@ -15,6 +15,7 @@ import financeiro.service.PixService;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -87,5 +88,22 @@ class PixControllerTests {
         mockMvc.perform(post("/configuracoes/pix").with(csrf()).param("chavePix", "contato@example.org"))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(jsonPath("$.mensagem").value("Não foi possível salvar a chave Pix. Tente novamente."));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void adminPodeDesativarChavePix() throws Exception {
+        when(service.desativar()).thenReturn(new PixService.DadosPix(null, "Chave Pix desativada com sucesso!"));
+        mockMvc.perform(delete("/configuracoes/pix").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mensagem").value("Chave Pix desativada com sucesso!"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void usuarioComumNaoPodeDesativarChavePix() throws Exception {
+        mockMvc.perform(delete("/configuracoes/pix").with(csrf()))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(service);
     }
 }

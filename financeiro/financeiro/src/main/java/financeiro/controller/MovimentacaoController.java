@@ -104,7 +104,7 @@ public class MovimentacaoController {
             return "redirect:/movimentacoes/historico";
         }
 
-        if (mes.isAfter(atual)
+        if (mes.isAfter(atual.plusMonths(3))
                 || mes.isBefore(atual.minusMonths(3))) {
             return "redirect:/relatorios";
         }
@@ -114,6 +114,9 @@ public class MovimentacaoController {
         model.addAttribute("mes", mes);
 
         model.addAttribute("periodos", List.of(
+                atual.plusMonths(3),
+                atual.plusMonths(2),
+                atual.plusMonths(1),
                 atual,
                 atual.minusMonths(1),
                 atual.minusMonths(2),

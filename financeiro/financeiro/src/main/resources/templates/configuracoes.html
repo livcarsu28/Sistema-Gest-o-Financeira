@@ -7,6 +7,7 @@
     <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <title>Ajustes | Resgate de Vidas</title>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/configuracoes.css}">
     <script th:src="@{/js/configuracoes.js}" defer></script>
 </head>
@@ -14,78 +15,11 @@
 <body class="configuracoes-body">
     <a class="configuracoes-pular" href="#conteudo-principal">Ir para o conteúdo</a>
 
-    <div class="configuracoes-layout">
-        <!-- Barra lateral para Desktop -->
-        <aside class="configuracoes-sidebar">
-            <a class="configuracoes-sidebar-marca" th:href="@{/dashboard}"
-                aria-label="Resgate de Vidas – Criança Feliz, início">
-                <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="" width="52" height="52">
-                <span class="configuracoes-sidebar-marca-texto">
-                    <strong>Resgate de Vidas</strong>
-                    <span>Criança Feliz</span>
-                </span>
-            </a>
-            <p class="configuracoes-sidebar-marca-sistema">Gestão financeira</p>
-            <nav class="configuracoes-sidebar-nav" aria-label="Navegação lateral">
-                <p class="configuracoes-sidebar-nav-titulo">Principal</p>
-                <ul class="configuracoes-sidebar-nav-lista">
-                    <li>
-                        <a class="configuracoes-sidebar-nav-link" th:href="@{/dashboard}">
-                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                                focusable="false">
-                                <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
-                            </svg>
-                            <span>Início</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="configuracoes-sidebar-nav-link" th:href="@{/movimentacoes}">
-                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                                focusable="false">
-                                <path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4" />
-                            </svg>
-                            <span>Movimentações</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="configuracoes-sidebar-nav-link" th:href="@{/calendario}">
-                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                                focusable="false">
-                                <rect x="3" y="5" width="18" height="16" rx="2" />
-                                <path d="M8 3v4m8-4v4M3 10h18" />
-                            </svg>
-                            <span>Calendário</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="configuracoes-sidebar-nav-link" th:href="@{/relatorios}">
-                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                                focusable="false">
-                                <path d="M6 3h9l4 4v14H6zM14 3v5h5M10 17v-3m4 3v-6" />
-                            </svg>
-                            <span>Relatórios</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="configuracoes-sidebar-nav-link ativo" th:href="@{/configuracoes}" aria-current="page">
-                            <svg class="configuracoes-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                                focusable="false">
-                                <path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1" />
-                            </svg>
-                            <span>Dados da ONG</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+    <div class="layout">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
         <!-- Conteúdo Principal -->
-        <main class="configuracoes-main" id="conteudo-principal" tabindex="-1">
+        <main class="main configuracoes-main" id="conteudo-principal" tabindex="-1">
             <div class="configuracoes-container">
                 <!-- Cabeçalho -->
                 <header class="configuracoes-header">
@@ -117,7 +51,9 @@
                                 </svg>
                             </div>
                             <div class="configuracoes-perfil-info">
-                                <h2 id="titulo-perfil" class="configuracoes-perfil-titulo">Perfil de acesso</h2>
+                                <h2 id="titulo-perfil" class="configuracoes-perfil-titulo"
+                                    th:text="${'Perfil de Acesso: ' + (ehAdmin == null or ehAdmin ? 'Administrador' : 'Usuário comum')}">
+                                    Perfil de Acesso: Administrador</h2>
                                 <p class="configuracoes-perfil-descricao"
                                     th:text="${ehAdmin != null and ehAdmin ? 'Acesso completo' : 'Acesso padrão'}">
                                     Acesso completo</p>
@@ -125,20 +61,6 @@
                         </div>
                         <div class="configuracoes-perfil-acoes"
                             style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                            <div class="configuracoes-perfil-seletor-box" title="Perfil ativo do usuário">
-                                <select class="configuracoes-perfil-select" id="perfil-select"
-                                    aria-label="Perfil de acesso">
-                                    <option value="Administrador" th:selected="${ehAdmin == null or ehAdmin}">
-                                        Administrador</option>
-                                    <option value="Usuário comum" th:selected="${ehAdmin != null and !ehAdmin}">Usuário
-                                        comum</option>
-                                </select>
-                                <svg class="configuracoes-perfil-chevron" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <polyline points="6 9 12 15 18 9" />
-                                </svg>
-                            </div>
                             <button th:if="${ehAdmin == null or ehAdmin}" type="button" id="btn-abrir-modal-usuario"
                                 class="configuracoes-btn-editar configuracoes-btn-novo-usuario"
                                 style="padding: 6px 12px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;">
@@ -298,17 +220,26 @@
                                     <p class="configuracoes-card-subtitulo" id="mensagem-pix" th:text="${pix.mensagem}"
                                         role="status"></p>
                                 </div>
-                                <button th:if="${ehAdmin == null or ehAdmin}" type="button"
-                                    class="configuracoes-btn-editar" id="btn-abrir-modal-pix"
-                                    aria-label="Editar chave PIX">
-                                    <svg class="configuracoes-btn-editar-icone" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                                        <path d="m15 5 4 4" />
-                                    </svg>
-                                    <span>Editar</span>
-                                </button>
+                                <div th:if="${ehAdmin == null or ehAdmin}"
+                                    style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <button type="button"
+                                        class="configuracoes-btn-editar" id="btn-abrir-modal-pix"
+                                        aria-label="Editar chave PIX">
+                                        <svg class="configuracoes-btn-editar-icone" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                            stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                            <path d="m15 5 4 4" />
+                                        </svg>
+                                        <span>Editar</span>
+                                    </button>
+                                    <button type="button"
+                                        class="configuracoes-btn-desativar" id="btn-desativar-pix"
+                                        th:hidden="${!pix.disponivel()}"
+                                        aria-label="Desativar chave PIX">
+                                        Desativar
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -380,69 +311,6 @@
             </div> <!-- .configuracoes-container -->
         </main>
     </div>
-
-    <!-- Navegação Inferior Fixa (Mobile) -->
-    <nav class="configuracoes-nav-inferior" aria-label="Navegação móvel principal">
-        <ul class="configuracoes-nav-inferior-lista">
-            <li>
-                <a class="configuracoes-nav-inferior-link" th:href="@{/dashboard}">
-                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        focusable="false">
-                        <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
-                    </svg>
-                    <span>Início</span>
-                </a>
-            </li>
-            <li>
-                <a class="configuracoes-nav-inferior-link" th:href="@{/movimentacoes}">
-                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        focusable="false">
-                        <line x1="18" y1="20" x2="18" y2="10" />
-                        <line x1="12" y1="20" x2="12" y2="4" />
-                        <line x1="6" y1="20" x2="6" y2="14" />
-                    </svg>
-                    <span>Movimentações</span>
-                </a>
-            </li>
-            <li>
-                <a class="configuracoes-nav-inferior-link" th:href="@{/calendario}">
-                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        focusable="false">
-                        <rect x="3" y="5" width="18" height="16" rx="2" />
-                        <path d="M8 3v4m8-4v4M3 10h18" />
-                    </svg>
-                    <span>Calendário</span>
-                </a>
-            </li>
-            <li>
-                <a class="configuracoes-nav-inferior-link" th:href="@{/relatorios}">
-                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        focusable="false">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="16" y1="13" x2="8" y2="13" />
-                        <line x1="16" y1="17" x2="8" y2="17" />
-                        <polyline points="10 9 9 9 8 9" />
-                    </svg>
-                    <span>Relatórios</span>
-                </a>
-            </li>
-            <li>
-                <a class="configuracoes-nav-inferior-link ativo" th:href="@{/configuracoes}" aria-current="page">
-                    <svg class="configuracoes-nav-inferior-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        focusable="false">
-                        <path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1" />
-                    </svg>
-                    <span>Dados da ONG</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
 
     <!-- Modal: Editar Chave PIX -->
     <div th:if="${ehAdmin == null or ehAdmin}" class="configuracoes-modal-backdrop" id="modal-pix" hidden role="dialog"

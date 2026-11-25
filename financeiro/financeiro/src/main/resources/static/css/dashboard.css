@@ -180,7 +180,7 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
     .navegacao-link .icone { width: 20px; height: 20px; }
     .navegacao-link:hover { background: rgba(255, 255, 255, 0.08); color: var(--cartao); }
     .navegacao-link[aria-current="page"] { color: var(--vinho); background: var(--cartao); font-weight: 600; }
-    .conteudo { padding: 0 32px 32px; max-width: 1600px; margin: 0 auto; }
+    .conteudo { padding: 32px; max-width: 1600px; margin: auto; }
     .cabecalho { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px; margin: 0 0 24px; padding: 28px; border-radius: var(--raio-card); }
     .cabecalho-apresentacao { display: none; }
     .cabecalho-saudacao h1 { font-size: 1.75rem; letter-spacing: -.02em; }
@@ -203,7 +203,7 @@ a.acao:hover { background: var(--vinho-suave); border-color: var(--vinho); }
 }
 
 @media (min-width: 1280px) {
-    .conteudo { padding-right: 40px; padding-left: 40px; }
+    .conteudo { padding: 32px 40px; }
     .indicador { padding: 22px; }
     .indicador dt { font-size: .75rem; }
     .painel { padding: 26px; }

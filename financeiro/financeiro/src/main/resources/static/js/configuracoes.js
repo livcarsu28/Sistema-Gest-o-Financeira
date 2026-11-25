@@ -49,19 +49,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================================
     // 5.2. PERFIL DE ACESSO E GESTÃO DE USUÁRIOS
     // =========================================================================
-    const perfilSelect = $("perfil-select");
     const btnAbrirModalUsuario = $("btn-abrir-modal-usuario");
     const modalUsuario = $("modal-usuario");
     const btnFecharModalUsuario = $("btn-fechar-modal-usuario");
     const btnCancelarModalUsuario = $("btn-cancelar-modal-usuario");
     const formCadastrarUsuario = $("form-cadastrar-usuario");
     const erroUsuario = $("erro-usuario");
-
-    if (perfilSelect) {
-        perfilSelect.addEventListener("change", () => {
-            exibirToast("O perfil ativo é determinado pelas credenciais de login.");
-        });
-    }
 
     function abrirModalUsuario() {
         if (!modalUsuario) return;
@@ -233,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     galeriaImagensLista.querySelectorAll(".btn-remover-foto-galeria").forEach((btn) => {
                         btn.addEventListener("click", async (e) => {
-                            const idFoto = e.target.getAttribute("data-id");
+                            const idFoto = e.currentTarget.getAttribute("data-id");
                             await excluirImagem(idFoto);
                         });
                     });
@@ -355,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (areaUpload && inputArquivoImagem) {
         areaUpload.addEventListener("click", (e) => {
+            if (totalImagensAtuais >= LIMITE_MAXIMO_IMAGENS) return;
             if (e.target === btnRemoverImagem || btnRemoverImagem?.contains(e.target) ||
                 e.target === btnConfirmarUpload || btnConfirmarUpload?.contains(e.target)) {
                 return;
@@ -363,6 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         areaUpload.addEventListener("keydown", (e) => {
+            if (totalImagensAtuais >= LIMITE_MAXIMO_IMAGENS) return;
             if ((e.key === "Enter" || e.key === " ") && e.target === areaUpload) {
                 e.preventDefault();
                 inputArquivoImagem.click();
@@ -378,7 +373,9 @@ document.addEventListener("DOMContentLoaded", () => {
             areaUpload.addEventListener(evento, (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                areaUpload.classList.add("dragover");
+                if (totalImagensAtuais < LIMITE_MAXIMO_IMAGENS) {
+                    areaUpload.classList.add("dragover");
+                }
             });
         });
 
@@ -391,6 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         areaUpload.addEventListener("drop", (e) => {
+            if (totalImagensAtuais >= LIMITE_MAXIMO_IMAGENS) return;
             const arquivos = e.dataTransfer && e.dataTransfer.files;
             if (arquivos && arquivos.length > 0) {
                 processarArquivoImagem(arquivos[0]);
@@ -464,6 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================================
     const textoChavePix = $("texto-chave-pix");
     const btnAbrirModalPix = $("btn-abrir-modal-pix");
+    const btnDesativarPix = $("btn-desativar-pix");
     const modalPix = $("modal-pix");
     const btnFecharModalPix = $("btn-fechar-modal-pix");
     const btnCancelarModalPix = $("btn-cancelar-modal-pix");
@@ -569,6 +568,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 const mensagemPix = $("mensagem-pix");
                 if (mensagemPix) mensagemPix.textContent = "Chave Pix cadastrada para a instituição.";
+                if (btnDesativarPix) btnDesativarPix.hidden = false;
                 fecharModalPix();
                 exibirToast(dados.mensagem || "Chave Pix salva com sucesso!");
             } catch (erroSalvar) {
@@ -578,6 +578,52 @@ document.addEventListener("DOMContentLoaded", () => {
             } finally {
                 botaoSalvar.disabled = false;
                 formEditarPix.removeAttribute("aria-busy");
+            }
+        });
+    }
+
+    if (btnDesativarPix) {
+        btnDesativarPix.addEventListener("click", async () => {
+            if (btnDesativarPix.disabled) return;
+            btnDesativarPix.disabled = true;
+
+            try {
+                const headers = montarHeadersComCsrf({
+                    "Accept": "application/json"
+                });
+
+                const resposta = await fetch("/configuracoes/pix", {
+                    method: "DELETE",
+                    credentials: "same-origin",
+                    headers: headers
+                });
+
+                if (resposta.redirected || !resposta.headers.get("content-type")?.includes("application/json")) {
+                    throw new Error("Sua sessão expirou ou a solicitação foi recusada. Recarregue a página e tente novamente.");
+                }
+
+                const dados = await resposta.json().catch(() => ({}));
+                if (!resposta.ok) {
+                    if (resposta.status === 403 && !dados.mensagem) {
+                        throw new Error("Acesso negado (403). Verifique se sua conta é Administrador.");
+                    }
+                    throw new Error(dados.mensagem || "Não foi possível desativar a chave Pix.");
+                }
+
+                if (textoChavePix) {
+                    textoChavePix.textContent = "Não cadastrada";
+                    textoChavePix.dataset.chave = "";
+                }
+                const mensagemPix = $("mensagem-pix");
+                if (mensagemPix) {
+                    mensagemPix.textContent = "Nenhuma chave Pix cadastrada. Cadastre em Dados da ONG.";
+                }
+                btnDesativarPix.hidden = true;
+                exibirToast(dados.mensagem || "Chave Pix desativada com sucesso!");
+            } catch (erroDesativar) {
+                exibirToast(erroDesativar.message || "Não foi possível desativar a chave Pix.");
+            } finally {
+                btnDesativarPix.disabled = false;
             }
         });
     }

@@ -9,6 +9,7 @@ import financeiro.repository.InstituicaoRepository.Instituicao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -80,5 +81,17 @@ class PixServiceTests {
         when(repository.consultar(true)).thenReturn(List.of(new Instituicao(7, null), new Instituicao(8, null)));
         assertThrows(IllegalStateException.class, () -> service.salvar("contato@example.org"));
         verify(repository, never()).atualizarChavePix(anyInt(), anyString());
+    }
+
+    @Test
+    void desativaChavePixExistente() {
+        when(repository.consultar(true)).thenReturn(List.of(new Instituicao(7, "contato@example.org")));
+        when(repository.atualizarChavePix(7, null)).thenReturn(1);
+
+        var resultado = service.desativar();
+
+        assertNull(resultado.chave());
+        assertFalse(resultado.disponivel());
+        verify(repository).atualizarChavePix(7, null);
     }
 }

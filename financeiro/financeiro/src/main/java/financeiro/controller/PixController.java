@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,21 @@ public class PixController {
             return ResponseEntity.status(409).body(new Erro(e.getMessage()));
         } catch (DataAccessException e) {
             return ResponseEntity.status(503).body(new Erro("Não foi possível salvar a chave Pix. Tente novamente."));
+        }
+    }
+
+    @DeleteMapping("/configuracoes/pix")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> desativar() {
+        try {
+            return ResponseEntity.ok(pixService.desativar());
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new Erro("Apenas administradores podem desativar a chave PIX."));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(409).body(new Erro(e.getMessage()));
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(503).body(new Erro("Não foi possível desativar a chave Pix. Tente novamente."));
         }
     }
 

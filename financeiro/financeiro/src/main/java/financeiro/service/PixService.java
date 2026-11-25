@@ -51,6 +51,20 @@ public class PixService {
         return new DadosPix(chave, "Chave Pix atualizada com sucesso!");
     }
 
+    @Transactional
+    public DadosPix desativar() {
+        var instituicoes = repository.consultar(true);
+        if (instituicoes.size() != 1) {
+            throw new IllegalStateException(instituicoes.isEmpty()
+                    ? "Cadastre a instituição antes de desativar a chave Pix."
+                    : "Há mais de uma instituição cadastrada. Solicite a conferência do cadastro.");
+        }
+        if (repository.atualizarChavePix(instituicoes.get(0).id(), null) != 1) {
+            throw new IllegalStateException("O cadastro da instituição foi alterado. Recarregue a página.");
+        }
+        return new DadosPix(null, "Chave Pix desativada com sucesso!");
+    }
+
     private boolean chaveValida(String chave) {
         if (chave.length() > 100 || chave.isBlank()) {
             return false;

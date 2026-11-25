@@ -20,10 +20,11 @@
 .barra-lateral a:focus-visible { outline: 3px solid #E0C218; outline-offset: 3px; }
 
 .barra-lateral { height: 0; }
-.barra-lateral .marca, .barra-lateral .marca-sistema, .barra-lateral .navegacao-titulo { display: none; }
+.barra-lateral .marca, .barra-lateral .marca-sistema, .barra-lateral .navegacao-titulo, .barra-lateral-rodape { display: none; }
 .barra-lateral .navegacao { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cartao); border-top: 1px solid var(--borda); padding: 8px 6px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 24px rgba(53, 35, 35, 0.04); }
-.barra-lateral .navegacao-lista { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; padding: 0; gap: 2px; list-style: none; }
-.barra-lateral .navegacao-link { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; min-height: 60px; padding: 8px 0; border-radius: 12px; font-size: .625rem; text-decoration: none; color: var(--secundario); }
+.barra-lateral .navegacao-lista { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0; padding: 0; gap: 2px; list-style: none; }
+.barra-lateral .navegacao-link { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; min-height: 60px; padding: 8px 2px; border-radius: 12px; font-size: .625rem; text-decoration: none; color: var(--secundario); min-width: 0; }
+.barra-lateral .navegacao-link span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .barra-lateral .navegacao-link:hover { color: var(--vinho); background: var(--vinho-suave); }
 .barra-lateral .navegacao-link[aria-current="page"] { color: var(--vinho); background: var(--vinho-suave); font-weight: 600; }
 
@@ -32,15 +33,17 @@
 }
 
 @media (max-width: 999px) {
-    .barra-lateral .navegacao { padding: .7rem .55rem calc(.7rem + env(safe-area-inset-bottom)); }
-    .barra-lateral .navegacao-link { gap: .24rem; min-height: 48px; padding: 4px 0; font-size: .625rem; }
+    .barra-lateral .navegacao { padding: .6rem .4rem calc(.6rem + env(safe-area-inset-bottom)); }
+    .barra-lateral .navegacao-link { gap: .22rem; min-height: 48px; padding: 4px 2px; font-size: 9.5px; text-align: center; }
     .barra-lateral .navegacao-link[aria-current="page"] { background: transparent; }
-    .barra-lateral ~ .main { padding-bottom: calc(126px + env(safe-area-inset-bottom)); }
+    .barra-lateral ~ .main,
+    .barra-lateral ~ .conteudo { padding-bottom: calc(116px + env(safe-area-inset-bottom)); }
     .barra-lateral ~ .main .fab { bottom: calc(90px + env(safe-area-inset-bottom)); z-index: 101; }
 }
 
 @media (min-width: 1000px) {
-    .barra-lateral { display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; height: 100dvh; padding: 32px 20px 24px; background: var(--vinho); color: var(--cartao); }
+    .layout { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+    .barra-lateral { display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; height: 100dvh; padding: 32px 20px 24px; background: var(--vinho); color: var(--cartao); flex: 0 0 248px; width: 248px; }
     .barra-lateral .marca { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .barra-lateral .marca img { width: 48px; height: 48px; object-fit: contain; padding: 4px; border-radius: 50%; background: var(--cartao); }
     .barra-lateral .marca-texto { display: flex; flex-direction: column; font-family: "Goudy Old Style", "Palatino Linotype", Georgia, serif; color: var(--cartao); line-height: 1.25; }
@@ -50,16 +53,21 @@
     .barra-lateral .navegacao { position: static; margin-top: 36px; padding: 0; border: 0; background: transparent; box-shadow: none; }
     .barra-lateral .navegacao-titulo { display: block; margin: 0 10px 10px; color: var(--vinho-borda-suave); font-size: .625rem; text-transform: uppercase; letter-spacing: .12em; }
     .barra-lateral .navegacao-lista { grid-template-columns: 1fr; gap: 8px; }
-    .barra-lateral .navegacao-link { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 12px 16px; min-height: 46px; border-radius: 10px; font-size: .75rem; font-weight: 500; color: var(--vinho-suave); }
+    .barra-lateral .navegacao-link { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 12px 16px; min-height: 46px; border-radius: 10px; font-size: .75rem; font-weight: 500; color: var(--vinho-suave); text-align: left; }
     .barra-lateral .navegacao-link .icone { width: 20px; height: 20px; }
     .barra-lateral .navegacao-link:hover { background: rgba(255, 255, 255, 0.08); color: var(--cartao); }
     .barra-lateral .navegacao-link[aria-current="page"] { color: var(--vinho); background: var(--cartao); font-weight: 600; }
-    .barra-lateral { flex: 0 0 248px; width: 248px; }
-    .barra-lateral ~ .main { min-width: 0; }
+    .barra-lateral .navegacao-sair { color: var(--vinho-suave); }
+    .barra-lateral .navegacao-sair:hover { background: rgba(255, 255, 255, 0.08); color: var(--cartao); }
+    .barra-lateral ~ .main,
+    .barra-lateral ~ .conteudo { min-width: 0; }
+    .barra-lateral-rodape { display: block; margin-top: auto; padding: 16px 10px 0; font-size: 0.6875rem; color: #DDBBBB; border-top: 1px solid rgba(255, 255, 255, 0.14); }
+    .barra-lateral-rodape a { color: #F0DEDE; text-decoration: none; }
+    .barra-lateral-rodape a:hover { text-decoration: underline; }
+    .barra-lateral-rodape span { margin: 0 4px; }
 }
 
 /* Botão de sair da conta */
-
 .logout-form {
     width: 100%;
     margin: 0;
@@ -74,7 +82,6 @@
     font-size: inherit;
     color: #900606;
     cursor: pointer;
-    text-align: left;
 }
 
 .navegacao-sair:hover {
@@ -83,17 +90,6 @@
 }
 
 .navegacao-sair:focus-visible {
-    outline: 2px solid #900606;
+    outline: 2px solid #E0C218;
     outline-offset: 2px;
-}
-@media (max-width: 999px) {
-    .barra-lateral .navegacao-lista {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-
-    .barra-lateral .navegacao-link {
-        font-size: 9px;
-        text-align: center;
-        overflow-wrap: anywhere;
-    }
 }

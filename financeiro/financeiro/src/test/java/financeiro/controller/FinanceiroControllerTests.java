@@ -148,7 +148,7 @@ class FinanceiroControllerTests {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void paginasExibemMesmaChavePixEFormularioTemCsrf() throws Exception {
         org.mockito.Mockito.when(pixService.consultar()).thenReturn(
                 new financeiro.service.PixService.DadosPix("contato@example.org", "Chave Pix cadastrada."));
