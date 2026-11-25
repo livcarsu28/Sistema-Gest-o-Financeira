@@ -15,6 +15,13 @@ public record PublicacaoFinanceiraDTO(
         String observacao,
         boolean disponivel
 ) {
+    public static final String STATUS_RETIRADA = "Retirado";
+
+    public static PublicacaoFinanceiraDTO retirada() {
+        return new PublicacaoFinanceiraDTO(null, 0, 0, "Dados temporariamente indisponíveis",
+                BigDecimal.ZERO, BigDecimal.ZERO, null, STATUS_RETIRADA, null, false);
+    }
+
     public static PublicacaoFinanceiraDTO naoPublicado() {
         return new PublicacaoFinanceiraDTO(null, 0, 0, "Nenhuma publicação realizada",
                 BigDecimal.ZERO, BigDecimal.ZERO, null, "Pendente", null, false);

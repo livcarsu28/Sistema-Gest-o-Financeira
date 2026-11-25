@@ -359,13 +359,17 @@
                                 </div>
                                 <div class="linha-dado">
                                     <span>Total de Gastos Exibido:</span>
-                                    <strong class="negativo valor-grande" id="dado-gastos-publicado" th:text="${#numbers.formatCurrency(ultimaPublicacao.totalGastos)}">R$ 0,00</strong>
+                                    <strong class="negativo valor-grande" id="dado-gastos-publicado" th:text="${ultimaPublicacao.disponivel ? #numbers.formatCurrency(ultimaPublicacao.totalGastos) : '—'}">R$ 0,00</strong>
                                 </div>
                                 <div class="linha-dado">
                                     <span>Data da Última Atualização:</span>
                                     <span class="txt-sub" id="dado-data-publicacao" th:text="${ultimaPublicacao.dataPublicacao != null ? #temporals.format(ultimaPublicacao.dataPublicacao, 'dd/MM/yyyy HH:mm') : 'Ainda não publicado'}">01/01/2026</span>
                                 </div>
                             </div>
+                            <form id="form-retirar-publicacao" method="post" th:action="@{/relatorios/publicacao/retirar}"
+                                  th:attr="hidden=${ultimaPublicacao.disponivel ? null : 'hidden'}">
+                                <button class="btn-acao-secundario" type="submit">Retirar publicação do site</button>
+                            </form>
                         </article>
 
                         <!-- Card: Prévia da publicação selecionada -->

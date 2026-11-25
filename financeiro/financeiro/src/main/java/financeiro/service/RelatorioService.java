@@ -167,9 +167,23 @@ public class RelatorioService {
         return consultarUltimaPublicacao();
     }
 
+    @Transactional
+    public void retirarPublicacao(Integer idUsuario) {
+        var ultima = relatorioRepository.consultarUltimaPublicacao();
+        if (ultima.isEmpty() || PublicacaoFinanceiraDTO.STATUS_RETIRADA.equals(ultima.get().statusAtualizacao())) {
+            return;
+        }
+        var publicada = ultima.get();
+        relatorioRepository.salvarPublicacao(publicada.mesReferencia(), publicada.anoReferencia(),
+                BigDecimal.ZERO, BigDecimal.ZERO, PublicacaoFinanceiraDTO.STATUS_RETIRADA, null, idUsuario);
+    }
+
     public PublicacaoFinanceiraDTO consultarUltimaPublicacao() {
         return relatorioRepository.consultarUltimaPublicacao()
                 .map(pub -> {
+                    if (PublicacaoFinanceiraDTO.STATUS_RETIRADA.equals(pub.statusAtualizacao())) {
+                        return PublicacaoFinanceiraDTO.retirada();
+                    }
                     LocalDate ref = LocalDate.of(pub.anoReferencia(), pub.mesReferencia(), 1);
                     String rawRef = ref.format(FORMATADOR_PERIODO);
                     String periodoFormatado = rawRef.substring(0, 1).toUpperCase(LOCALE_BRASIL) + rawRef.substring(1);

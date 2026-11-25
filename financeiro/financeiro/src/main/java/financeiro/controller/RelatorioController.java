@@ -127,6 +127,12 @@ public class RelatorioController {
         return ResponseEntity.ok(relatorioService.gerarTotalizadoresPorCategoria(mes, ano));
     }
 
+    @PostMapping("/relatorios/publicacao/retirar")
+    public String retirarPublicacao(@AuthenticationPrincipal UsuarioAutenticado usuario) {
+        relatorioService.retirarPublicacao(usuario != null ? usuario.getId() : null);
+        return "redirect:/relatorios?aba=publicacao";
+    }
+
     @PostMapping("/relatorios/api/publicar")
     @ResponseBody
     public ResponseEntity<PublicacaoFinanceiraDTO> publicarRelatorioNoSite(

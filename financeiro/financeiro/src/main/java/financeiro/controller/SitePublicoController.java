@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import financeiro.dto.PublicacaoFinanceiraDTO;
 import financeiro.service.PixService;
 import financeiro.service.RelatorioService;
 
@@ -63,9 +64,11 @@ public class SitePublicoController {
             gastos = List.of();
         }
 
+        String imagemPublicada = PublicacaoFinanceiraDTO.STATUS_RETIRADA.equals(ultima.statusAtualizacao())
+                ? null : imagemUrl;
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore())
-                .body(new DadosPublicos(publicacao, chave, imagemUrl, gastos, pix.temporariamenteIndisponivel()));
+                .body(new DadosPublicos(publicacao, chave, imagemPublicada, gastos, pix.temporariamenteIndisponivel()));
     }
 
     private static String urlHttpsPublica(String valor) {

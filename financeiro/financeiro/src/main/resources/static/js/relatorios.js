@@ -118,6 +118,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnFecharModal = $("btn-fechar-modal");
     const btnCancelarModal = $("btn-cancelar-modal");
     const formConfirmarPublicacao = $("form-confirmar-publicacao");
+    const formRetirarPublicacao = $("form-retirar-publicacao");
+    formRetirarPublicacao?.addEventListener("submit", event => {
+        if (!window.confirm("Retirar os dados financeiros do Portal da Transparência e da página de doações?")) {
+            event.preventDefault();
+        }
+    });
 
     function abrirModal() {
         if (!modalPublicacao) return;
@@ -213,6 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         badge.textContent = dados.statusAtualizacao || "Atualizado";
                     }
 
+                    if (formRetirarPublicacao) formRetirarPublicacao.hidden = false;
                     fecharModal();
                     exibirToast("Informações financeiras publicadas com sucesso no site institucional!");
                 } else {
