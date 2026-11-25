@@ -5,67 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Relatório financeiro para impressão</title>
     <style>
-        body { font: 14px system-ui, sans-serif; color: #201a1a; margin: 1.5rem auto; max-width: 1150px; padding: 0 1rem; }
-        h1, h2 { color: #7b151b; }
-        dl { display: flex; flex-wrap: wrap; gap: 1rem; }
-        dt { font-weight: bold; }
-        dd { margin: 0; }
+        @font-face { font-family: Poppins; src: url('../fonts/poppins-400.ttf') format('truetype'); font-weight: 400; }
+        @font-face { font-family: Poppins; src: url('../fonts/poppins-600.ttf') format('truetype'); font-weight: 600; }
+        @font-face { font-family: Poppins; src: url('../fonts/poppins-700.ttf') format('truetype'); font-weight: 700; }
+
+        :root { color: #2d2425; font: 14px/1.55 Poppins, sans-serif; background: #f8f4f2; }
+        * { box-sizing: border-box; }
+        body { max-width: 1150px; margin: 1.5rem auto; padding: 0 1rem; }
+        .acoes { display: flex; justify-content: flex-end; margin-bottom: .8rem; }
+        .acoes button { background: #7b151b; border: 0; border-radius: .55rem; color: #fff; padding: .65rem 1rem; font: 600 1rem/1.4 Poppins, sans-serif; cursor: pointer; }
+        .relatorio { background: white; border: 1px solid #ebdfdc; border-radius: 1rem; padding: clamp(1rem, 3vw, 2rem); }
+        .cabecalho { display: flex; align-items: center; gap: 1rem; border-bottom: 2px solid #7b151b; padding-bottom: .8rem; }
+        .cabecalho img { width: 52px; height: 52px; object-fit: contain; }
+        .instituicao { margin: 0; color: #6f5657; font-weight: 600; font-size: .88rem; }
+        h1, h2 { color: #7b151b; line-height: 1.25; }
+        h1 { font-size: clamp(1.5rem, 4vw, 2rem); margin: .15rem 0 0; }
+        h2 { font-size: 1.15rem; margin: 1.15rem 0 .5rem; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: .65rem; margin: .9rem 0; }
+        .card { padding: .65rem .8rem; background: #fcf7f5; border: 1px solid #e7d9d7; border-left: 3px solid #7b151b; border-radius: .45rem; }
+        .card-entrada { border-left-color: #176343; }
+        dt { font-size: .82rem; font-weight: 600; color: #694f50; }
+        dd { margin: .18rem 0 0; font-size: 1.1rem; font-weight: 700; overflow-wrap: anywhere; }
+        .filtros dd { font-size: .92rem; font-weight: 600; }
+        .nota { font-size: .82rem; color: #665758; margin: .5rem 0; }
+        .vazio { background: #fcf7f5; padding: .7rem; border-radius: .4rem; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: .4rem; border-bottom: 1px solid #d9cbcb; vertical-align: top; overflow-wrap: anywhere; }
-        th { background: #f5eded; }
+        th, td { text-align: left; padding: .45rem .4rem; border-bottom: 1px solid #e6dbd9; vertical-align: top; overflow-wrap: anywhere; }
+        th { background: #f2e6e4; color: #64191d; font-weight: 600; }
+        tbody tr:nth-child(even) { background: #fcf8f7; }
         .dados { overflow-x: auto; }
+        .dados table { min-width: 780px; }
         .data { white-space: nowrap; }
         @media print {
-            @page { size: A4 landscape; margin: 12mm; }
-            body { margin: 0; padding: 0; font-size: 10pt; }
+            @page { size: A4 landscape; margin: 11mm; }
+            :root { background: #fff; font-size: 9pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+            body { max-width: none; margin: 0; padding: 0; }
+            .relatorio { padding: 0; border: 0; }
             .acoes { display: none; }
+            .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .cabecalho, .cards, tr { break-inside: avoid; }
+            h2 { break-after: avoid; }
             .dados { overflow: visible; }
-            tr { break-inside: avoid; }
+            .dados table { min-width: 0; }
+            thead { display: table-header-group; }
         }
     </style>
 </head>
 <body>
     <div class="acoes"><button type="button" onclick="window.print()">Imprimir ou salvar PDF</button></div>
-    <h1>Relatório financeiro</h1>
-    <p><strong>Período dos lançamentos</strong>
-        <span th:text="${#temporals.format(inicio, 'dd/MM/yyyy')}"></span> a
-        <span th:text="${#temporals.format(fim, 'dd/MM/yyyy')}"></span>
-    </p>
-    <p><strong>Categoria</strong> <span th:text="${categoriaNome}"></span> ·
-        <strong>Tipo</strong> <span th:text="${tipo == 'ENTRADA' ? 'Entradas' : (tipo == 'SAIDA' ? 'Saídas' : 'Entradas e saídas')}"></span></p>
-    <p th:if="${quantidade == 0}">Nenhum lançamento encontrado para os filtros escolhidos.</p>
-    <p>Os totais incluem os lançamentos selecionados, independentemente da situação de pagamento.</p>
-    <dl>
-        <div th:if="${tipo != 'SAIDA'}"><dt>Total de entradas</dt><dd th:text="|R$ ${#numbers.formatDecimal(totais.entradas, 1, 'POINT', 2, 'COMMA')}|"></dd></div>
-        <div th:if="${tipo != 'ENTRADA'}"><dt>Total de saídas</dt><dd th:text="|R$ ${#numbers.formatDecimal(totais.saidas, 1, 'POINT', 2, 'COMMA')}|"></dd></div>
-        <div><dt>Lançamentos</dt><dd th:text="${quantidade}"></dd></div>
-    </dl>
-    <section th:if="${formato == 'categoria' and quantidade > 0}">
-        <h2>Totais por categoria</h2>
-        <table>
-            <thead><tr><th>Categoria</th><th th:if="${tipo != 'SAIDA'}">Entradas</th><th th:if="${tipo != 'ENTRADA'}">Saídas</th></tr></thead>
-            <tbody><tr th:each="grupo : ${grupos}">
-                <td th:text="${grupo.key}"></td>
-                <td th:if="${tipo != 'SAIDA'}" th:text="|R$ ${#numbers.formatDecimal(grupo.value.entradas, 1, 'POINT', 2, 'COMMA')}|"></td>
-                <td th:if="${tipo != 'ENTRADA'}" th:text="|R$ ${#numbers.formatDecimal(grupo.value.saidas, 1, 'POINT', 2, 'COMMA')}|"></td>
-            </tr></tbody>
-        </table>
-    </section>
-    <section class="dados" th:if="${formato == 'detalhado' and quantidade > 0}">
-        <h2>Lançamentos</h2>
-        <table>
-            <thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th>Situação</th><th>Forma</th><th>Vencimento</th><th>Pagamento</th><th>Observação</th></tr></thead>
-            <tbody><tr th:each="linha : ${linhas}">
-                <td class="data" th:text="${#temporals.format(linha.data, 'dd/MM/yyyy')}"></td>
-                <td th:text="${linha.tipo == 'ENTRADA' ? 'Entrada' : 'Saída'}"></td>
-                <td th:text="${linha.categoria}"></td><td th:text="${linha.descricao ?: '—'}"></td>
-                <td th:text="|R$ ${#numbers.formatDecimal(linha.valor, 1, 'POINT', 2, 'COMMA')}|"></td>
-                <td th:text="${linha.status}"></td><td th:text="${linha.forma ?: '—'}"></td>
-                <td class="data" th:text="${linha.vencimento == null ? '—' : #temporals.format(linha.vencimento, 'dd/MM/yyyy')}"></td>
-                <td class="data" th:text="${linha.pagamento == null ? '—' : #temporals.format(linha.pagamento, 'dd/MM/yyyy')}"></td>
-                <td th:text="${linha.observacao ?: '—'}"></td>
-            </tr></tbody>
-        </table>
-    </section>
+    <main class="relatorio">
+        <header class="cabecalho">
+            <img th:src="@{/img/logo-resgate-de-vidas.png}" alt="">
+            <div>
+                <p class="instituicao">Resgate de Vidas Criança Feliz</p>
+                <h1>Relatório financeiro</h1>
+            </div>
+        </header>
+        <dl class="cards filtros">
+            <div class="card">
+                <dt>Período dos lançamentos</dt>
+                <dd><span th:text="${#temporals.format(inicio, 'dd/MM/yyyy')}"></span> a
+                    <span th:text="${#temporals.format(fim, 'dd/MM/yyyy')}"></span></dd>
+            </div>
+            <div class="card"><dt>Categorias</dt><dd th:text="${categoriaNome}"></dd></div>
+            <div class="card"><dt>Movimentações</dt>
+                <dd th:text="${tipo == 'ENTRADA' ? 'Entradas' : (tipo == 'SAIDA' ? 'Saídas' : 'Entradas e saídas')}"></dd></div>
+        </dl>
+        <dl class="cards">
+            <div class="card card-entrada" th:if="${tipo != 'SAIDA'}"><dt>Total de entradas</dt><dd th:text="|R$ ${#numbers.formatDecimal(totais.entradas, 1, 'POINT', 2, 'COMMA')}|"></dd></div>
+            <div class="card" th:if="${tipo != 'ENTRADA'}"><dt>Total de saídas</dt><dd th:text="|R$ ${#numbers.formatDecimal(totais.saidas, 1, 'POINT', 2, 'COMMA')}|"></dd></div>
+            <div class="card"><dt>Lançamentos</dt><dd th:text="${quantidade}"></dd></div>
+        </dl>
+        <p class="vazio" th:if="${quantidade == 0}">Nenhum lançamento encontrado para os filtros escolhidos.</p>
+        <p class="nota">Os totais incluem os lançamentos selecionados, independentemente da situação de pagamento.</p>
+        <section th:if="${formato == 'categoria' and quantidade > 0}">
+            <h2>Totais por categoria</h2>
+            <table>
+                <thead><tr><th>Categoria</th><th th:if="${tipo != 'SAIDA'}">Entradas</th><th th:if="${tipo != 'ENTRADA'}">Saídas</th></tr></thead>
+                <tbody><tr th:each="grupo : ${grupos}">
+                    <td th:text="${grupo.key}"></td>
+                    <td th:if="${tipo != 'SAIDA'}" th:text="|R$ ${#numbers.formatDecimal(grupo.value.entradas, 1, 'POINT', 2, 'COMMA')}|"></td>
+                    <td th:if="${tipo != 'ENTRADA'}" th:text="|R$ ${#numbers.formatDecimal(grupo.value.saidas, 1, 'POINT', 2, 'COMMA')}|"></td>
+                </tr></tbody>
+            </table>
+        </section>
+        <section class="dados" th:if="${formato == 'detalhado' and quantidade > 0}">
+            <h2>Lançamentos</h2>
+            <table>
+                <thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th>Situação</th><th>Forma</th><th>Vencimento</th><th>Pagamento</th><th>Observação</th></tr></thead>
+                <tbody><tr th:each="linha : ${linhas}">
+                    <td class="data" th:text="${#temporals.format(linha.data, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${linha.tipo == 'ENTRADA' ? 'Entrada' : 'Saída'}"></td>
+                    <td th:text="${linha.categoria}"></td><td th:text="${linha.descricao ?: '—'}"></td>
+                    <td th:text="|R$ ${#numbers.formatDecimal(linha.valor, 1, 'POINT', 2, 'COMMA')}|"></td>
+                    <td th:text="${linha.status}"></td><td th:text="${linha.forma ?: '—'}"></td>
+                    <td class="data" th:text="${linha.vencimento == null ? '—' : #temporals.format(linha.vencimento, 'dd/MM/yyyy')}"></td>
+                    <td class="data" th:text="${linha.pagamento == null ? '—' : #temporals.format(linha.pagamento, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${linha.observacao ?: '—'}"></td>
+                </tr></tbody>
+            </table>
+        </section>
+    </main>
 </body>
 </html>
