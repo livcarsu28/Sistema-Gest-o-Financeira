@@ -19,6 +19,7 @@ public class SecurityConfig {
             throws Exception {
 
         http
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/login",
@@ -35,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/configuracoes/pix").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/configuracoes/endereco").hasRole("ADMIN")
                         .requestMatchers("/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/site-publico").permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form
