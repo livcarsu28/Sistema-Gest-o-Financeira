@@ -214,13 +214,23 @@ document.addEventListener("DOMContentLoaded", () => {
                         item.style.cssText = "background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; text-align: center; position: relative;";
                         item.innerHTML = `
                             <div style="height: 70px; background: #e2e8f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 6px;">
-                                <img src="${img.urlImagem}" alt="Foto ${img.categoria}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='/img/logo-resgate-de-vidas.png';">
+                                <img alt="" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='/img/logo-resgate-de-vidas.png';">
                             </div>
-                            <span style="font-size: 11px; font-weight: 600; color: #475569; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${img.categoria}</span>
-                            <button type="button" class="btn-remover-foto-galeria" data-id="${img.id}" style="margin-top: 6px; width: 100%; font-size: 11px; padding: 4px; background: #fee2e2; color: #dc2626; border: none; border-radius: 4px; cursor: pointer;">
+                            <span style="font-size: 11px; font-weight: 600; color: #475569; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+                            <button type="button" class="btn-remover-foto-galeria"  style="margin-top: 6px; width: 100%; font-size: 11px; padding: 4px; background: #fee2e2; color: #dc2626; border: none; border-radius: 4px; cursor: pointer;">
                                 Remover
                             </button>
                         `;
+                        const miniatura = item.querySelector("img");
+                        const url = new URL(img.urlImagem, location.origin);
+                        if (url.origin === location.origin && url.pathname.startsWith("/configuracoes/imagens/arquivo/")) {
+                            miniatura.src = url.href;
+                        }
+                        miniatura.alt = "Foto " + img.categoria;
+                        item.querySelector("span").textContent = img.categoria;
+                        const remover = item.querySelector(".btn-remover-foto-galeria");
+                        if ($("publicar-imagem-site")) remover.dataset.id = img.id;
+                        else remover.remove();
                         galeriaImagensLista.appendChild(item);
                     });
 
@@ -421,6 +431,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const formData = new FormData();
                 formData.append("arquivo", arquivoSelecionado);
                 formData.append("categoria", selectCategoria ? selectCategoria.value : "Projetos");
+                const publicar = $("publicar-imagem-site");
+                formData.append("publicar", String(Boolean(publicar?.checked)));
 
                 const headers = montarHeadersComCsrf();
 
@@ -436,6 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     throw new Error(dados.mensagem || "Erro ao salvar imagem.");
                 }
 
+                if (publicar) publicar.checked = false;
                 resetarUpload();
                 exibirToast(dados.mensagem || "Imagem adicionada com sucesso!");
                 await carregarGaleriaImagens();

@@ -26,11 +26,17 @@
 
     <!-- JavaScript do sistema -->
     <script defer th:src="@{/js/app.js}"></script>
+    <meta name="financeiro-api" th:content="@{/api/financeiro}">
+    <meta name="csrf-token" th:content="${_csrf.token}">
+    <meta name="csrf-header" th:content="${_csrf.headerName}">
+    <link rel="stylesheet" th:href="@{/css/calendario.css}">
+    <script defer th:src="@{/js/calendario-store.js}"></script>
+    <script defer th:src="@{/js/calendario-ui.js}"></script>
     <script defer th:src="@{/js/movimentacoes.js}"></script>
 
 </head>
 
-<body>
+<body class="pagina-gestao-movimentacoes">
 
     <div class="layout">
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
@@ -252,7 +258,9 @@
                             R$ 0,00
 
                         </b>
-
+                        <button type="button" class="abrir-acoes-movimentacao" th:attr="data-movimento=${m.id}">
+                            Editar ou excluir
+                        </button>
                     </article>
 
 

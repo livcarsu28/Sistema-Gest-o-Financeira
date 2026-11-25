@@ -50,6 +50,37 @@ public class ImagemRepository {
                 categoria, urlImagem, idUsuario != null ? idUsuario : 1);
     }
 
+    public void salvar(String categoria, String urlImagem, int idUsuario, byte[] conteudo, boolean publicada) {
+        jdbcTemplate.update("""
+                INSERT INTO imagem_midia (categoria, url_imagem, id_usuario, conteudo, publicada)
+                VALUES (?, ?, ?, ?, ?)
+                """, categoria, urlImagem, idUsuario, conteudo, publicada);
+    }
+
+    public Optional<byte[]> carregarConteudo(String urlImagem) {
+        return jdbcTemplate.query(
+                "SELECT conteudo FROM imagem_midia WHERE url_imagem = ? AND conteudo IS NOT NULL LIMIT 1",
+                (rs, linha) -> rs.getBytes(1), urlImagem).stream().findFirst();
+    }
+
+    public List<ImagemPublica> listarPublicadas() {
+        return jdbcTemplate.query("""
+                SELECT id_midia, categoria FROM imagem_midia
+                WHERE publicada = TRUE AND conteudo IS NOT NULL ORDER BY id_midia DESC
+                """, (rs, linha) -> new ImagemPublica(rs.getInt("id_midia"), rs.getString("categoria")));
+    }
+
+    public Optional<ArquivoPublicado> carregarPublicada(int id) {
+        return jdbcTemplate.query("""
+                SELECT conteudo, url_imagem FROM imagem_midia
+                WHERE id_midia = ? AND publicada = TRUE AND conteudo IS NOT NULL
+                """, (rs, linha) -> new ArquivoPublicado(rs.getBytes("conteudo"), rs.getString("url_imagem")), id)
+                .stream().findFirst();
+    }
+
+    public record ImagemPublica(int id, String categoria) {}
+    public record ArquivoPublicado(byte[] conteudo, String nome) {}
+
     public int excluir(int idMidia) {
         return jdbcTemplate.update("DELETE FROM imagem_midia WHERE id_midia = ?", idMidia);
     }

@@ -71,6 +71,7 @@
 
     async function gravar(caminho, metodo, corpo) {
         await requisitar(caminho, metodo, corpo);
+        window.dispatchEvent(new Event('financeiro:gravou'));
         try {
             await carregar();
         } catch {

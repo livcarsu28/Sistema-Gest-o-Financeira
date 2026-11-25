@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -113,7 +113,8 @@ public class ImagemService {
             String categoria,
             String nomeOriginal,
             byte[] bytes,
-            Integer idUsuario) {
+            Integer idUsuario,
+            boolean publicar) {
 
         if (imagemRepository.contarTotal() >= LIMITE_MAXIMO) {
             throw new IllegalStateException(
@@ -155,60 +156,14 @@ public class ImagemService {
 
         String nomeArquivoSalvo = UUID.randomUUID() + "." + extensao;
 
-        Path targetPath = uploadDir
-                .resolve(nomeArquivoSalvo)
-                .normalize();
-
-        if (!targetPath.startsWith(uploadDir)) {
-            throw new IllegalArgumentException(
-                    "Caminho de arquivo inválido ou inseguro.");
-        }
-
-        try {
-            Files.write(
-                    targetPath,
-                    bytes,
-                    StandardOpenOption.CREATE_NEW);
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    "Falha ao salvar a imagem no diretório de armazenamento.",
-                    e);
-        }
-
-        String cat = (categoria != null && !categoria.isBlank())
-                ? categoria.trim()
-                : "Projetos";
+        String cat = categoria == null || categoria.isBlank() ? "Projetos" : categoria.trim();
+        if (cat.length() > 50) throw new IllegalArgumentException("Categoria inválida.");
 
         String urlAcesso = "/configuracoes/imagens/arquivo/" + nomeArquivoSalvo;
-
-        try {
-            imagemRepository.salvar(cat, urlAcesso, idUsuario);
-
-            return imagemRepository.listarTodas()
-                    .stream()
-                    .filter(imagem -> imagem.urlImagem().equals(urlAcesso))
-                    .findFirst()
-                    .orElse(
-                            new DadosImagemMidia(
-                                    0,
-                                    cat,
-                                    urlAcesso,
-                                    java.time.LocalDateTime.now(),
-                                    idUsuario != null ? idUsuario : 1));
-
-        } catch (RuntimeException e) {
-            try {
-                Files.deleteIfExists(targetPath);
-            } catch (IOException erroExclusao) {
-                e.addSuppressed(erroExclusao);
-                log.warn(
-                        "Não foi possível remover o arquivo após falha no banco: {}",
-                        targetPath,
-                        erroExclusao);
-            }
-
-            throw e;
-        }
+        imagemRepository.salvar(cat, urlAcesso, idUsuario != null ? idUsuario : 1, bytes, publicar);
+        return imagemRepository.listarTodas().stream()
+                .filter(imagem -> imagem.urlImagem().equals(urlAcesso))
+                .findFirst().orElseThrow();
     }
 
     @Transactional
@@ -261,6 +216,16 @@ public class ImagemService {
 
             throw new IllegalArgumentException(
                     "Nome de arquivo inválido.");
+        }
+
+        var conteudo = imagemRepository.carregarConteudo("/configuracoes/imagens/arquivo/" + nomeArquivo);
+        if (conteudo.isPresent()) {
+            return new ByteArrayResource(conteudo.get()) {
+                @Override
+                public String getFilename() {
+                    return nomeArquivo;
+                }
+            };
         }
 
         Path arquivo = uploadDir

@@ -36,7 +36,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/configuracoes/pix", "/configuracoes/pix/status").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/configuracoes/endereco").hasRole("ADMIN")
                         .requestMatchers("/usuarios/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/site-publico").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/configuracoes/imagens").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/configuracoes/imagens/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/site-publico", "/api/site-publico/imagens",
+                                "/api/site-publico/imagens/*").permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form

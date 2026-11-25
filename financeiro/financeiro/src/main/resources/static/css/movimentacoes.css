@@ -1117,3 +1117,16 @@ select:disabled {
 .history-complete-link:hover { background: #fff0f2; }
 .history-complete-link [data-lucide], .history-complete-link svg { width: 16px; height: 16px; }
 @media (max-width: 540px) { .history-head { align-items: flex-start; flex-wrap: wrap; } .history-complete-link { margin-left: auto; } }
+
+.abrir-acoes-movimentacao {
+    min-width: 0;
+    padding: .45rem .65rem;
+    border: 1px solid #ead1d4;
+    border-radius: .45rem;
+    background: white;
+    color: #801124;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+.abrir-acoes-movimentacao:hover { background: #fdf2f4; }

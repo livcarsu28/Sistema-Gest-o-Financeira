@@ -103,8 +103,12 @@
                                 alcançado. Para adicionar novas fotos, remova ao menos uma imagem abaixo.
                             </div>
 
+                            <p th:if="${ehAdmin}">
+                                <label><input type="checkbox" id="publicar-imagem-site">
+                                    Publicar na galeria do site da ONG</label>
+                            </p>
                             <!-- Campo Categoria -->
-                            <div class="configuracoes-campo-grupo">
+                            <div class="configuracoes-campo-grupo" th:if="${ehAdmin}">
                                 <label for="select-categoria" class="configuracoes-label">Categoria</label>
                                 <div class="configuracoes-select-container">
                                     <select id="select-categoria" class="configuracoes-select">
@@ -114,6 +118,10 @@
                                         <option value="Instalações">Instalações</option>
                                         <option value="Materiais">Materiais</option>
                                         <option value="Geral">Geral</option>
+                                        <option value="Atividades">Atividades</option>
+                                        <option value="Aprendizado">Aprendizado</option>
+                                        <option value="Alimentação">Alimentação</option>
+                                        <option value="Momentos">Momentos</option>
                                     </select>
                                     <svg class="configuracoes-select-chevron" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -124,7 +132,7 @@
                             </div>
 
                             <!-- Área de Upload -->
-                            <div class="configuracoes-upload" id="area-upload" role="button" tabindex="0"
+                            <div class="configuracoes-upload" id="area-upload" th:if="${ehAdmin}" role="button" tabindex="0"
                                 aria-label="Fazer upload de imagem">
                                 <input type="file" id="input-arquivo-imagem" class="configuracoes-input-file"
                                     accept="image/png, image/jpeg, image/jpg" aria-hidden="true">

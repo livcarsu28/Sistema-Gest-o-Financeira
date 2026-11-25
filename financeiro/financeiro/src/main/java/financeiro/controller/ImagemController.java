@@ -64,6 +64,7 @@ public class ImagemController {
     public ResponseEntity<?> adicionar(
             @RequestParam("arquivo") MultipartFile arquivo,
             @RequestParam(value = "categoria", defaultValue = "Projetos") String categoria,
+            @RequestParam(value = "publicar", defaultValue = "false") boolean publicar,
             @AuthenticationPrincipal UsuarioAutenticado usuario) {
         try {
             if (arquivo == null || arquivo.isEmpty()) {
@@ -77,7 +78,8 @@ public class ImagemController {
                     categoria,
                     arquivo.getOriginalFilename(),
                     bytes,
-                    idUsuario);
+                    idUsuario,
+                    publicar);
 
             int novoTotal = imagemService.contarImagens();
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(

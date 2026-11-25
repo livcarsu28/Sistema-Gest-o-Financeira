@@ -130,3 +130,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+document.querySelectorAll('[data-movimento]').forEach(botao => {
+    botao.addEventListener('click', async () => {
+        const id = Number(botao.dataset.movimento);
+        const ok = await window.UI.executar(botao, async () => {
+            await window.Store.carregar();
+            if (!window.Store.obter(id)) throw new Error('Movimentação não encontrada. Atualize a página.');
+        });
+        if (ok) window.UI.detalhe(id);
+    });
+});
+window.addEventListener('financeiro:gravou', () => window.location.reload());
