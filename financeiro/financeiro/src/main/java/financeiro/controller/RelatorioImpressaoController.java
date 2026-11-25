@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -29,15 +30,16 @@ public class RelatorioImpressaoController {
     public String imprimir(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim,
                            @RequestParam(defaultValue = "TODOS") String tipo,
-                           @RequestParam(defaultValue = "0") int categoria,
+                           @RequestParam(defaultValue = "0") List<Integer> categoria,
                            @RequestParam(defaultValue = "detalhado") String formato,
                            Model model) {
         if (fim.isBefore(inicio) || inicio.getYear() < 1900 || fim.getYear() > 2100
-                || categoria < 0 || !Set.of("TODOS", "ENTRADA", "SAIDA").contains(tipo)
+                || categoria.stream().anyMatch(id -> id == null || id < 0) || !Set.of("TODOS", "ENTRADA", "SAIDA").contains(tipo)
                 || !Set.of("detalhado", "categoria", "resumo").contains(formato)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Filtros de impressão inválidos.");
         }
-        var linhas = repository.linhasImpressao(inicio.atStartOfDay(), fim.plusDays(1).atStartOfDay(), tipo, categoria);
+        Set<Integer> categorias = categoria.contains(0) ? Set.of() : Set.copyOf(categoria);
+        var linhas = repository.linhasImpressao(inicio.atStartOfDay(), fim.plusDays(1).atStartOfDay(), tipo, categorias);
         Map<String, Totais> grupos = new TreeMap<>();
         for (var linha : linhas) {
             BigDecimal zero = BigDecimal.ZERO;
@@ -58,9 +60,11 @@ public class RelatorioImpressaoController {
         model.addAttribute("totais", totais);
         model.addAttribute("linhas", "detalhado".equals(formato) ? linhas : List.of());
         model.addAttribute("quantidade", linhas.size());
-        model.addAttribute("categoriaNome", categoria == 0 ? "Todas" : repository.categoriasImpressao().stream()
-                .filter(c -> c.id() == categoria).map(RelatorioRepository.CategoriaImpressao::nome)
-                .findFirst().orElse("Categoria não encontrada"));
+        model.addAttribute("categoriaNome", categorias.isEmpty() ? "Todas" : repository.categoriasImpressao().stream()
+                .filter(c -> categorias.contains(c.id()))
+                .map(RelatorioRepository.CategoriaImpressao::nome)
+                .collect(Collectors.collectingAndThen(Collectors.joining(", "),
+                        nomes -> nomes.isEmpty() ? "Categorias não encontradas" : nomes)));
         return "relatorio-impressao";
     }
 

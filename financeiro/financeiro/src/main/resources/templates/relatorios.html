@@ -411,11 +411,16 @@
                     <select name="tipo"><option value="TODOS">Entradas e saídas</option>
                         <option value="ENTRADA">Só entradas</option><option value="SAIDA">Só saídas</option></select>
                 </label>
-                <label>Categoria
-                    <select name="categoria"><option value="0">Todas as categorias</option>
-                        <option th:each="categoria : ${categoriasImpressao}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
-                    </select>
-                </label>
+                <fieldset class="impressao-categorias">
+                    <legend>Categorias</legend>
+                    <label><input type="checkbox" name="categoria" value="0" checked> Todas as categorias</label>
+                    <div class="impressao-categorias-lista">
+                        <label th:each="categoria : ${categoriasImpressao}">
+                            <input type="checkbox" name="categoria" th:value="${categoria.id}">
+                            <span th:text="${categoria.nome}"></span>
+                        </label>
+                    </div>
+                </fieldset>
                 <label>Formato
                     <select name="formato"><option value="detalhado">Detalhado por lançamento</option>
                         <option value="categoria">Agrupado por categoria</option><option value="resumo">Somente totais</option></select>

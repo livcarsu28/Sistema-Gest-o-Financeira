@@ -66,6 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalImpressao = $("modal-impressao");
     const formImpressao = modalImpressao?.querySelector("form[method='get']");
     if (formImpressao) {
+        const categorias = formImpressao.querySelector(".impressao-categorias");
+        const todas = categorias.querySelector('input[value="0"]');
+        const individuais = [...categorias.querySelectorAll('input:not([value="0"])')];
+        categorias.addEventListener("change", event => {
+            if (event.target === todas && todas.checked) {
+                individuais.forEach(input => { input.checked = false; });
+            }
+            todas.checked = !individuais.some(input => input.checked);
+        });
         const inicio = formImpressao.elements.inicio;
         const fim = formImpressao.elements.fim;
         const ajustarPeriodo = () => {

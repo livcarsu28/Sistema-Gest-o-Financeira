@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -167,23 +171,24 @@ public class RelatorioRepository {
                 (rs, linha) -> new CategoriaImpressao(rs.getInt("id_categoria"), rs.getString("nome")));
     }
 
-    public List<LinhaImpressao> linhasImpressao(LocalDateTime inicio, LocalDateTime fim, String tipo, int categoria) {
-        return jdbcTemplate.query("""
+    public List<LinhaImpressao> linhasImpressao(LocalDateTime inicio, LocalDateTime fim, String tipo, Set<Integer> categorias) {
+        return new NamedParameterJdbcTemplate(jdbcTemplate).query("""
                 SELECT m.data_movimentacao, m.tipo, c.nome, m.valor, m.descricao, m.observacao,
                        m.status_pagamento, fp.nome AS forma, m.data_vencimento, m.data_pagamento
                 FROM movimentacao m
                 JOIN categoria_movimentacao c ON c.id_categoria = m.id_categoria
                 LEFT JOIN forma_pagamento fp ON fp.id_forma_pagamento = m.id_forma_pagamento
-                WHERE m.excluida = FALSE AND m.data_movimentacao >= ? AND m.data_movimentacao < ?
-                  AND (? = 'TODOS' OR m.tipo = ?)
-                  AND (? = 0 OR m.id_categoria = ?)
+                WHERE m.excluida = FALSE AND m.data_movimentacao >= :inicio AND m.data_movimentacao < :fim
+                  AND (:tipo = 'TODOS' OR m.tipo = :tipo)
+                  AND (:todas = TRUE OR m.id_categoria IN (:categorias))
                 ORDER BY m.data_movimentacao, m.id_movimentacao
-                """, (rs, linha) -> new LinhaImpressao(
+                """, Map.of("inicio", inicio, "fim", fim, "tipo", tipo, "todas", categorias.isEmpty(),
+                "categorias", categorias.isEmpty() ? Set.of(0) : categorias), (rs, linha) -> new LinhaImpressao(
                 rs.getObject("data_movimentacao", LocalDateTime.class).toLocalDate(),
                 rs.getString("tipo"), rs.getString("nome"), rs.getBigDecimal("valor"),
                 rs.getString("descricao"), rs.getString("observacao"), rs.getString("status_pagamento"),
                 rs.getString("forma"), rs.getObject("data_vencimento", java.time.LocalDate.class),
-                rs.getObject("data_pagamento", LocalDateTime.class)), inicio, fim, tipo, tipo, categoria, categoria);
+                rs.getObject("data_pagamento", LocalDateTime.class)));
     }
 
     public record GastoCategoria(int id, String nome, String descricao, BigDecimal total) {}
