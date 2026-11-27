@@ -1,5 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 /* ==========================================
    IDENTIDADE VISUAL
@@ -1148,4 +1147,28 @@ select:disabled {
 /* Contraste WCAG AA: cartão verde de resumo (texto pequeno sobre #eaf7f1). */
 .pagina-gestao-movimentacoes .summary-card.green-bg {
     color: #11683d;
+}
+
+/* Contraste dos elementos visíveis na listagem (WCAG AA).
+   As regras ficam restritas a Movimentações para não alterar outros módulos. */
+.pagina-gestao-movimentacoes .summary-card small,
+.pagina-gestao-movimentacoes .summary-card .summary-caption {
+    color: #3d4047;
+}
+.pagina-gestao-movimentacoes .summary-card.green-bg small,
+.pagina-gestao-movimentacoes .summary-card.green-bg .summary-caption {
+    color: #11683d;
+}
+.pagina-gestao-movimentacoes .summary-card.red-bg small,
+.pagina-gestao-movimentacoes .summary-card.red-bg .summary-caption {
+    color: #8f1c28;
+}
+.pagina-gestao-movimentacoes .search,
+.pagina-gestao-movimentacoes .history-head p,
+.pagina-gestao-movimentacoes .item-info small,
+.pagina-gestao-movimentacoes .items .empty {
+    color: #59545b;
+}
+.pagina-gestao-movimentacoes .search input::placeholder {
+    color: #62646c;
 }
