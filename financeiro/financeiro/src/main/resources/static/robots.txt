@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /login
+Allow: /termos
+Allow: /privacidade
+Allow: /termos-e-politicas
+Disallow: /dashboard
+Disallow: /calendario
+Disallow: /movimentacoes
+Disallow: /relatorios
+Disallow: /configuracoes
+Disallow: /usuarios
+Disallow: /api/
