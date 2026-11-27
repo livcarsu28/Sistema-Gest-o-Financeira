@@ -796,10 +796,17 @@
     }
 }
 
-/* Prioridade sobre .tabs button de app.css: contraste AA das abas inativas. */
-.relatorios-pagina .tabs button.aba-btn {
-    color: #514a4d;
+/* Contraste WCAG AA: sobrescreve especificamente .tabs button do CSS global.
+   Define também o fundo para não depender de regras externas. */
+.relatorios-pagina nav.tabs button.aba-btn:not(.selected) {
+    color: #352323;
+    background-color: #e8e3dd;
 }
-.relatorios-pagina .tabs button.aba-btn.selected {
+.relatorios-pagina nav.tabs button.aba-btn.selected {
     color: #7b0404;
+    background-color: #fff;
+}
+.relatorios-pagina nav.tabs button.aba-btn:focus-visible {
+    outline: 3px solid #7b0404;
+    outline-offset: 2px;
 }
