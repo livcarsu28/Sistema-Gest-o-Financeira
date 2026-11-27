@@ -1020,3 +1020,10 @@
 .legal-modal-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; font-size: 13px; }
 .legal-modal-footer a { color: #8d1015; font-weight: 600; }
 @media (max-width: 600px) { .configuracoes-modal.legal-modal { height: 92vh; } .legal-modal-tabs { gap: 5px; } }
+
+/* Elementos ocultos não podem conter controles alcançáveis por teclado/leitores de tela.
+   O display:flex das prévias não deve prevalecer sobre o atributo HTML hidden. */
+.configuracoes-body [hidden] { display: none !important; }
+
+/* Contraste de componentes da galeria e botões sobre fundos claros. */
+.configuracoes-body .btn-remover-foto-galeria { color: #991b1b !important; }

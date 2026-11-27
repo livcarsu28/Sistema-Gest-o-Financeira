@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (galeriaImagensLista && dados.imagens) {
                 galeriaImagensLista.innerHTML = "";
                 if (dados.imagens.length === 0) {
-                    galeriaImagensLista.innerHTML = '<p style="color: #94a3b8; font-size: 13px; grid-column: 1 / -1;">Nenhuma imagem cadastrada no momento.</p>';
+                    galeriaImagensLista.innerHTML = '<p style="color: #475569; font-size: 13px; grid-column: 1 / -1;">Nenhuma imagem cadastrada no momento.</p>';
                 } else {
                     dados.imagens.forEach((img) => {
                         const item = document.createElement("div");
@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <img alt="" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='/img/logo-resgate-de-vidas.png';">
                             </div>
                             <span style="font-size: 11px; font-weight: 600; color: #475569; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
-                            <button type="button" class="btn-remover-foto-galeria"  style="margin-top: 6px; width: 100%; font-size: 11px; padding: 4px; background: #fee2e2; color: #dc2626; border: none; border-radius: 4px; cursor: pointer;">
+                            <button type="button" class="btn-remover-foto-galeria"  style="margin-top: 6px; width: 100%; font-size: 11px; padding: 4px; background: #fee2e2; color: #991b1b; border: none; border-radius: 4px; cursor: pointer;">
                                 Remover
                             </button>
                         `;
