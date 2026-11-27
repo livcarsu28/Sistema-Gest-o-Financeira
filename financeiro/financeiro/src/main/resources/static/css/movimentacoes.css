@@ -1130,3 +1130,17 @@ select:disabled {
     cursor: pointer;
 }
 .abrir-acoes-movimentacao:hover { background: #fdf2f4; }
+
+/* Acessibilidade: contraste dos textos secundários na tela de movimentações.
+   Ajuste restrito a esta página, sem mudar as cores globais do sistema. */
+.pagina-gestao-movimentacoes .page-head p,
+.pagina-gestao-movimentacoes .history-subtitle,
+.pagina-gestao-movimentacoes .item-info small,
+.pagina-gestao-movimentacoes .empty {
+    color: #59545b;
+}
+
+.pagina-gestao-movimentacoes .search input::placeholder,
+.pagina-gestao-movimentacoes .filters input::placeholder {
+    color: #62646c;
+}
