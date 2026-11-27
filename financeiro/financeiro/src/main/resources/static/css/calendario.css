@@ -448,3 +448,31 @@ dialog.folha::backdrop { background: rgba(30, 20, 20, .5); backdrop-filter: blur
     font-weight: 650;
     text-decoration: underline;
 }
+
+/* Lighthouse: manter a geometria do calendário estável durante a carga da API. */
+.calendario-pagina .stats { min-height: 66px; }
+.calendario-pagina .categorias-navegacao { min-height: 52px; }
+.calendario-pagina .grade {
+    min-height: calc(var(--semanas, 5) * 50px);
+    grid-auto-rows: minmax(50px, auto);
+}
+/* Feedback assíncrono fora do fluxo, para não empurrar o calendário. */
+.calendario-pagina .dados-feedback:not([hidden]) {
+    position: fixed;
+    z-index: 120;
+    top: 12px;
+    right: 12px;
+    max-width: min(360px, calc(100vw - 24px));
+    margin: 0;
+    padding: 10px 14px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    background: var(--cartao);
+    box-shadow: var(--sombra);
+}
+@media (min-width: 1200px) {
+    .calendario-pagina .grade {
+        min-height: calc(var(--semanas, 5) * 76px);
+        grid-auto-rows: minmax(76px, auto);
+    }
+}

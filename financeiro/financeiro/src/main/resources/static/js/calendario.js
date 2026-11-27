@@ -21,6 +21,8 @@
     const doDia = d => ({ movs: S.filtrar({ mes: d.slice(0, 7) }).filter(m => m.data === d && passa(m)), notas: S.notas({ mes: d.slice(0, 7) }).filter(n => n.data === d && passa(n)) });
 
     function renderGrade() {
+        const semanas = celulasDoMes().length / 7;
+        $('grade').style.setProperty('--semanas', String(semanas));
         const movs = S.filtrar({ mes: ym }).filter(passa), notas = S.notas({ mes: ym }).filter(passa), hoje = S.hoje();
         const por = {};
         const slot = d => por[d] || (por[d] = { movs: [], notas: [] });
@@ -139,5 +141,10 @@
         const ok = await U.executar(botao, () => S.criarNota({ descricao: t, data: sel, categoriaId: Number($('notaCat').value) || null }));
         if (ok) { $('notaTexto').value = ''; $('notaTexto').focus(); }
     });
+    // Exibe a estrutura do mês antes da resposta da API para evitar saltos de layout.
+    // O evento financeiro:mudou substitui os valores iniciais pelos dados reais.
+    renderTopo();
+    renderGrade();
+    renderDia();
     U.iniciar(render);
 })();
