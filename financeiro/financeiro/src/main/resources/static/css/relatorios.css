@@ -775,3 +775,12 @@
 .relatorios-pagina .tag-pendente {
     color: #855400;
 }
+
+/* Corrige a regra .page-head p de app.css, que tem especificidade maior
+   que .subtitle/.eyebrow e deixa o texto claro demais. */
+.relatorios-pagina .page-head .subtitle {
+    color: #61575f;
+}
+.relatorios-pagina .page-head .eyebrow {
+    color: #7b0404;
+}
