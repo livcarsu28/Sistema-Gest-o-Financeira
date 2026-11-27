@@ -1144,3 +1144,8 @@ select:disabled {
 .pagina-gestao-movimentacoes .filters input::placeholder {
     color: #62646c;
 }
+
+/* Contraste WCAG AA: cartão verde de resumo (texto pequeno sobre #eaf7f1). */
+.pagina-gestao-movimentacoes .summary-card.green-bg {
+    color: #11683d;
+}
