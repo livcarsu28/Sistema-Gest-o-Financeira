@@ -127,7 +127,7 @@
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease;
     white-space: nowrap;
 }
 
@@ -783,4 +783,15 @@
 }
 .relatorios-pagina .page-head .eyebrow {
     color: #7b0404;
+}
+
+/* Otimização: evita transições de propriedades de layout desnecessárias. */
+.relatorios-pagina .aba-btn {
+    transition: color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+    .relatorios-pagina *, .relatorios-pagina *::before, .relatorios-pagina *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
 }
