@@ -795,3 +795,11 @@
         transition-duration: .01ms !important;
     }
 }
+
+/* Prioridade sobre .tabs button de app.css: contraste AA das abas inativas. */
+.relatorios-pagina .tabs button.aba-btn {
+    color: #514a4d;
+}
+.relatorios-pagina .tabs button.aba-btn.selected {
+    color: #7b0404;
+}
