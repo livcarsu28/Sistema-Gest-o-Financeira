@@ -763,3 +763,15 @@
     gap: .5rem;
 }
 .impressao-categorias input[type="checkbox"] { width: auto; margin: 0; }
+
+/* Acessibilidade: contraste AA em textos auxiliares e alertas dos relatórios.
+   Alterações restritas à tela de Relatórios. */
+.relatorios-pagina .card-metrica small,
+.relatorios-pagina .estado-vazio,
+.relatorios-pagina .txt-sub {
+    color: #61575f;
+}
+.relatorios-pagina .icone-metrica-tag.amarelo,
+.relatorios-pagina .tag-pendente {
+    color: #855400;
+}
