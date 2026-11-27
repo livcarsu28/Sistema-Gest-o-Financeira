@@ -2,12 +2,13 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <link rel="icon" type="image/png" th:href="@{/img/logo-resgate-de-vidas.png}">
+    <link rel="icon" type="image/webp" th:href="@{/img/logo-resgate-de-vidas.webp}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <title>Ajustes | Resgate de Vidas</title>
+    <meta name="description" content="Configurações administrativas da ONG Resgate de Vidas para gerenciamento de imagens, dados institucionais e documentos. Acesso restrito.">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/configuracoes.css}">
     <script th:src="@{/js/configuracoes.js}" defer></script>
@@ -64,7 +65,7 @@
                             style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                             <button th:if="${ehAdmin == null or ehAdmin}" type="button" id="btn-abrir-modal-usuario"
                                 class="configuracoes-btn-editar configuracoes-btn-novo-usuario"
-                                style="padding: 6px 12px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;">
+                                style="padding: 6px 12px; background: #075985; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;">
                                 + Cadastrar Usuário Comum
                             </button>
                         </div>
@@ -130,7 +131,7 @@
                             <div class="configuracoes-upload" id="area-upload" th:if="${ehAdmin}" role="button" tabindex="0"
                                 aria-label="Fazer upload de imagem">
                                 <input type="file" id="input-arquivo-imagem" class="configuracoes-input-file"
-                                    accept="image/png, image/jpeg, image/jpg" aria-hidden="true">
+                                    accept="image/png, image/jpeg, image/jpg" tabindex="-1">
 
                                 <div class="configuracoes-upload-estado-inicial" id="upload-estado-inicial">
                                     <div class="configuracoes-upload-icone-box" aria-hidden="true">
@@ -171,7 +172,7 @@
                                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                                         <button type="button" class="configuracoes-upload-btn-salvar"
                                             id="btn-confirmar-upload"
-                                            style="padding: 6px 12px; background: #16a34a; color: white; border: none; border-radius: 4px; font-size: 13px; cursor: pointer;">
+                                            style="padding: 6px 12px; background: #166534; color: white; border: none; border-radius: 4px; font-size: 13px; cursor: pointer;">
                                             Salvar Imagem
                                         </button>
                                         <button type="button" class="configuracoes-upload-btn-remover"
